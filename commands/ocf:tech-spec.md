@@ -3,28 +3,28 @@ description: Author a rigorous technical specification for a project. Delegates 
 agent: business-ops/spec-writer
 ---
 
-## /ocf:tech-spec
+## $flow-tech-spec
 
 Create or refine a technical specification.
 
 Usage:
 
 ```
-/ocf:tech-spec <slug> [initial scope description]
+$flow-tech-spec <slug> [initial scope description]
 ```
 
 Examples:
 
 ```
-/ocf:tech-spec dia-educacao-2026
-/ocf:tech-spec loyalty-program "B2C loyalty program with points and tiers"
+$flow-tech-spec dia-educacao-2026
+$flow-tech-spec loyalty-program "B2C loyalty program with points and tiers"
 ```
 
 ## What happens
 
 1. The `business-ops/spec-writer` agent bootstraps
    `docs/specs/<slug>/` via `scripts/spec-init.sh`, copying the company
-   logo from `docs/assets/` or `~/.config/opencode/assets/`.
+   logo from `docs/assets/` or `~/.codex/flow/assets/`.
 2. It runs structured discovery across the 12 spec dimensions defined in
    the `tech-spec` skill, asking the user targeted questions in batches.
 3. It invokes C-level agents (`cto`, `cmo`, `cfo`, `coo`) in parallel when
@@ -35,7 +35,7 @@ Examples:
 5. Output: `docs/specs/<slug>/tech-spec.md`.
 6. Optional: if the user provides commercial identities, also write
    `docs/specs/<slug>/proposal-data.json` (client + issuer blocks — see
-   the `proposal-writer` skill for the schema) so `/ocf:proposal` can reuse
+   the `proposal-writer` skill for the schema) so `$flow-proposal` can reuse
    them later.
 
 ## Next step
@@ -43,7 +43,7 @@ Examples:
 After approval:
 
 ```
-/ocf:proposal <slug>
+$flow-proposal <slug>
 ```
 
 to generate the commercial proposal from the approved spec.

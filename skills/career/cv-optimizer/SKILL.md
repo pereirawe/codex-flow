@@ -1,7 +1,37 @@
 ---
-name: cv-optimizer
-description: Analyze and optimize a candidate's profile from hub.json — general qualifications, profile score (0-100 per section + global), target job profiles, CLT vs PJ market salary ranges ([INFERIDO] bands), context gaps, integrated objective-calibrated LinkedIn improvements (banner, headline literal, Sobre com logros, experiência com bullets, revisão de skills — consistent with cv-linkedin, referencing ocf:cv-banner / linkedin-optimization.md / linkedin-sync.json) and a prioritized action plan. Use when you need to analyze and improve a candidate's profile (command ocf:cv-optimize). Career sector.
+name: cf-cv-optimizer
+description: Analyze and optimize a candidate's profile from hub.json — general qualifications,
+  profile score (0-100 per section + global), target job profiles, CLT vs PJ market
+  salary ranges ([INFERIDO] bands), context gaps, integrated objective-calibrated
+  LinkedIn improvements (banner, headline literal, Sobre com logros, experiência com
+  bullets, revisão de skills — consistent with cv-linkedin, referencing $flow-cv-banner
+  / linkedin-optimization.md / linkedin-sync.json) and a prioritized action plan.
+  Use when you need to analyze and improve a candidate's profile (command $flow-cv-optimize).
+  Career sector.
 ---
+
+## Codex runtime contract
+
+This workflow was migrated to Codex. Read `~/.codex/flow/docs/runtime.md`
+before its first use. Resolve scripts from `~/.codex/flow/scripts/` and run
+them with CWD set to the intended project. Read the project's root AGENTS.md,
+then `.codex/AGENTS.md` and relevant local context. Project definitions take
+precedence over global definitions with the same legacy identifier.
+
+Legacy `Task(role)` means a Codex subagent using the role in the agent catalog;
+if that role cannot be selected natively, read its instructions and include
+them in the subagent task. Never run OpenCode. Legacy read/glob/grep/skill
+names mean the equivalent available Codex file/search/skill tools. Read a
+referenced skill by resolving its legacy name in `catalog/skills.json`.
+Shell snippets using OpenCode's !`...` notation are examples, not executable
+directives: run the corresponding reviewed command with native shell tools.
+
+Inherit Codex permissions and model settings. Old permission YAML is source
+metadata, not an enforcement mechanism. Stop on failed gates; never claim
+unperformed tests/reviews passed. Only send external notifications/comments
+when the user explicitly invokes a workflow that includes them or separately
+authorizes them. Mere migration, file reading, or implicit skill selection
+does not authorize sending. Do not hide approval rejections from the user.
 
 # CV Optimizer — profile analysis and improvement plan
 
@@ -14,8 +44,8 @@ substantially** before generating tailored resumes (`cv-tailor`).
 ## Prerequisite
 
 A valid `~/career/<candidate-name>/hub.json` (validated by
-`python3 $SCRIPTS_DIR/cv/validate.py`). If it does not exist, the `ocf:cv-hub`
-flow must run first (the `ocf:cv-optimize` command already handles this).
+`python3 $SCRIPTS_DIR/cv/validate.py`). If it does not exist, the `$flow-cv-hub`
+flow must run first (the `$flow-cv-optimize` command already handles this).
 
 ## LinkedIn context (optional inputs, consumed when present)
 
@@ -31,7 +61,7 @@ analysis, it only changes what the section recommends:
   literal target roles/services) or, if unanswered, DECLARE the assumed
   objective at the top of the section — never silently, never founder/CEO for
   a `job_search` profile.
-- `linkedin-optimization.md` (issue #223 / `ocf:cv-linkedin`) — the ready
+- `linkedin-optimization.md` (issue #223 / `$flow-cv-linkedin`) — the ready
   literal headline/Sobre/experience/skills copy. REFERENCE it — never
   duplicate its text into `profile-analysis.md`.
 - `linkedin-sync.json` (issue #225 — `scripts/cv/linkedin-sync.py` +
@@ -40,7 +70,7 @@ analysis, it only changes what the section recommends:
   `Skills.csv`; an export without it reports `skills.available: false` and no
   recommendations). Absent/without recommendations → recommend running the
   issue-225 sync or applying from the hub + objective keywords.
-- `ocf:cv-banner` (issue #224) — the planned banner command referenced as the
+- `$flow-cv-banner` (issue #224) — the planned banner command referenced as the
   artifact to run for the banner item; issue #224 is NOT implemented in this
   config version — never invent its output contract, just reference the
   command.
@@ -59,7 +89,7 @@ The report does NOT modify `hub.json` — it only reports.
 ## Report language
 
 The report MUST be written in the language the user communicates in (detected
-from the session locale — `.opencode/locale` project → global → English — or
+from the session locale — `.codex/locale` project → global → English — or
 an explicit user instruction). This applies to `profile-analysis.md`,
 `gap-analysis.md` and `inferences.md` (career analysis outputs). Technical
 terms, command names and the `[INFERIDO]` label remain unchanged. See
@@ -118,7 +148,7 @@ After writing `profile-analysis.md`, also generate the PDF for easier reading:
 ### 1. Validate and load the hub
 
 1. Run `python3 $SCRIPTS_DIR/cv/validate.py hub.json`. Exit 0 → continue.
-2. Missing/invalid hub → tell the user that `ocf:cv-hub` must run first and
+2. Missing/invalid hub → tell the user that `$flow-cv-hub` must run first and
    stop (do not fix data manually).
 3. Load the JSON and extract: personal info, summary, experience, education,
    skills (with levels), certifications, projects, languages, links.
@@ -319,7 +349,7 @@ priority (P1/P2/P3, consistent with the action-plan rules). Keep outputs
 condensed (single recommendation each) — expansion lives in `cv-linkedin`:
 
 1. **Banner do perfil** (issue 224) — avaliar/criar o banner via
-   `ocf:cv-banner` (planejado — issue 224 não implementada nesta versão;
+   `$flow-cv-banner` (planejado — issue 224 não implementada nesta versão;
    referencie o comando como o artefato a rodar, sem inventar o contrato de
    saída). O banner carrega telefone/e-mail/redes sociais/frase curta de
    impacto REAIS do hub (`personal_info`) e respeita a zona segura da foto de
@@ -329,7 +359,7 @@ condensed (single recommendation each) — expansion lives in `cv-linkedin`:
    das vagas/serviços (job_search → título da vaga + disponibilidade;
    services_sales → serviços). Referencie as variantes prontas do
    `linkedin-optimization.md`; sem esse arquivo, a ação é "rodar
-   `ocf:cv-linkedin`" para gerá-lo.
+   `$flow-cv-linkedin`" para gerá-lo.
 3. **Sobre estruturado com logros** (issue 223) — reestruturar o Sobre
    (≤2600 chars): hook → lógica de valor → bullets ✔ de conquistas com
    métricas reais (`ação → resultado quantificado`) → CTA alinhado ao
@@ -360,7 +390,7 @@ formatação fora do padrão). O detalhamento (até 5) pertence ao
 **Reference, never duplicate.** `profile-analysis.md` is an internal analysis
 artifact: `[INFERIDO]` markers are allowed inline here (§5). The section only
 RECOMMENDS the LinkedIn actions and references the copy-paste-ready outputs
-(`linkedin-optimization.md`, `ocf:cv-banner`, `linkedin-sync.json`) — it never
+(`linkedin-optimization.md`, `$flow-cv-banner`, `linkedin-sync.json`) — it never
 writes the literal headline/Sobre/bullets itself, so the `[INFERIDO]` ban of
 the shareable `linkedin-optimization.md` is never violated.
 
@@ -386,7 +416,7 @@ target-job gaps (courses/certifications/languages), positioning, **LinkedIn**.
 **LinkedIn category rows.** Every LinkedIn improvement item of section 7
 (§ "Melhorias no LinkedIn") MUST also appear here as an action row, with
 Impact/Effort/Priority and the artifact/output to produce in the Action cell
-(e.g. "LinkedIn — rodar `ocf:cv-banner` para gerar o banner do perfil",
+(e.g. "LinkedIn — rodar `$flow-cv-banner` para gerar o banner do perfil",
 "LinkedIn — aplicar headline literal do `linkedin-optimization.md` (vaga +
 disponibilidade)", "LinkedIn — aplicar diff de skills do `linkedin-sync.json`
 (adicionar/promover/remover)" or "rodar o sync da issue 225"). The rows
@@ -417,7 +447,7 @@ text.
     literal, Sobre com logros, experiência com bullets, revisão de skills)
     MUST be the SAME topics of the cv-linkedin report (#223) — same labels,
     same semantics, never contradicting. Reference the outputs
-    (`ocf:cv-banner`, `linkedin-optimization.md`, `linkedin-sync.json`)
+    (`$flow-cv-banner`, `linkedin-optimization.md`, `linkedin-sync.json`)
     instead of duplicating their copy-paste content.
 11. **Objective first (issue #222):** echo `hub.profile_objective` when
     present and calibrate the LinkedIn actions by it (`job_search` → headline

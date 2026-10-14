@@ -1,4 +1,4 @@
-## /ocf:promote <id>
+## $flow-promote <id>
 
 ---
 description: Promote an issue — backlog→ready or ready→in-progress with branch
@@ -34,5 +34,5 @@ reviewer profile validation, remote creation if needed, and status update.
 ### Usage
 
 ```
-/ocf:promote 2
+$flow-promote 2
 ```

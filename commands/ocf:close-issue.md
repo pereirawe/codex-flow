@@ -1,4 +1,4 @@
-## /ocf:close-issue [id]
+## $flow-close-issue [id]
 
 ---
 description: Close remote issue and archive after PR merge
@@ -21,6 +21,6 @@ Close a remote issue and archive it after its PR has been merged.
 ### Usage
 
 ```
-/ocf:close-issue
-/ocf:close-issue 4
+$flow-close-issue
+$flow-close-issue 4
 ```

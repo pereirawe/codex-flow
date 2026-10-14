@@ -1,11 +1,11 @@
-## /ocf:cv-linkedin <candidate-directory> [<job>]
+## $flow-cv-linkedin <candidate-directory> [<job>]
 
 ---
 description: Generate an objective-driven LinkedIn profile action report from the candidate hub — confirmed profile objective (issue #222), 2–3 LITERAL headline variants (≤220 chars), structured Sobre/About draft (≤2600 chars) with ✔ achievement bullets and objective-aligned CTA, per-role Experiência bullets with real metrics, add/promote/remove Skills review (issue-225 linkedin-sync output or pasted list) and prioritized next steps (banner, featured, sections); outputs linkedin-optimization.md in the user's communication language (never scrapes or modifies LinkedIn, never fabricates, NO [INFERIDO] in the shareable file)
 ---
 
 Generates an objective-driven LinkedIn profile action report for the
-candidate from `hub.json` (built with `/ocf:cv-hub`). The report is governed
+candidate from `hub.json` (built with `$flow-cv-hub`). The report is governed
 by the profile objective (`hub.profile_objective`, issue #222) and covers the
 high-impact LinkedIn sections in order: **Objetivo do perfil** (confirmado),
 **Headline** (2–3 literal variants ≤220 chars), **Sobre** (structured ≤2600
@@ -20,13 +20,13 @@ or modified** — the user copies/pastes the suggestions manually.
 ### Prerequisite
 
 The candidate needs a valid hub at `~/career/<candidate-name>/hub.json`.
-If it does not exist, run `/ocf:cv-hub` first.
+If it does not exist, run `$flow-cv-hub` first.
 
 ### Usage
 
 ```
-/ocf:cv-linkedin ~/career/maria-silva
-/ocf:cv-linkedin ~/career/maria-silva "job text for the target role"
+$flow-cv-linkedin ~/career/maria-silva
+$flow-cv-linkedin ~/career/maria-silva "job text for the target role"
 ```
 
 The optional job can be provided as:
@@ -47,7 +47,7 @@ never scraped, never invented.
 ### Flow
 
 1. **Validate hub** — `python3 $SCRIPTS_DIR/cv/validate.py hub.json`; if the
-   hub is missing/invalid, tell the user to run `/ocf:cv-hub` first.
+   hub is missing/invalid, tell the user to run `$flow-cv-hub` first.
 2. **Invoke the agent** `career/cv-linkedin` via `task:` with the candidate
    directory and the job (when provided).
 3. **Determine the profile objective FIRST** (issue #222) — read

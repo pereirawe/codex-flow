@@ -1,11 +1,37 @@
 ---
-name: test-runner
-description: Single test entry point with a result cache (fingerprint) for development agents. Use when you need to validate tests (check/run/status), consume a fresh cache without re-executing, or run the suite for your own use when there is no cache. Never invoke ad hoc test commands (go test, pytest, npm test) — use this runner.
+name: cf-test-runner
+description: Single test entry point with a result cache (fingerprint) for development
+  agents. Use when you need to validate tests (check/run/status), consume a fresh
+  cache without re-executing, or run the suite for your own use when there is no cache.
+  Never invoke ad hoc test commands (go test, pytest, npm test) — use this runner.
 ---
+
+## Codex runtime contract
+
+This workflow was migrated to Codex. Read `~/.codex/flow/docs/runtime.md`
+before its first use. Resolve scripts from `~/.codex/flow/scripts/` and run
+them with CWD set to the intended project. Read the project's root AGENTS.md,
+then `.codex/AGENTS.md` and relevant local context. Project definitions take
+precedence over global definitions with the same legacy identifier.
+
+Legacy `Task(role)` means a Codex subagent using the role in the agent catalog;
+if that role cannot be selected natively, read its instructions and include
+them in the subagent task. Never run OpenCode. Legacy read/glob/grep/skill
+names mean the equivalent available Codex file/search/skill tools. Read a
+referenced skill by resolving its legacy name in `catalog/skills.json`.
+Shell snippets using OpenCode's !`...` notation are examples, not executable
+directives: run the corresponding reviewed command with native shell tools.
+
+Inherit Codex permissions and model settings. Old permission YAML is source
+metadata, not an enforcement mechanism. Stop on failed gates; never claim
+unperformed tests/reviews passed. Only send external notifications/comments
+when the user explicitly invokes a workflow that includes them or separately
+authorizes them. Mere migration, file reading, or implicit skill selection
+does not authorize sending. Do not hide approval rejections from the user.
 
 # Test Runner
 
-Response language: user's input language → `.opencode/locale` (project → global) → EN.
+Response language: user's input language → `.codex/locale` (project → global) → EN.
 
 Single test entry point for development agents. Eliminates repeated
 executions of the same suite with identical output along the pipeline and
@@ -44,7 +70,7 @@ Additional args after `--` are passed to the test command
    (no runner detected, or `package.json` without a `test` script) is a
    **no-op**: `--run` and `--check` both exit `0` with a
    `no test surface` message — nothing to run, never a gate failure (issue
-   #239). The full report is in `.opencode/test-cache/<branch>-<runner>.log`.
+   #239). The full report is in `.codex/test-cache/<branch>-<runner>.log`.
 7. **`--check`** exits 0 only when there is a fresh cache AND the last run
    passed (`exit_code=0`), or when there is no test surface (no-op, issue
    #239). A fresh cache from a failed suite → exit 3.
@@ -54,7 +80,7 @@ Additional args after `--` are passed to the test command
 
 ## Versioned test environment (issue #210)
 
-The runner verifies the runtime against `.opencode/env-manifest.md`:
+The runner verifies the runtime against `.codex/env-manifest.md`:
 
 - **Pins**: `.nvmrc` / `.node-version` pin Node (e.g. `22`); the supported
   **ranges** live in the manifest strict section (`node: >=20 <23`,
@@ -72,7 +98,7 @@ The runner verifies the runtime against `.opencode/env-manifest.md`:
   consistency warning (pin must satisfy `pin ⊆ range`).
 - **Drift**: cached `.result` versions ≠ current environment → drift warning
   in `--status`, non-blocking.
-- `.nvmrc`, `.node-version` and `.opencode/env-manifest.md` are **excluded
+- `.nvmrc`, `.node-version` and `.codex/env-manifest.md` are **excluded
   from the fingerprint** — environment metadata edits never invalidate the
   cache.
 
@@ -82,8 +108,8 @@ full protocol.
 ## Where the cache lives
 
 ```
-.opencode/test-cache/<branch>-<runner>.result   # fingerprint + exit_code + timestamp + version metadata
-.opencode/test-cache/<branch>-<runner>.log      # full output of the last run
+.codex/test-cache/<branch>-<runner>.result   # fingerprint + exit_code + timestamp + version metadata
+.codex/test-cache/<branch>-<runner>.log      # full output of the last run
 ```
 
 The `.result` file records the versions actually used:
@@ -98,7 +124,7 @@ python_version=3.12.0
 runner_version=1.0.0
 ```
 
-The `.opencode/test-cache/` directory is gitignored. The fingerprint is derived
+The `.codex/test-cache/` directory is gitignored. The fingerprint is derived
 from the git HEAD + changed code/test files — any minimal change invalidates
 the cache and forces re-execution.
 

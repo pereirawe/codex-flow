@@ -3,20 +3,20 @@ description: Author a client-ready commercial proposal from an approved tech spe
 agent: business-ops/proposal-writer
 ---
 
-## /ocf:proposal
+## $flow-proposal
 
 Create the commercial proposal for an approved technical specification.
 
 Usage:
 
 ```
-/ocf:proposal <slug>
+$flow-proposal <slug>
 ```
 
 Example:
 
 ```
-/ocf:proposal dia-educacao-2026
+$flow-proposal dia-educacao-2026
 ```
 
 ## Preconditions

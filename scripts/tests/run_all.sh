@@ -8,7 +8,14 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" && pwd)"
 files_passed=0
 files_failed=0
 
-for t in "$SCRIPT_DIR"/test_*.sh; do
+tests=("$SCRIPT_DIR"/test_*.sh)
+if [[ "${1:-}" == --core ]]; then
+  tests=()
+  for name in remote language issue_lint timestamps jira_sync committer_check test_runner; do
+    tests+=("$SCRIPT_DIR/test_${name}.sh")
+  done
+fi
+for t in "${tests[@]}"; do
   [[ -e "$t" ]] || continue
   chmod +x "$t" 2>/dev/null || true
   if bash "$t"; then

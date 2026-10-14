@@ -4,8 +4,8 @@
 #      echo "message" | openwa-notify.sh [flags]
 #
 # Credentials loaded from (load order; env vars override files):
-#   1. ./.opencode/openwa.env (current project)
-#   2. ~/.config/opencode/.opencode/openwa.env (global)
+#   1. ./.codex/openwa.env (current project)
+#   2. ~/.codex/flow/.codex/openwa.env (global)
 #   3. Environment variables OPENWA_BASE_URL / OPENWA_SESSION_ID / OPENWA_API_KEY / OPENWA_CHAT_ID (override)
 
 set -euo pipefail
@@ -83,11 +83,11 @@ load_env_file() {
     done < "$env_file"
 }
 
-# 1. Project-level .opencode/openwa.env
-load_env_file "./.opencode/openwa.env"
+# 1. Project-level .codex/openwa.env
+load_env_file "./.codex/openwa.env"
 
-# 2. Global ~/.config/opencode/.opencode/openwa.env
-load_env_file "$HOME/.config/opencode/.opencode/openwa.env"
+# 2. Global ~/.codex/flow/.codex/openwa.env
+load_env_file "$HOME/.codex/flow/.codex/openwa.env"
 
 # 3. Environment variables (override)
 BASE_URL="${ENV_BASE_URL:-${OPENWA_BASE_URL:-}}"
@@ -98,25 +98,25 @@ CHAT_ID="${ENV_CHAT_ID:-${OPENWA_CHAT_ID:-}}"
 # --- Validate ---
 if [[ -z "$API_KEY" ]]; then
     echo "❌ OPENWA_API_KEY not set." >&2
-    echo "   Create .opencode/openwa.env or export the variable." >&2
+    echo "   Create .codex/openwa.env or export the variable." >&2
     exit 1
 fi
 
 if [[ -z "$SESSION_ID" ]]; then
     echo "❌ OPENWA_SESSION_ID not set." >&2
-    echo "   Create .opencode/openwa.env or export the variable." >&2
+    echo "   Create .codex/openwa.env or export the variable." >&2
     exit 1
 fi
 
 if [[ -z "$BASE_URL" ]]; then
     echo "❌ OPENWA_BASE_URL not set." >&2
-    echo "   Create .opencode/openwa.env or export the variable." >&2
+    echo "   Create .codex/openwa.env or export the variable." >&2
     exit 1
 fi
 
 if [[ -z "$CHAT_ID" ]]; then
     echo "❌ OPENWA_CHAT_ID not set." >&2
-    echo "   Create .opencode/openwa.env or export the variable." >&2
+    echo "   Create .codex/openwa.env or export the variable." >&2
     exit 1
 fi
 

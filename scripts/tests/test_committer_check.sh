@@ -25,10 +25,10 @@
 #         "no issue-scoped report found" (no cross-issue fallback)
 #
 # Self-contained: mktemp + trap; config.sh resolves PROJECT_ISSUES_FILE /
-# PROJECT_ISSUES_DIR from the CWD (`.opencode/known_issues.md`), so each case
+# PROJECT_ISSUES_DIR from the CWD (`.codex/known_issues.md`), so each case
 # runs with `cd` into an isolated fixture dir (mirroring test_issue_lint.sh).
 # committer-check.sh also calls `test-runner.sh --check` from the fixture CWD;
-# a minimal `.opencode/test-cache/<branch>-pytest.result` is seeded with the
+# a minimal `.codex/test-cache/<branch>-pytest.result` is seeded with the
 # fingerprint reported by `test-runner.sh --status`, so the "Tests cache" gate
 # passes and the security gate is the ONLY variable under test. Deterministic:
 # report mtimes are pinned with `touch -d`.
@@ -46,7 +46,7 @@ TMP="$(mktemp -d)"
 trap 'rm -rf "$TMP"' EXIT
 RUN_OUT="$TMP/run.out"
 
-# seed_test_cache <dir> — seeds a minimal .opencode/test-cache result so the
+# seed_test_cache <dir> — seeds a minimal .codex/test-cache result so the
 # `test-runner.sh --check` called by committer-check.sh (from the fixture CWD)
 # exits 0. The fingerprint comes from `test-runner.sh --status` itself, so the
 # seeded cache always matches whatever the fixture contains (the cache dir is
@@ -58,8 +58,8 @@ seed_test_cache() {
   branch="$(printf '%s\n' "$status" | awk '/^[[:space:]]+branch:/{print $2; exit}')"
   runner="$(printf '%s\n' "$status" | awk '/^[[:space:]]+runner:/{print $2; exit}')"
   [[ -n "$fp" && -n "$branch" && -n "$runner" ]] || { t_fail "seed_test_cache: could not parse test-runner --status (fp='$fp' branch='$branch' runner='$runner')"; return 1; }
-  mkdir -p "$dir/.opencode/test-cache"
-  cat > "$dir/.opencode/test-cache/${branch}-${runner}.result" <<EOF
+  mkdir -p "$dir/.codex/test-cache"
+  cat > "$dir/.codex/test-cache/${branch}-${runner}.result" <<EOF
 fingerprint=$fp
 exit_code=0
 timestamp=$(date +%s)
@@ -75,7 +75,7 @@ EOF
 # test-runner detects the pytest runner for the seeded cache.
 make_issue() {
   local dir="$1"
-  mkdir -p "$dir/.opencode/reviews"
+  mkdir -p "$dir/.codex/reviews"
   {
     printf '## Known Issues\n\n'
     printf '### 1. Bug: committer security gate regression\n'
@@ -83,12 +83,12 @@ make_issue() {
     printf -- '- Type: bug\n- Severity: high\n- Priority: high\n- Base branch: main\n'
     printf -- '- Reviewers: 1 (security)\n- Remote: -\n- Business rules: none\n'
     printf -- '- Tests:\n  1. cenario -> outcome\n'
-  } > "$dir/.opencode/known_issues.md"
+  } > "$dir/.codex/known_issues.md"
   printf 'dummy\n' > "$dir/requirements.txt"
 }
 
 # run_check <dir> <id> — runs committer-check.sh with CWD = <dir> so config.sh
-# resolves the fixture's .opencode/; echoes the exit code, output in $RUN_OUT.
+# resolves the fixture's .codex/; echoes the exit code, output in $RUN_OUT.
 run_check() {
   local dir="$1" id="$2"
   local rc=0
@@ -107,14 +107,14 @@ make_issue "$t1"
   printf '# Security Review — issue 1 (original round)\n\n'
   printf '**Verdict: REQUEST_CHANGES** — findings require fixes before approval\n\n'
   printf '## Findings\n- 2 critical\n- 1 high\n'
-} > "$t1/.opencode/reviews/security-issue-1-original.md"
+} > "$t1/.codex/reviews/security-issue-1-original.md"
 {
   printf '# Security Review — issue 1 (recheck round)\n\n'
   printf '**Verdict: APPROVED** — all findings resolved\n\n'
   printf '## Details\n- nothing outstanding\n'
-} > "$t1/.opencode/reviews/security-issue-1-recheck.md"
-touch -d "2026-09-01 10:00:00" "$t1/.opencode/reviews/security-issue-1-original.md"
-touch -d "2026-09-09 10:00:00" "$t1/.opencode/reviews/security-issue-1-recheck.md"
+} > "$t1/.codex/reviews/security-issue-1-recheck.md"
+touch -d "2026-09-01 10:00:00" "$t1/.codex/reviews/security-issue-1-original.md"
+touch -d "2026-09-09 10:00:00" "$t1/.codex/reviews/security-issue-1-recheck.md"
 seed_test_cache "$t1" || { t_fail "t01: seeding test cache"; t_finish; exit 1; }
 
 rc=$(run_check "$t1" 1)
@@ -136,8 +136,8 @@ make_issue "$t2"
   printf '# Security Review — issue 1\n\n'
   printf '**Verdict: REQUEST_CHANGES** — 3 critical + 3 high findings block approval\n\n'
   printf '## Details\n- fix before merge\n'
-} > "$t2/.opencode/reviews/security-issue-1-final.md"
-touch -d "2026-09-09 10:00:00" "$t2/.opencode/reviews/security-issue-1-final.md"
+} > "$t2/.codex/reviews/security-issue-1-final.md"
+touch -d "2026-09-09 10:00:00" "$t2/.codex/reviews/security-issue-1-final.md"
 seed_test_cache "$t2" || { t_fail "t02: seeding test cache"; t_finish; exit 1; }
 
 rc=$(run_check "$t2" 1)
@@ -156,7 +156,7 @@ make_issue "$t3"
 {
   printf '# Security Review — git-cred-cache (issue 209 scope)\n\n'
   printf '**Verdict: REFUSED** — credential cache design needs rework\n\n'
-} > "$t3/.opencode/reviews/security-git-cred-cache-20260909.md"
+} > "$t3/.codex/reviews/security-git-cred-cache-20260909.md"
 seed_test_cache "$t3" || { t_fail "t03: seeding test cache"; t_finish; exit 1; }
 
 rc=$(run_check "$t3" 1)
@@ -177,8 +177,8 @@ rm -f "$t4/requirements.txt"   # drop the runner marker -> no test surface
 {
   printf '# Security Review — issue 1\n\n'
   printf '**Verdict: APPROVED** — no findings\n\n'
-} > "$t4/.opencode/reviews/security-issue-1-approved.md"
-touch -d "2026-09-09 10:00:00" "$t4/.opencode/reviews/security-issue-1-approved.md"
+} > "$t4/.codex/reviews/security-issue-1-approved.md"
+touch -d "2026-09-09 10:00:00" "$t4/.codex/reviews/security-issue-1-approved.md"
 # NOTE: no seed_test_cache — the gate must pass WITHOUT any cache
 
 rc=$(run_check "$t4" 1)

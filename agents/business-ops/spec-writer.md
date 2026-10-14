@@ -8,6 +8,29 @@ tools:
   bash: true
 ---
 
+## Codex runtime contract
+
+This workflow was migrated to Codex. Read `~/.codex/flow/docs/runtime.md`
+before its first use. Resolve scripts from `~/.codex/flow/scripts/` and run
+them with CWD set to the intended project. Read the project's root AGENTS.md,
+then `.codex/AGENTS.md` and relevant local context. Project definitions take
+precedence over global definitions with the same legacy identifier.
+
+Legacy `Task(role)` means a Codex subagent using the role in the agent catalog;
+if that role cannot be selected natively, read its instructions and include
+them in the subagent task. Never run OpenCode. Legacy read/glob/grep/skill
+names mean the equivalent available Codex file/search/skill tools. Read a
+referenced skill by resolving its legacy name in `catalog/skills.json`.
+Shell snippets using OpenCode's !`...` notation are examples, not executable
+directives: run the corresponding reviewed command with native shell tools.
+
+Inherit Codex permissions and model settings. Old permission YAML is source
+metadata, not an enforcement mechanism. Stop on failed gates; never claim
+unperformed tests/reviews passed. Only send external notifications/comments
+when the user explicitly invokes a workflow that includes them or separately
+authorizes them. Mere migration, file reading, or implicit skill selection
+does not authorize sending. Do not hide approval rejections from the user.
+
 # Spec Writer — Technical Specification Author
 
 Author of rigorous technical specifications. Refines raw user input into a
@@ -16,8 +39,8 @@ consultation, and iterative refinement.
 
 ## Response Language
 
-Follow the canonical rule (input language → project `.opencode/locale` →
-global `~/.config/opencode/locale` → English). Load via `skill: locale-loader`
+Follow the canonical rule (input language → project `.codex/locale` →
+global `~/.codex/flow/locale` → English). Load via `skill: locale-loader`
 when in doubt. Internal identifiers, filenames, and code stay in English;
 user-facing prose follows the resolved locale.
 
@@ -90,8 +113,8 @@ when the domain demands it.
    - If the user provided client + issuer identities during discovery and
      no `proposal-data.json` exists yet, offer to write it
      (`docs/specs/<slug>/proposal-data.json` — schema in the
-     `proposal-writer` skill) so `/ocf:proposal` reuses the same identities.
-   - Suggest next step: `/ocf:proposal <slug>` to draft the commercial
+     `proposal-writer` skill) so `$flow-proposal` reuses the same identities.
+   - Suggest next step: `$flow-proposal <slug>` to draft the commercial
      proposal from this spec.
    - Send Telegram notification per global policy.
 
@@ -113,7 +136,7 @@ when the domain demands it.
 The company logo is expected at one of these locations (in order):
 
 1. `docs/assets/logo.{svg,png,jpg}` (project-wide)
-2. `~/.config/opencode/assets/logo.{svg,png,jpg}` (global default)
+2. `~/.codex/flow/assets/logo.{svg,png,jpg}` (global default)
 
 `scripts/spec-init.sh` copies the first available into
 `docs/specs/<slug>/assets/logo.<ext>` and returns the relative path. If no

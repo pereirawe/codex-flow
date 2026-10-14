@@ -559,11 +559,11 @@ fi
 OPT_CMD_218="$SCRIPT_DIR/../../commands/ocf:cv-optimize.md"
 if [[ -f "$OPT_CMD_218" ]]; then
   assert_contains "$OPT_CMD_218" "detected domain(s)" \
-    "ocf:cv-optimize command documents the detected-domain analysis step (BR 7)"
+    "\$flow-cv-optimize command documents the detected-domain analysis step (BR 7)"
   assert_contains "$OPT_CMD_218" "domain-relative" \
-    "ocf:cv-optimize command documents the domain-relative criteria (BR 2)"
+    "\$flow-cv-optimize command documents the domain-relative criteria (BR 2)"
 else
-  t_fail "ocf:cv-optimize command missing at $OPT_CMD_218"
+  t_fail "\$flow-cv-optimize command missing at $OPT_CMD_218"
 fi
 
 # --- cv-cover-letter contract (issue #66) ---
@@ -613,13 +613,13 @@ fi
 CL_CMD="$SCRIPT_DIR/../../commands/ocf:cv-cover-letter.md"
 if [[ -f "$CL_CMD" ]]; then
   assert_contains "$CL_CMD" "templates/resume.html" \
-    "ocf:cv-cover-letter command references the reference template"
+    "\$flow-cv-cover-letter command references the reference template"
   assert_contains "$CL_CMD" "standards/cv-design.md" \
-    "ocf:cv-cover-letter command mandates standards/cv-design.md"
+    "\$flow-cv-cover-letter command mandates standards/cv-design.md"
   assert_contains "$CL_CMD" "carta-apresentacao.pdf" \
-    "ocf:cv-cover-letter command documents the PDF output path"
+    "\$flow-cv-cover-letter command documents the PDF output path"
 else
-  t_fail "ocf:cv-cover-letter command missing at $CL_CMD"
+  t_fail "\$flow-cv-cover-letter command missing at $CL_CMD"
 fi
 
 # opencode.json registers the command and the skill allow (BR 12 / AC 4)
@@ -628,10 +628,10 @@ if [[ -f "$OP_CONFIG" ]]; then
   python3 - "$OP_CONFIG" <<'PYEOF' || t_fail "opencode.json cv-cover-letter registration invalid"
 import json, sys
 cfg = json.load(open(sys.argv[1]))
-assert "ocf:cv-cover-letter" in cfg.get("command", {}), "command ocf:cv-cover-letter not registered"
+assert "\$flow-cv-cover-letter" in cfg.get("command", {}), "command \$flow-cv-cover-letter not registered"
 assert cfg["permission"]["skill"].get("cv-cover-letter") == "allow", "skill cv-cover-letter not allow"
 PYEOF
-  t_ok "opencode.json registers ocf:cv-cover-letter command + skill allow"
+  t_ok "opencode.json registers \$flow-cv-cover-letter command + skill allow"
 else
   t_fail "opencode.json missing at $OP_CONFIG"
 fi
@@ -686,11 +686,11 @@ fi
 LI_CMD="$SCRIPT_DIR/../../commands/ocf:cv-linkedin.md"
 if [[ -f "$LI_CMD" ]]; then
   assert_contains "$LI_CMD" "linkedin-optimization.md" \
-    "ocf:cv-linkedin command documents the linkedin-optimization.md output"
+    "\$flow-cv-linkedin command documents the linkedin-optimization.md output"
   assert_contains "$LI_CMD" "standards/cv-analysis.md" \
-    "ocf:cv-linkedin command references standards/cv-analysis.md (BR 12)"
+    "\$flow-cv-linkedin command references standards/cv-analysis.md (BR 12)"
 else
-  t_fail "ocf:cv-linkedin command missing at $LI_CMD"
+  t_fail "\$flow-cv-linkedin command missing at $LI_CMD"
 fi
 
 # opencode.json registers the command and the skill allow (BR 11 / AC 4)
@@ -698,10 +698,10 @@ if [[ -f "$OP_CONFIG" ]]; then
   python3 - "$OP_CONFIG" <<'PYEOF' || t_fail "opencode.json cv-linkedin registration invalid"
 import json, sys
 cfg = json.load(open(sys.argv[1]))
-assert "ocf:cv-linkedin" in cfg.get("command", {}), "command ocf:cv-linkedin not registered"
+assert "\$flow-cv-linkedin" in cfg.get("command", {}), "command \$flow-cv-linkedin not registered"
 assert cfg["permission"]["skill"].get("cv-linkedin") == "allow", "skill cv-linkedin not allow"
 PYEOF
-  t_ok "opencode.json registers ocf:cv-linkedin command + skill allow"
+  t_ok "opencode.json registers \$flow-cv-linkedin command + skill allow"
 else
   t_fail "opencode.json missing at $OP_CONFIG"
 fi
@@ -777,13 +777,13 @@ fi
 IP_CMD="$SCRIPT_DIR/../../commands/ocf:cv-interview-prep.md"
 if [[ -f "$IP_CMD" ]]; then
   assert_contains "$IP_CMD" "interview-preparation.md" \
-    "ocf:cv-interview-prep command documents the interview-preparation.md output"
+    "\$flow-cv-interview-prep command documents the interview-preparation.md output"
   assert_contains "$IP_CMD" "standards/cv-analysis.md" \
-    "ocf:cv-interview-prep command references standards/cv-analysis.md (BR 11)"
+    "\$flow-cv-interview-prep command references standards/cv-analysis.md (BR 11)"
   assert_contains "$IP_CMD" "<candidate-directory> <job>" \
-    "ocf:cv-interview-prep command documents the <candidate-directory> <job> signature (BR 1)"
+    "\$flow-cv-interview-prep command documents the <candidate-directory> <job> signature (BR 1)"
 else
-  t_fail "ocf:cv-interview-prep command missing at $IP_CMD"
+  t_fail "\$flow-cv-interview-prep command missing at $IP_CMD"
 fi
 
 # opencode.json registers the command and the skill allow (BR 10 / AC 4)
@@ -791,10 +791,10 @@ if [[ -f "$OP_CONFIG" ]]; then
   python3 - "$OP_CONFIG" <<'PYEOF' || t_fail "opencode.json cv-interview-prep registration invalid"
 import json, sys
 cfg = json.load(open(sys.argv[1]))
-assert "ocf:cv-interview-prep" in cfg.get("command", {}), "command ocf:cv-interview-prep not registered"
+assert "\$flow-cv-interview-prep" in cfg.get("command", {}), "command \$flow-cv-interview-prep not registered"
 assert cfg["permission"]["skill"].get("cv-interview-prep") == "allow", "skill cv-interview-prep not allow"
 PYEOF
-  t_ok "opencode.json registers ocf:cv-interview-prep command + skill allow"
+  t_ok "opencode.json registers \$flow-cv-interview-prep command + skill allow"
 else
   t_fail "opencode.json missing at $OP_CONFIG"
 fi
@@ -882,15 +882,15 @@ fi
 ATS_CMD="$SCRIPT_DIR/../../commands/ocf:cv-ats-score.md"
 if [[ -f "$ATS_CMD" ]]; then
   assert_contains "$ATS_CMD" "ats-score.md" \
-    "ocf:cv-ats-score command documents the ats-score.md output"
+    "\$flow-cv-ats-score command documents the ats-score.md output"
   assert_contains "$ATS_CMD" "standards/cv-analysis.md" \
-    "ocf:cv-ats-score command references standards/cv-analysis.md (BR 10)"
+    "\$flow-cv-ats-score command references standards/cv-analysis.md (BR 10)"
   assert_contains "$ATS_CMD" "<candidate-directory> <job-slug>" \
-    "ocf:cv-ats-score command documents the <candidate-directory> <job-slug> signature (BR 1)"
+    "\$flow-cv-ats-score command documents the <candidate-directory> <job-slug> signature (BR 1)"
   assert_contains "$ATS_CMD" "40%" \
-    "ocf:cv-ats-score command documents the 40/30/30 breakdown (BR 4)"
+    "\$flow-cv-ats-score command documents the 40/30/30 breakdown (BR 4)"
 else
-  t_fail "ocf:cv-ats-score command missing at $ATS_CMD"
+  t_fail "\$flow-cv-ats-score command missing at $ATS_CMD"
 fi
 
 # opencode.json registers the command and the skill allow (BR 6/7 / AC 4)
@@ -898,10 +898,10 @@ if [[ -f "$OP_CONFIG" ]]; then
   python3 - "$OP_CONFIG" <<'PYEOF' || t_fail "opencode.json cv-ats-score registration invalid"
 import json, sys
 cfg = json.load(open(sys.argv[1]))
-assert "ocf:cv-ats-score" in cfg.get("command", {}), "command ocf:cv-ats-score not registered"
+assert "\$flow-cv-ats-score" in cfg.get("command", {}), "command \$flow-cv-ats-score not registered"
 assert cfg["permission"]["skill"].get("cv-ats-score") == "allow", "skill cv-ats-score not allow"
 PYEOF
-  t_ok "opencode.json registers ocf:cv-ats-score command + skill allow"
+  t_ok "opencode.json registers \$flow-cv-ats-score command + skill allow"
 else
   t_fail "opencode.json missing at $OP_CONFIG"
 fi
@@ -1143,10 +1143,10 @@ else
 fi
 
 if [[ -f "$TAILOR_CMD" ]]; then
-  assert_contains "$TAILOR_CMD" "templates/resume.html" "ocf:cv-tailor command references the reference template"
-  assert_contains "$TAILOR_CMD" "standards/cv-design.md" "ocf:cv-tailor command mandates standards/cv-design.md"
+  assert_contains "$TAILOR_CMD" "templates/resume.html" "\$flow-cv-tailor command references the reference template"
+  assert_contains "$TAILOR_CMD" "standards/cv-design.md" "\$flow-cv-tailor command mandates standards/cv-design.md"
 else
-  t_fail "ocf:cv-tailor command missing at $TAILOR_CMD"
+  t_fail "\$flow-cv-tailor command missing at $TAILOR_CMD"
 fi
 
 # 5. Design standard exists with testable ATS/print/page rules (AC 1)
@@ -1166,40 +1166,40 @@ EXTRACTOR_AGENT="$SCRIPT_DIR/../../agents/career/cv-extractor.md"
 # 1. Command exists with the <candidate-directory> signature (BR 1 / AC 1)
 if [[ -f "$HUB_UPDATE_CMD" ]]; then
   # command docs use the "## /ocf:... " title + --- description frontmatter --- pattern
-  grep -q '^## /ocf:cv-hub-update <candidate-directory>$' "$HUB_UPDATE_CMD" \
-    && t_ok "ocf:cv-hub-update command title carries the <candidate-directory> signature (BR 1)" \
-    || t_fail "ocf:cv-hub-update command title missing the <candidate-directory> signature (BR 1)"
+  grep -q '^## \$flow-cv-hub-update <candidate-directory>$' "$HUB_UPDATE_CMD" \
+    && t_ok "\$flow-cv-hub-update command title carries the <candidate-directory> signature (BR 1)" \
+    || t_fail "\$flow-cv-hub-update command title missing the <candidate-directory> signature (BR 1)"
   grep -q '^description: ' "$HUB_UPDATE_CMD" \
-    && t_ok "ocf:cv-hub-update command has a description frontmatter field" \
-    || t_fail "ocf:cv-hub-update command missing the description frontmatter field"
+    && t_ok "\$flow-cv-hub-update command has a description frontmatter field" \
+    || t_fail "\$flow-cv-hub-update command missing the description frontmatter field"
   # never recreates the hub (BR 1) and never builds when hub.json is missing (BR 5 / AC 7)
   assert_contains "$HUB_UPDATE_CMD" "NEVER recreates" \
-    "ocf:cv-hub-update command forbids recreating hub.json from scratch (BR 1)"
-  assert_contains "$HUB_UPDATE_CMD" "run \`/ocf:cv-hub\` first" \
-    "ocf:cv-hub-update command tells the user to run ocf:cv-hub first when hub.json is missing (BR 5 / AC 7)"
+    "\$flow-cv-hub-update command forbids recreating hub.json from scratch (BR 1)"
+  assert_contains "$HUB_UPDATE_CMD" "run \`\$flow-cv-hub\` first" \
+    "\$flow-cv-hub-update command tells the user to run \$flow-cv-hub first when hub.json is missing (BR 5 / AC 7)"
   # accepted input forms (BR 2 / AC 2)
   assert_contains "$HUB_UPDATE_CMD" "Pasted text" \
-    "ocf:cv-hub-update command accepts pasted text (BR 2)"
+    "\$flow-cv-hub-update command accepts pasted text (BR 2)"
   assert_contains "$HUB_UPDATE_CMD" "New PDF" \
-    "ocf:cv-hub-update command accepts a new PDF (BR 2)"
+    "\$flow-cv-hub-update command accepts a new PDF (BR 2)"
   assert_contains "$HUB_UPDATE_CMD" "New file" \
-    "ocf:cv-hub-update command accepts a new file (BR 2)"
+    "\$flow-cv-hub-update command accepts a new file (BR 2)"
   assert_contains "$HUB_UPDATE_CMD" "Manual key-value edits" \
-    "ocf:cv-hub-update command accepts manual key-value edits (BR 2)"
+    "\$flow-cv-hub-update command accepts manual key-value edits (BR 2)"
   # validate + README regeneration (BR 4 / AC 6) and diff/summary (BR 10 / AC 8)
   assert_contains "$HUB_UPDATE_CMD" "validate.py" \
-    "ocf:cv-hub-update command re-validates with validate.py (BR 4 / AC 6)"
+    "\$flow-cv-hub-update command re-validates with validate.py (BR 4 / AC 6)"
   assert_contains "$HUB_UPDATE_CMD" "Regenerate \`README.md\`" \
-    "ocf:cv-hub-update command regenerates README.md (BR 4 / AC 6)"
+    "\$flow-cv-hub-update command regenerates README.md (BR 4 / AC 6)"
   assert_contains "$HUB_UPDATE_CMD" "diff/summary" \
-    "ocf:cv-hub-update command reports a diff/summary of changes (BR 10 / AC 8)"
+    "\$flow-cv-hub-update command reports a diff/summary of changes (BR 10 / AC 8)"
   # agent invocation + update mode (BR 8 / AC 9)
   assert_contains "$HUB_UPDATE_CMD" "career/cv-extractor" \
-    "ocf:cv-hub-update command invokes the career/cv-extractor subagent (BR 8)"
+    "\$flow-cv-hub-update command invokes the career/cv-extractor subagent (BR 8)"
   assert_contains "$HUB_UPDATE_CMD" "update-mode" \
-    "ocf:cv-hub-update command passes the update-mode instruction to the agent"
+    "\$flow-cv-hub-update command passes the update-mode instruction to the agent"
 else
-  t_fail "ocf:cv-hub-update command missing at $HUB_UPDATE_CMD"
+  t_fail "\$flow-cv-hub-update command missing at $HUB_UPDATE_CMD"
 fi
 
 # 2. The cv-hub skill EXTENDS (not replaces) the build flow with update mode (BR 9)
@@ -1263,16 +1263,16 @@ if [[ -f "$OP_CONFIG" ]]; then
   python3 - "$OP_CONFIG" <<'PYEOF' || t_fail "opencode.json cv-hub-update registration invalid"
 import json, sys
 cfg = json.load(open(sys.argv[1]))
-assert "ocf:cv-hub-update" in cfg.get("command", {}), "command ocf:cv-hub-update not registered"
+assert "\$flow-cv-hub-update" in cfg.get("command", {}), "command \$flow-cv-hub-update not registered"
 assert cfg["permission"]["skill"].get("cv-hub") == "allow", "skill cv-hub not allow"
-assert "career/cv-extractor" in cfg["command"]["ocf:cv-hub-update"]["template"], \
+assert "career/cv-extractor" in cfg["command"]["\$flow-cv-hub-update"]["template"], \
     "cv-hub-update template does not invoke the cv-extractor agent"
-assert "validate.py" in cfg["command"]["ocf:cv-hub-update"]["template"], \
+assert "validate.py" in cfg["command"]["\$flow-cv-hub-update"]["template"], \
     "cv-hub-update template does not mandate validate.py"
-assert "update-mode" in cfg["command"]["ocf:cv-hub-update"]["template"], \
+assert "update-mode" in cfg["command"]["\$flow-cv-hub-update"]["template"], \
     "cv-hub-update template does not pass the update-mode instruction"
 PYEOF
-  t_ok "opencode.json registers ocf:cv-hub-update command + cv-hub skill allow"
+  t_ok "opencode.json registers \$flow-cv-hub-update command + cv-hub skill allow"
 else
   t_fail "opencode.json missing at $OP_CONFIG"
 fi
@@ -1342,13 +1342,13 @@ fi
 
 if [[ -f "$TAILOR_CMD" ]]; then
   assert_contains "$TAILOR_CMD" "match percentage" \
-    "ocf:cv-tailor command documents the match percentage (BR 1)"
+    "\$flow-cv-tailor command documents the match percentage (BR 1)"
   assert_contains "$TAILOR_CMD" "keyword density map" \
-    "ocf:cv-tailor command documents the keyword density map (BR 2)"
+    "\$flow-cv-tailor command documents the keyword density map (BR 2)"
   assert_contains "$TAILOR_CMD" "coverage summary" \
-    "ocf:cv-tailor command documents the coverage summary (BR 3)"
+    "\$flow-cv-tailor command documents the coverage summary (BR 3)"
 else
-  t_fail "ocf:cv-tailor command missing at $TAILOR_CMD"
+  t_fail "\$flow-cv-tailor command missing at $TAILOR_CMD"
 fi
 
 # fixture: gap-analysis.md with the match-percentage table must follow the
@@ -1499,7 +1499,7 @@ assert_contains "$TAILOR_SKILL" "note the limitation" \
 assert_contains "$TAILOR_AGENT" "invent counts: if no text source" \
   "cv-tailor agent forbids inventing counts"
 assert_contains "$TAILOR_CMD" "Never invent counts" \
-  "ocf:cv-tailor command forbids inventing counts"
+  "\$flow-cv-tailor command forbids inventing counts"
 
 # F6 — row-ordering rules are documented in the standard
 assert_contains "$CV_ANALYSIS_STD" "Rows are ordered by" \
@@ -1522,9 +1522,9 @@ if [[ -f "$CAREER_README" ]]; then
     assert_contains "$CAREER_README" "$agent" \
       "agents/career/README.md lists the $agent agent (BR 3)"
   done
-  for cmd in ocf:cv-hub ocf:cv-hub-update ocf:cv-optimize ocf:cv-tailor \
-             ocf:cv-cover-letter ocf:cv-linkedin ocf:cv-interview-prep \
-             ocf:cv-ats-score; do
+  for cmd in \$flow-cv-hub \$flow-cv-hub-update \$flow-cv-optimize \$flow-cv-tailor \
+             \$flow-cv-cover-letter \$flow-cv-linkedin \$flow-cv-interview-prep \
+             \$flow-cv-ats-score; do
     assert_contains "$CAREER_README" "$cmd" \
       "agents/career/README.md documents the $cmd command (BR 3)"
   done
@@ -1554,15 +1554,15 @@ assert_not_contains "$TAILOR_AGENT" '"curl -L*": allow' \
 assert_not_contains "$TAILOR_AGENT" "curl" \
   "cv-tailor agent has no curl/URL-fetching instructions (BR 5)"
 assert_not_contains "$TAILOR_CMD" "curl" \
-  "ocf:cv-tailor command has no curl/URL-fetching instructions (BR 5)"
+  "\$flow-cv-tailor command has no curl/URL-fetching instructions (BR 5)"
 if [[ -f "$OP_CONFIG" ]]; then
-  python3 - "$OP_CONFIG" <<'PYEOF' || t_fail "ocf:cv-tailor template still references curl (BR 5)"
+  python3 - "$OP_CONFIG" <<'PYEOF' || t_fail "\$flow-cv-tailor template still references curl (BR 5)"
 import json, sys
 cfg = json.load(open(sys.argv[1]))
-template = cfg["command"]["ocf:cv-tailor"]["template"]
-assert "curl" not in template, "ocf:cv-tailor template must not mention curl"
+template = cfg["command"]["\$flow-cv-tailor"]["template"]
+assert "curl" not in template, "\$flow-cv-tailor template must not mention curl"
 PYEOF
-  t_ok "ocf:cv-tailor command template has no curl instructions (BR 5)"
+  t_ok "\$flow-cv-tailor command template has no curl instructions (BR 5)"
 else
   t_fail "opencode.json missing at $OP_CONFIG"
 fi
@@ -1779,9 +1779,9 @@ if [[ -f "$TAILOR_AGENT" ]]; then
   assert_contains "$TAILOR_AGENT" "Quantified achievements" "cv-tailor agent prioritizes quantified achievements"
 fi
 if [[ -f "$TAILOR_CMD" ]]; then
-  assert_contains "$TAILOR_CMD" "Application gate" "ocf:cv-tailor command documents the application gate"
-  assert_contains "$TAILOR_CMD" "feedback.md" "ocf:cv-tailor command documents feedback.md"
-  assert_contains "$TAILOR_CMD" "quantified achievements" "ocf:cv-tailor command prioritizes quantified achievements"
+  assert_contains "$TAILOR_CMD" "Application gate" "\$flow-cv-tailor command documents the application gate"
+  assert_contains "$TAILOR_CMD" "feedback.md" "\$flow-cv-tailor command documents feedback.md"
+  assert_contains "$TAILOR_CMD" "quantified achievements" "\$flow-cv-tailor command prioritizes quantified achievements"
 fi
 
 # 5. cv-cover-letter skill/agent/command document the same gate
@@ -1798,9 +1798,9 @@ if [[ -f "$CL_AGENT" ]]; then
   assert_contains "$CL_AGENT" "quantified achievements" "cv-cover-letter agent prefers quantified achievements"
 fi
 if [[ -f "$CL_CMD" ]]; then
-  assert_contains "$CL_CMD" "Application gate" "ocf:cv-cover-letter command documents the application gate"
-  assert_contains "$CL_CMD" "feedback.md" "ocf:cv-cover-letter command documents feedback.md"
-  assert_contains "$CL_CMD" "quantified achievements" "ocf:cv-cover-letter command prefers quantified achievements"
+  assert_contains "$CL_CMD" "Application gate" "\$flow-cv-cover-letter command documents the application gate"
+  assert_contains "$CL_CMD" "feedback.md" "\$flow-cv-cover-letter command documents feedback.md"
+  assert_contains "$CL_CMD" "quantified achievements" "\$flow-cv-cover-letter command prefers quantified achievements"
 fi
 
 # 6. standards/cv-analysis.md documents the feedback report (§3.5) + gate protocol
@@ -2256,9 +2256,9 @@ fi
 
 if [[ -f "$TAILOR_CMD" ]]; then
   assert_contains "$TAILOR_CMD" "<FirstName> <LastName> - <JobTitle>.pdf" \
-    "ocf:cv-tailor command documents the commercial PDF name (BR 1)"
+    "\$flow-cv-tailor command documents the commercial PDF name (BR 1)"
 else
-  t_fail "ocf:cv-tailor command missing at $TAILOR_CMD"
+  t_fail "\$flow-cv-tailor command missing at $TAILOR_CMD"
 fi
 
 # BR 5 — cv-ats-score locates the resume PDF by the new pattern (never by the

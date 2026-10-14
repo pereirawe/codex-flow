@@ -1,4 +1,4 @@
-## /ocf:cv-hub <candidate-directory>
+## $flow-cv-hub <candidate-directory>
 
 ---
 description: Build the candidate's resume hub — extract CV PDF + official LinkedIn export + extras into hub.json (AI canonical schema) + README.md
@@ -7,7 +7,7 @@ description: Build the candidate's resume hub — extract CV PDF + official Link
 Builds a candidate's data hub from the CV in PDF (required), the official
 LinkedIn export (optional) and complementary files (optional). The hub
 (`hub.json` + `README.md`) is the source of truth for generating tailored
-resumes via `/ocf:cv-tailor`.
+resumes via `$flow-cv-tailor`.
 
 ### Official LinkedIn flow (only accepted way)
 
@@ -22,7 +22,7 @@ and it violates the terms. Only the official export is accepted.
 ### Usage
 
 ```
-/ocf:cv-hub ~/career/maria-silva
+$flow-cv-hub ~/career/maria-silva
 ```
 
 - If the directory does not exist, create the structure:
@@ -42,7 +42,7 @@ and it violates the terms. Only the official export is accepted.
    `hub.json` (canonical schema) and generates `README.md`.
 4. **Validate** — `python3 $SCRIPTS_DIR/cv/validate.py hub.json`; fix until exit 0.
 5. **Report** — `hub.json` path, whether validation passed, and a summary of
-   the populated sections. Tell the user the next step is `/ocf:cv-tailor`.
+   the populated sections. Tell the user the next step is `$flow-cv-tailor`.
 
 ### Rules
 

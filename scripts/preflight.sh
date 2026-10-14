@@ -5,7 +5,7 @@ source "$(dirname "$0")/config.sh"
 # Usage: preflight.sh <local_issue_id>
 #
 # Cheap mechanical warm-up for an issue BEFORE it is developed. Produces a
-# structured notes file (.opencode/preflight/issue-<id>.md) so the Developer
+# structured notes file (.codex/preflight/issue-<id>.md) so the Developer
 # agent can skip re-exploration and start implementing sooner — shortening the
 # development cycle (see develop-full "warm next issue" step).
 #

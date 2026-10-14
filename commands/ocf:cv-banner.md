@@ -1,11 +1,11 @@
-## /ocf:cv-banner <candidate-directory> [<direção>]
+## $flow-cv-banner <candidate-directory> [<direção>]
 
 ---
 description: Generate the LinkedIn profile banner of the candidate (4:1, 1584×396) with an image model (each::sense via the vendored poster-design-generation skill or scripts/cv/banner-gen.sh — EACHLABS_API_KEY required) from the REAL hub.json content (phone/email/socials/short impact phrase) and an art-director visual direction that RESPECTS the profile-photo safe zone (bottom-left ≈ left 500px × bottom 260px) and mobile center-crop legibility; outputs land in ~/career/<candidate>/linkedin/banner/ (final PNG + spec md/json + desktop/mobile previews) with a text gate (up to 2 retries) and a deterministic crisp-text overlay fallback; nothing is published — the user uploads manually
 ---
 
 Gera o **banner do perfil LinkedIn** do candidato a partir do `hub.json`
-(construído com `/ocf:cv-hub`): imagem 4:1 (**1584×396**) com **telefone,
+(construído com `$flow-cv-hub`): imagem 4:1 (**1584×396**) com **telefone,
 e-mail, redes sociais** presentes no hub e uma **frase de impacto curta**
 destilada do perfil (~30 palavras do summary → frase legível), dispostos como
 um footer na faixa central/direita — **fora da zona da foto de perfil**
@@ -21,7 +21,7 @@ publicado** — o usuário faz o upload manual no LinkedIn.
 ### Prerequisite
 
 Candidato com `hub.json` válido em `~/career/<candidate-name>/hub.json`. Se
-não existir, rodar `/ocf:cv-hub` primeiro.
+não existir, rodar `$flow-cv-hub` primeiro.
 
 A geração real exige a **`EACHLABS_API_KEY`** (env/secret local, nunca
 commitada). Sem a key o fluxo falha com mensagem clara e não produz arquivos
@@ -31,8 +31,8 @@ commitada). Sem a key o fluxo falha com mensagem clara e não produz arquivos
 ### Usage
 
 ```
-/ocf:cv-banner ~/career/maria-silva
-/ocf:cv-banner ~/career/maria-silva "cores escuras com azul elétrico, vibe tech"
+$flow-cv-banner ~/career/maria-silva
+$flow-cv-banner ~/career/maria-silva "cores escuras com azul elétrico, vibe tech"
 ```
 
 A `<direção>` é opcional: uma preferência visual do usuário que o
@@ -42,7 +42,7 @@ perfil.
 ### Flow
 
 1. **Validate hub** — `python3 $SCRIPTS_DIR/cv/validate.py hub.json` (exit 0
-   obrigatório); hub ausente/inválido → pedir `/ocf:cv-hub` primeiro.
+   obrigatório); hub ausente/inválido → pedir `$flow-cv-hub` primeiro.
 2. **Conteúdo** — ler `hub.profile_objective` (type/target_role), `summary`
    e os contatos (`personal_info.phone/email`, `personal_info.linkedin/
    github/site`, `links[]`). Definir com o usuário quais contatos exibir

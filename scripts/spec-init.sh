@@ -11,7 +11,7 @@
 #
 # Logo resolution order:
 #   1) $PWD/docs/assets/logo.{svg,png,jpg,jpeg,webp}
-#   2) ~/.config/opencode/assets/logo.{svg,png,jpg,jpeg,webp}
+#   2) ~/.codex/flow/assets/logo.{svg,png,jpg,jpeg,webp}
 #
 # If no logo is found, writes a placeholder text file and exits 0 with a
 # warning — the agent decides how to proceed.
@@ -38,7 +38,7 @@ mkdir -p "$ASSETS_DIR"
 
 find_logo() {
   local base
-  for base in "docs/assets" "$HOME/.config/opencode/assets"; do
+  for base in "docs/assets" "$HOME/.codex/flow/assets"; do
     for ext in svg png jpg jpeg webp; do
       if [[ -f "$base/logo.$ext" ]]; then
         echo "$base/logo.$ext"
@@ -61,7 +61,7 @@ else
 No logo was found. Place your company logo at one of:
 
   docs/assets/logo.{svg,png,jpg,jpeg,webp}
-  ~/.config/opencode/assets/logo.{svg,png,jpg,jpeg,webp}
+  ~/.codex/flow/assets/logo.{svg,png,jpg,jpeg,webp}
 
 Then re-run: scripts/spec-init.sh ${SLUG_CLEAN}
 EOF

@@ -1,11 +1,11 @@
 # Padrão de Ambiente de Testes (test-env)
 
 Ambiente de testes versionado e verificado para o pipeline: `.nvmrc`,
-`.node-version` e `.opencode/env-manifest.md` fixam e validam as versões de
+`.node-version` e `.codex/env-manifest.md` fixam e validam as versões de
 Node/Python/test-runner usadas para executar a suíte. Aplica-se a todo projeto
-que usa `scripts/test-runner.sh` e ao bootstrap de `scripts/init.sh`.
+que usa `scripts/test-runner.sh` e ao bootstrap de `scripts$flow-init.sh`.
 
-## Formato do manifest (`.opencode/env-manifest.md`)
+## Formato do manifest (`.codex/env-manifest.md`)
 
 O manifest é uma **instância de projeto, committeada**. DEVE conter uma seção
 STRICTA machine-parseable além da prosa com o procedimento de bootstrap. A
@@ -83,6 +83,6 @@ pipeline nunca re-perguntem qual versão executou a suíte.
 
 ## Fingerprint
 
-`.nvmrc`, `.node-version` e `.opencode/env-manifest.md` são **excluídos do
+`.nvmrc`, `.node-version` e `.codex/env-manifest.md` são **excluídos do
 fingerprint**: alterar metadados de ambiente nunca invalida o cache de
 resultados — só mudanças de código/testes invalidam.

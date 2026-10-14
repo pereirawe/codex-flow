@@ -1,7 +1,42 @@
 ---
-name: cv-linkedin-banner
-description: Generate the LinkedIn profile banner of the candidate (4:1, 1584×396) with an external image model (each::sense via the vendored poster-design-generation skill / scripts/cv/banner-gen.sh, EACHLABS_API_KEY) from the REAL hub.json data and an art-director visual direction — phone, email, social links and a short impact phrase derived from the profile, laid out as a footer while RESPECTING the profile-photo safe zone (bottom-left guard ≈ left 500px × bottom 260px on desktop) and staying legible in the mobile center-crop. Outputs land in ~/career/<candidate>/linkedin/banner/ (final PNG + spec md/json + desktop/mobile crop previews); nothing is published — the user uploads manually. AI text is gated (up to 2 retries) with a deterministic crisp-text overlay fallback that guarantees correct phone/email/handle. Use when you need to create a LinkedIn cover banner for a candidate (command ocf:cv-banner; "banner do LinkedIn", "banner do perfil", "capa do linkedin" also trigger this skill). Career sector.
+name: cf-cv-linkedin-banner
+description: Generate the LinkedIn profile banner of the candidate (4:1, 1584×396)
+  with an external image model (each::sense via the vendored poster-design-generation
+  skill / scripts/cv/banner-gen.sh, EACHLABS_API_KEY) from the REAL hub.json data
+  and an art-director visual direction — phone, email, social links and a short impact
+  phrase derived from the profile, laid out as a footer while RESPECTING the profile-photo
+  safe zone (bottom-left guard ≈ left 500px × bottom 260px on desktop) and staying
+  legible in the mobile center-crop. Outputs land in ~/career/<candidate>/linkedin/banner/
+  (final PNG + spec md/json + desktop/mobile crop previews); nothing is published
+  — the user uploads manually. AI text is gated (up to 2 retries) with a deterministic
+  crisp-text overlay fallback that guarantees correct phone/email/handle. Use when
+  you need to create a LinkedIn cover banner for a candidate (command $flow-cv-banner;
+  "banner do LinkedIn", "banner do perfil", "capa do linkedin" also trigger this skill).
+  Career sector.
 ---
+
+## Codex runtime contract
+
+This workflow was migrated to Codex. Read `~/.codex/flow/docs/runtime.md`
+before its first use. Resolve scripts from `~/.codex/flow/scripts/` and run
+them with CWD set to the intended project. Read the project's root AGENTS.md,
+then `.codex/AGENTS.md` and relevant local context. Project definitions take
+precedence over global definitions with the same legacy identifier.
+
+Legacy `Task(role)` means a Codex subagent using the role in the agent catalog;
+if that role cannot be selected natively, read its instructions and include
+them in the subagent task. Never run OpenCode. Legacy read/glob/grep/skill
+names mean the equivalent available Codex file/search/skill tools. Read a
+referenced skill by resolving its legacy name in `catalog/skills.json`.
+Shell snippets using OpenCode's !`...` notation are examples, not executable
+directives: run the corresponding reviewed command with native shell tools.
+
+Inherit Codex permissions and model settings. Old permission YAML is source
+metadata, not an enforcement mechanism. Stop on failed gates; never claim
+unperformed tests/reviews passed. Only send external notifications/comments
+when the user explicitly invokes a workflow that includes them or separately
+authorizes them. Mere migration, file reading, or implicit skill selection
+does not authorize sending. Do not hide approval rejections from the user.
 
 # CV LinkedIn Banner — banner de perfil com direção de design + each::sense
 
@@ -29,7 +64,7 @@ LinkedIn; o fluxo entrega os arquivos prontos + previews de conferência.
 
 1. `hub.json` válido em `~/career/<candidate-name>/hub.json` — validar com
    `python3 $SCRIPTS_DIR/cv/validate.py` (exit 0 obrigatório). Sem hub → rodar
-   `/ocf:cv-hub` antes e parar.
+   `$flow-cv-hub` antes e parar.
 2. **`EACHLABS_API_KEY`** definida no ambiente/secret local (nunca em arquivo
    versionado). Verificação: `scripts/cv/banner-gen.sh --check`.
    Sem a key → **falha com mensagem clara** (exit != 0) e nenhum arquivo
@@ -138,7 +173,7 @@ usuário tiver uma referência visual diferente):
    consideradas e elemento-assinatura**. Para o banner, aproveitar os campos
    visuais; os campos de UI (component_vocabulary, motion etc.) não se
    aplicam — ignorá-los.
-3. **Direção opcional do usuário** (`/ocf:cv-banner <candidate-dir>
+3. **Direção opcional do usuário** (`$flow-cv-banner <candidate-dir>
    [direção]`): quando o usuário dá uma direção (ex.: "cores escuras com azul
    elétrico, vibe tech"), passá-la no brief como restrição e registrar a
    escolha no spec — a direção do art-director nunca contradiz uma restrição

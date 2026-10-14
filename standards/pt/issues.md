@@ -1,8 +1,8 @@
 # Rastreamento de Issues
 
 Rastreamento em dois níveis:
-- **Global**: `~/.config/opencode/known_issues.md` — issues de config do opencode
-- **Projeto**: `<projeto>/.opencode/known_issues.md` — issues específicas do projeto
+- **Global**: `~/.codex/flow/known_issues.md` — issues de config do opencode
+- **Projeto**: `<projeto>/.codex/known_issues.md` — issues específicas do projeto
 
 ## Formato de Entrada
 
@@ -37,7 +37,7 @@ Rastreamento em dois níveis:
 está habilitado (issue #48). É separado de `Remote:` (que continua exclusivo
 do provider git GitHub/GitLab). Preenchido por `scripts/sync-jira.sh` (via
 hooks em `create_issue.sh`/`promote.sh`/`close_issue.sh` ou o comando
-`ocf:sync-jira`); o sync é não-bloqueante e o `Status:` local sempre vence o
+`$flow-sync-jira`); o sync é não-bloqueante e o `Status:` local sempre vence o
 Jira.
 
 ### Timestamps (Opened / Ready / Started / In review / In QA / In publish / Resolved + Durations)

@@ -47,8 +47,8 @@ The discovery pipeline branches by `- Type:` (BR 1, 12, 13):
 - **`feat`** → the full 6-phase flow below, preserved unchanged.
 
 1. **PO** registers a prioritization proposal in the **project's**
-   `.opencode/prioritization.md`. If the project doesn't have this
-   file yet, create it. The global `~/.config/opencode/prioritization.md`
+   `.codex/prioritization.md`. If the project doesn't have this
+   file yet, create it. The global `~/.codex/flow/prioritization.md`
    is ONLY for opencode's own improvements — never write project proposals there.
    Include business value, target, rationale, proposed issue type, and known
    business rules.
@@ -189,7 +189,7 @@ the user.
 poll or check — it only acts when explicitly triggered by a merge notification.
 The user merges the MR manually.
 
-**Exception — `/ocf:develop-full` (end-to-end) and `/ocf:develop` (up to MR)**:
+**Exception — `$develop-full` (end-to-end) and `$develop` (up to MR)**:
 Both commands drive the pipeline **directly via scripts** — there is no
 orchestrator agent in the critical path. The engine is: `promote.sh` →
 `preflight.sh` → `detect-lang.sh` picks the
@@ -200,16 +200,16 @@ dev agent → developer implements + tests → **senior reviewers run in paralle
 Agents appear only where judgment is needed (developer, reviewers); everything
 mechanical is scripted, which is faster and cheaper.
 
-- `/ocf:develop-full`: end-to-end — after the MR, it **auto-merges**, checks out
+- `$develop-full`: end-to-end — after the MR, it **auto-merges**, checks out
   the updated base branch, and closes/archives the issue, then sends ONE
   Telegram notification.
-- `/ocf:develop`: manual-merge variant — runs the same engine UP TO MR creation
+- `$develop`: manual-merge variant — runs the same engine UP TO MR creation
   and STOPS. The MR is left OPEN; the issue stays `in-publish`. Closing/archiving
-  is delegated to `ocf:check-pr` / the Close Requester after the user merges
+  is delegated to `$flow-check-pr` / the Close Requester after the user merges
   manually.
 
 The `delivery` orchestrator agent was **removed** (issue #233); `/ocf:delivery`
-is no longer supported — use `/ocf:develop` or `/ocf:develop-full`. Language
+is no longer supported — use `$develop` or `$develop-full`. Language
 routing is handled by `scripts/detect-lang.sh`. Loop differentiation (bug vs
 feat, expedite vs lean) is defined in § Loop Profiles above and selected during
 discovery.
@@ -221,16 +221,16 @@ feeds the continuous pipeline from remote issue comments:
 
 1. A `@aibot:develop` comment on a **locally tracked** issue (`Remote: #<id>`
    in the workspace `known_issues.md`) in an **allowlisted** repo
-   (`~/.config/opencode/aibot-repos.json`) triggers the equivalent of
-   `/ocf:develop-full <id>`: promote → develop → senior review → QA → corrections →
+   (`~/.codex/flow/aibot-repos.json`) triggers the equivalent of
+   `$develop-full <id>`: promote → develop → senior review → QA → corrections →
    committer gate → MR → **auto-merge** → local checkout of the updated base
    branch → remote issue close + archive → final notification.
 2. The trigger runs via `opencode run --attach <web-url> --auto --dir <workspace>
---command "ocf:develop-full"` on the existing web server, serialized per repo
+--command "$develop-full"` on the existing web server, serialized per repo
    with `flock -n` (parallel across repos).
 3. Result messages (success with MR link / already-in-progress /
    already-resolved / not-tracked-locally / cannot-develop) are posted to the
-   remote issue by the `development/aibot` subagent via `ocf:aibot-notify`,
+   remote issue by the `development/aibot` subagent via `$flow-aibot-notify`,
    following `standards/aibot-messages.md` — one message per trigger.
 4. Security boundary (validated by the security reviewer as a gate):
    repo allowlist (`aibot-repos.json`) + locally-tracked-issue gate +
@@ -246,19 +246,19 @@ feeds the continuous pipeline from remote issue comments:
       denies reads of `~/.ssh/**` and `state/**`.
 
 **No-merge-polling boundary**: the watcher itself polls ONLY issue comments.
-It never polls merge/PR status. `/ocf:develop-full` (the command the watcher
+It never polls merge/PR status. `$develop-full` (the command the watcher
 triggers) performs the merge once review and QA approve, then closes the
 remote issue and archives locally as part of its own end-to-end flow —
 bounded polling for the merge it initiated is confined to that command, never
-to the watcher. The Close Requester and `ocf:check-pr` remain the paths for
-closing issues merged manually after an `ocf:develop` run.
+to the watcher. The Close Requester and `$flow-check-pr` remain the paths for
+closing issues merged manually after an `$develop` run.
 
 ### Agent Pipeline
 
 1. **CTO** — define technical vision and guidelines
 2. **Product Owner** — define priorities, create user stories, register
-   prioritization proposals in `.opencode/prioritization.md`
-   (project-level) or `~/.config/opencode/prioritization.md`
+   prioritization proposals in `.codex/prioritization.md`
+   (project-level) or `~/.codex/flow/prioritization.md`
    (global fallback). **The global file is ONLY for opencode's own improvements —
    never write project proposals there.**
 3. **Tech Lead** — refine stories with technical detail, feasibility analysis,
@@ -289,7 +289,7 @@ closing issues merged manually after an `ocf:develop` run.
    The `security` reviewer profile is delegated to the OWASP specialist agent
    (`development/security-owasp`), which refuses approval when critical/high
    vulnerabilities are found (evidence + remediation in
-   `.opencode/reviews/security-<target>-<timestamp>.md`).
+   `.codex/reviews/security-<target>-<timestamp>.md`).
 8. **Quality Analyst (post-review)** — verify quality after senior review,
    check that all identified issues were addressed and quality standards are met
    (confirm tests via `test-runner --check`; do not re-run an unchanged suite)
@@ -328,30 +328,30 @@ Two meta-agents orchestrate the pipeline phases:
 **Delivery (flat engine)** — the `delivery` orchestrator agent was removed
 (issue #233); the delivery pipeline runs directly via scripts:
 
-- `/ocf:develop` — runs phases 6-11 up to MR creation (manual merge)
-- `/ocf:develop-full` — runs phases 6-12 end-to-end (auto-merge + archive)
+- `$develop` — runs phases 6-11 up to MR creation (manual merge)
+- `$develop-full` — runs phases 6-12 end-to-end (auto-merge + archive)
 - Engine: `promote.sh` → `preflight.sh` → `detect-lang.sh` → developer →
   parallel senior reviewers → `committer-check.sh` + `issue-lint.sh --strict`
   → `create-pr.sh` → (`merge-and-close.sh` for develop-full)
 - Executes automatically without user confirmation after promotion
 
-Use `ocf:discovery` to start the discovery pipeline and `ocf:develop` /
-`ocf:develop-full` to execute the delivery pipeline.
+Use `$discovery` to start the discovery pipeline and `$develop` /
+`$develop-full` to execute the delivery pipeline.
 
 ### Career Sector (resume optimization)
 
 Outside the issue pipeline, the `career` sector provides a personal
 resume-optimization flow (issue #60):
 
-- `/ocf:cv-hub <candidate-dir>` — build the candidate hub (`hub.json` +
+- `$flow-cv-hub <candidate-dir>` — build the candidate hub (`hub.json` +
   `README.md`) from a CV PDF (required), official LinkedIn export (Download My
   Data — never scraping), and optional extras. Output lives in
   `~/career/<candidate-name>/`.
-- `/ocf:cv-optimize <candidate-dir>` — analyze the candidate profile
+- `$flow-cv-optimize <candidate-dir>` — analyze the candidate profile
   (post-hub): profile score, target job profiles, CLT/PJ salary ranges
   (`[INFERRED]`), context gaps, and a prioritized improvement plan in
   `profile-analysis.md`. Never fabricates; never modifies `hub.json`.
-- `/ocf:cv-tailor <candidate-dir> <job>` — analyze a job (multi-portal), gap
+- `$flow-cv-tailor <candidate-dir> <job>` — analyze a job (multi-portal), gap
   analysis vs `hub.json`, and generate a job-tailored resume PDF (HTML → PDF,
   Chrome headless, fallback LibreOffice) in the job's language. Never
   fabricates content; inferences are resolved with the candidate
@@ -369,8 +369,8 @@ Backed by `agents/career/*`, `skills/career/*`, and `scripts/cv/*`.
 ### Design Pipeline (UI)
 
 Outside the issue pipeline, the `design` sector provides the Adorable
-pipeline: `/ocf:build-ui` (greenfield 4-pass: art-director → ui-architect →
-ui-implementer → ui-critic) and `/ocf:audit-ui` (audit/refactor:
+pipeline: `$flow-build-ui` (greenfield 4-pass: art-director → ui-architect →
+ui-implementer → ui-critic) and `$flow-audit-ui` (audit/refactor:
 ui-auditor → ui-refactor-planner, optional build chain). See
 `standards/design-pipeline.md` and `agents/design/README.md`.
 
@@ -382,8 +382,8 @@ ui-auditor → ui-refactor-planner, optional build chain). See
 
 ### Issue Lifecycle
 
-1. PO proposal registered in `.opencode/prioritization.md`
-   (project-level) or `~/.config/opencode/prioritization.md`
+1. PO proposal registered in `.codex/prioritization.md`
+   (project-level) or `~/.codex/flow/prioritization.md`
    (global fallback). **The global file is ONLY for opencode's own improvements
    — never write project proposals there.**
 2. Item captured in `known_issues.md` with status `backlog`

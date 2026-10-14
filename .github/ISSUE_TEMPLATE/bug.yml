@@ -25,7 +25,7 @@ body:
     attributes:
       label: Steps to reproduce
       description: How to trigger the bug
-      placeholder: "1. Run /ocf:develop\n2. See error..."
+      placeholder: "1. Run $develop\n2. See error..."
   - type: textarea
     id: logs
     attributes:

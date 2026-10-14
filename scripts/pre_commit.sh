@@ -18,7 +18,7 @@ if [[ -x "$RUNNER" ]]; then
     if [[ "$rc" -eq 2 ]]; then
       echo "[pre-commit] No test runner/suite — skipping tests (exit 2)"
     elif [[ "$rc" -ne 0 ]]; then
-      echo "[pre-commit] Tests failed (see .opencode/test-cache/)"
+      echo "[pre-commit] Tests failed (see .codex/test-cache/)"
       exit 1
     fi
   fi
@@ -122,8 +122,8 @@ fi
 # does not remove them from disk (BR 8); this blocks the staging only.
 # Allowed: known_issues.md and the versioned spikes/*.md deliverables.
 ROUTINE_STAGED="$(git diff --cached --name-only 2>/dev/null \
-  | grep -E '^\.opencode/(preflight|reviews|design-outputs)/|^\.opencode/spikes/' \
-  | grep -vE '^\.opencode/spikes/.*\.md$' || true)"
+  | grep -E '^\.codex/(preflight|reviews|design-outputs)/|^\.codex/spikes/' \
+  | grep -vE '^\.codex/spikes/.*\.md$' || true)"
 if [[ -n "$ROUTINE_STAGED" ]]; then
   echo "[pre-commit] ❌ Artefato rotineiro staged (deve permanecer ignorado — issue #250):"
   printf '%s\n' "$ROUTINE_STAGED" | sed 's/^/  - /'

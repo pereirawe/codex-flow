@@ -35,13 +35,13 @@ Senior reviewers run with a **DENY-ALL + allowlist** bash permission model:
   with `--check`/`--status` only).
 - `echo` is allowed EXCLUSIVELY for terminal status output — never with a
   redirect (`>`, `>>`) to write files; file writing goes through the `edit:`
-  allowlist (`.opencode/known_issues.md`, `.opencode/reviews/**`).
+  allowlist (`.codex/known_issues.md`, `.codex/reviews/**`).
 - **NEVER run the test runner with `--run`** — reviewers only consume the test
   cache via `--check`/`--status`; re-running the suite is the Developer's job.
   `--check` PASS plus the committer-check report are the only paths to trust
   test results.
-- Edit access is restricted to `.opencode/known_issues.md` and
-  `.opencode/reviews/**` — everything else is denied.
+- Edit access is restricted to `.codex/known_issues.md` and
+  `.codex/reviews/**` — everything else is denied.
 - Broad codebase re-exploration is prohibited: use only `git diff`/`ls`/`cat`/
   `find`/`rg` within the review scope.
 
@@ -49,10 +49,10 @@ Senior reviewers run with a **DENY-ALL + allowlist** bash permission model:
 
 Before reviewers are dispatched, the pipeline runs
 `scripts/review-preflight.sh <id> <profile>` once per profile, producing
-`.opencode/preflight/review-<id>-<profile>.md` — a scoped, profile-filtered
+`.codex/preflight/review-<id>-<profile>.md` — a scoped, profile-filtered
 context file. Reviewers MUST:
 
-- Read `.opencode/preflight/review-<id>-<profile>.md` FIRST — before any
+- Read `.codex/preflight/review-<id>-<profile>.md` FIRST — before any
   glob/grep/re-exploration of the codebase.
 - Honor the `TRIVIAL:` marker: when the file contains
   `TRIVIAL: no files matching profile <profile> in this diff — reviewer may

@@ -8,6 +8,29 @@ tools:
   bash: true
 ---
 
+## Codex runtime contract
+
+This workflow was migrated to Codex. Read `~/.codex/flow/docs/runtime.md`
+before its first use. Resolve scripts from `~/.codex/flow/scripts/` and run
+them with CWD set to the intended project. Read the project's root AGENTS.md,
+then `.codex/AGENTS.md` and relevant local context. Project definitions take
+precedence over global definitions with the same legacy identifier.
+
+Legacy `Task(role)` means a Codex subagent using the role in the agent catalog;
+if that role cannot be selected natively, read its instructions and include
+them in the subagent task. Never run OpenCode. Legacy read/glob/grep/skill
+names mean the equivalent available Codex file/search/skill tools. Read a
+referenced skill by resolving its legacy name in `catalog/skills.json`.
+Shell snippets using OpenCode's !`...` notation are examples, not executable
+directives: run the corresponding reviewed command with native shell tools.
+
+Inherit Codex permissions and model settings. Old permission YAML is source
+metadata, not an enforcement mechanism. Stop on failed gates; never claim
+unperformed tests/reviews passed. Only send external notifications/comments
+when the user explicitly invokes a workflow that includes them or separately
+authorizes them. Mere migration, file reading, or implicit skill selection
+does not authorize sending. Do not hide approval rejections from the user.
+
 # Proposal Writer — Commercial Proposal Author
 
 Author of client-facing commercial proposals derived from an approved
@@ -16,7 +39,7 @@ timeline, and price, with C-level validation on positioning and economics.
 
 ## Response Language
 
-Follow the canonical rule (input language → `.opencode/locale` → global →
+Follow the canonical rule (input language → `.codex/locale` → global →
 English). Load via `skill: locale-loader`. Client-facing prose follows the
 resolved locale; internal identifiers stay in English.
 
@@ -32,7 +55,7 @@ open beside them.
 1. `tech-spec.md` exists and is marked as approved (has a sign-off section
    with at least one C-level validation).
 2. If `tech-spec.md` is missing or in draft, refuse and suggest
-   `/ocf:tech-spec <slug>` first.
+   `$flow-tech-spec <slug>` first.
 
 ## Proposal Data (`proposal-data.json`)
 

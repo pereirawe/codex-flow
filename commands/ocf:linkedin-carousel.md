@@ -1,4 +1,4 @@
-## /ocf:linkedin-carousel <tema> [<direção>]
+## $flow-linkedin-carousel <tema> [<direção>]
 
 ---
 description: Generate a LinkedIn carousel deck (1080×1080 slides → deck.pdf) from a researched topic, running INSIDE the target project: preflight docs/assets/person.json + logo (validated schema), web research with saved sources (research/), editorial roteiro (1 cover + N−2 content + 1 CTA, 3≤N≤20 default 7), canonical per-slide spec (deck.json: EN design prompt + user-language structured text), each::sense background art when EACHLABS_API_KEY is set with deterministic Chrome typography/logo overlay, prompts-only fallback otherwise (no PNG/PDF); outputs under docs/carousel/<slug>/; identity never invented; nothing is published (manual upload)
@@ -31,8 +31,8 @@ Projeto alvo com:
 ### Usage
 
 ```
-/ocf:linkedin-carousel "Arquitetura limpa em 7 pontos"
-/ocf:linkedin-carousel "Data engineering na prática" "cores escuras, vibe tech"
+$flow-linkedin-carousel "Arquitetura limpa em 7 pontos"
+$flow-linkedin-carousel "Data engineering na prática" "cores escuras, vibe tech"
 ```
 
 A `<direção>` é opcional: preferência visual do usuário respeitada pelo roteiro

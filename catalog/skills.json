@@ -1,0 +1,602 @@
+[
+  {
+    "legacy_name": "analytics-engineering",
+    "name": "cf-analytics-engineering",
+    "path": "skills/bi/analytics-engineering/SKILL.md",
+    "description": "Data pipeline and warehouse engineering — ETL/ELT, dbt modeling, data modeling (star/snowflake), orchestration, data quality testing."
+  },
+  {
+    "legacy_name": "dashboard-design",
+    "name": "cf-dashboard-design",
+    "path": "skills/bi/dashboard-design/SKILL.md",
+    "description": "Dashboard and data visualization design — KPI selection, chart type selection, dashboard layout, UX, data storytelling, BI tool best practices."
+  },
+  {
+    "legacy_name": "data-analysis",
+    "name": "cf-data-analysis",
+    "path": "skills/bi/data-analysis/SKILL.md",
+    "description": "Exploratory and statistical data analysis — descriptive statistics, hypothesis testing, cohort analysis, funnel analysis, regression, segmentation."
+  },
+  {
+    "legacy_name": "data-governance",
+    "name": "cf-data-governance",
+    "path": "skills/bi/data-governance/SKILL.md",
+    "description": "Data governance and quality — data catalog, lineage, quality frameworks, metadata management, compliance (LGPD/GDPR), data policies."
+  },
+  {
+    "legacy_name": "report-automation",
+    "name": "cf-report-automation",
+    "path": "skills/bi/report-automation/SKILL.md",
+    "description": "Automated reporting and alerting — scheduled report generation, anomaly detection, executive summaries, automated insight delivery."
+  },
+  {
+    "legacy_name": "capacity-planner",
+    "name": "cf-capacity-planner",
+    "path": "skills/business-ops/capacity-planner/SKILL.md",
+    "description": "Resource and capacity planning — demand forecasting, resource allocation, utilization modeling, headcount planning, skills gap analysis."
+  },
+  {
+    "legacy_name": "internal-comms",
+    "name": "cf-internal-comms",
+    "path": "skills/business-ops/internal-comms/SKILL.md",
+    "description": "Internal communications strategy — organizational announcements, change management, leadership messaging, town halls, newsletter, all-hands."
+  },
+  {
+    "legacy_name": "knowledge-ops",
+    "name": "cf-knowledge-ops",
+    "path": "skills/business-ops/knowledge-ops/SKILL.md",
+    "description": "Knowledge operations and management — knowledge base design, information architecture, documentation standards, knowledge sharing culture, discovery optimization."
+  },
+  {
+    "legacy_name": "process-mapper",
+    "name": "cf-process-mapper",
+    "path": "skills/business-ops/process-mapper/SKILL.md",
+    "description": "Business process mapping and optimization — workflow design, SOP creation, RACI matrices, swimlane diagrams, process documentation, continuous improvement."
+  },
+  {
+    "legacy_name": "procurement-optimizer",
+    "name": "cf-procurement-optimizer",
+    "path": "skills/business-ops/procurement-optimizer/SKILL.md",
+    "description": "Strategic procurement and sourcing — spend analysis, supplier consolidation, strategic sourcing, contract optimization, cost reduction, sustainable procurement."
+  },
+  {
+    "legacy_name": "progress-report",
+    "name": "cf-progress-report",
+    "path": "skills/business-ops/progress-report/SKILL.md",
+    "description": "Generate a client-facing progress/delivery report for a tracked project (issues vs commercial proposal) — with Codetomika logo, PDF output, Mermaid Gantt, date, what is done, % completion by hours, delivery metrics for the client, and an explicit highlight of tasks that were not mapped in the proposal/issues. Use when the user asks to create, refresh, or standardize a progress report, delivery report, status report, \"relatório de avanço\", \"relatório de progresso\", \"relatório de entrega\", or to communicate value/delivery to the client. Also use when creating/improving the progress-report skill/script itself."
+  },
+  {
+    "legacy_name": "proposal-writer",
+    "name": "cf-proposal-writer",
+    "path": "skills/business-ops/proposal-writer/SKILL.md",
+    "description": "Turn an approved tech spec into a client-ready commercial proposal (scope, deliverables, timeline, investment, terms) with C-level validation on pricing and positioning. Use when the user asks to create, refine, or review a commercial proposal, SOW, quote, or client-facing project document derived from a spec. \"proposal\", \"commercial proposal\", \"SOW\", \"proposta comercial\", \"proposta técnica\" also trigger this skill."
+  },
+  {
+    "legacy_name": "strategic-brief",
+    "name": "cf-strategic-brief",
+    "path": "skills/business-ops/strategic-brief/SKILL.md",
+    "description": "Author senior-grade strategic consolidation briefs (GO/NO-GO) that merge fragmented business docs into one robust decision base with branding, competitors, sector tasks, investment, opex, EBITDA/break-even/ROI, market scenarios and synthetic-data simulation plans. Complements tech-spec and proposal-writer. Use when the user asks for a strategic document, consolidated business case, GO/NO-GO decision base, \"documento estrategico\", \"consolidado estrategico\", or investment/financial planning before a spec, business case, viability study, or go/no-go decision. Do not use to write technical specifications or commercial proposals themselves — route those to tech-spec and proposal-writer."
+  },
+  {
+    "legacy_name": "tech-spec",
+    "name": "cf-tech-spec",
+    "path": "skills/business-ops/tech-spec/SKILL.md",
+    "description": "Author rigorous technical specifications through structured discovery, C-level consultation, and a 12-dimension quality checklist. Use when the user asks to create, refine, or review a technical specification, tech spec, functional spec, SRS, or architecture document. \"tech spec\", \"technical specification\", \"SRS\", \"escrever spec técnica\", \"especificação técnica\" also trigger this skill."
+  },
+  {
+    "legacy_name": "vendor-management",
+    "name": "cf-vendor-management",
+    "path": "skills/business-ops/vendor-management/SKILL.md",
+    "description": "Vendor lifecycle management — vendor selection, RFP, evaluation, contracting, performance management, offboarding."
+  },
+  {
+    "legacy_name": "cv-ats-score",
+    "name": "cf-cv-ats-score",
+    "path": "skills/career/cv-ats-score/SKILL.md",
+    "description": "Score the ATS compatibility of a generated resume — extracts the resume text from the generated PDF (pdftotext, best-effort), loads the job keywords from the cv-tailor gap analysis, computes keyword density, detects ATS red flags (tables, images as text, multi-column layouts, missing standard sections), and produces a 0-100 score (keyword_match 40%, section_completeness 30%, format_compliance 30%) with actionable recommendations. Outputs ats-score.md in the job's slug directory, in the user's communication language. NEVER fabricates counts or scores — every metric is computed from the actual resume text and job requirements. Use when you need to score a tailored resume against a job's ATS keywords, measure ATS compatibility, check resume format compliance, or get actionable recommendations to improve a resume's ATS match (command $flow-cv-ats-score; \"pontuação ATS\", \"score ATS\", \"nota do currículo\", \"compatibilidade ATS\", \"avaliar currículo\" also trigger this skill). Career sector."
+  },
+  {
+    "legacy_name": "cv-cover-letter",
+    "name": "cf-cv-cover-letter",
+    "path": "skills/career/cv-cover-letter/SKILL.md",
+    "description": "Generate a tailored cover letter for a specific job from the candidate's hub.json and a job description. Analyzes the job (multi-portal, including LinkedIn, Indeed, Gupy, company sites — pasted text, local files, official LinkedIn export, or URL), extracts requirements/keywords, reuses or builds the gap analysis vs the hub, drafts the letter in the job's language (never fabricating — only rephrasing and highlighting real hub achievements) and generates the letter HTML + PDF. Use when you need to create a custom cover letter for an application (command $flow-cv-cover-letter; \"carta de apresentação\" also triggers this skill). Career sector."
+  },
+  {
+    "legacy_name": "cv-hub",
+    "name": "cf-cv-hub",
+    "path": "skills/career/cv-hub/SKILL.md",
+    "description": "Build a candidate's resume hub — extract data from the CV PDF (pdftotext), official LinkedIn export (Download My Data), and complementary files, consolidating everything into hub.json (canonical AI schema) + a human-readable README.md. Update mode (command $flow-cv-hub-update) merges new information into an existing hub.json incrementally — ADD/UPDATE only, duplicates merged, [INFERIDO] preserved. Use when you need to create or update a candidate's data hub (commands $flow-cv-hub, $flow-cv-hub-update). Career sector."
+  },
+  {
+    "legacy_name": "cv-interview-prep",
+    "name": "cf-cv-interview-prep",
+    "path": "skills/career/cv-interview-prep/SKILL.md",
+    "description": "Generate a structured interview preparation kit from the candidate's hub.json and a target job — likely interview questions (behavioral + technical), suggested STAR-format answers mapped to real hub experience, questions to ask the interviewer, and technical topics to review, with preparation gaps flagged for human review. Outputs interview-preparation.md in the user's communication language. NEVER fabricates experience — STAR answers always reference real hub entries. Use when you need to prepare for a job interview, build an interview prep kit, draft STAR answers from real experience, or identify what to review before an interview (command $flow-cv-interview-prep; \"preparação para entrevista\", \"entrevista de emprego\", \"entrevista\" and \"STAR\" also trigger this skill). Career sector."
+  },
+  {
+    "legacy_name": "cv-linkedin",
+    "name": "cf-cv-linkedin",
+    "path": "skills/career/cv-linkedin/SKILL.md",
+    "description": "Generate an objective-driven LinkedIn profile action report from the candidate's hub.json — confirmed profile objective (issue"
+  },
+  {
+    "legacy_name": "cv-linkedin-banner",
+    "name": "cf-cv-linkedin-banner",
+    "path": "skills/career/cv-linkedin-banner/SKILL.md",
+    "description": "Generate the LinkedIn profile banner of the candidate (4:1, 1584×396) with an external image model (each::sense via the vendored poster-design-generation skill / scripts/cv/banner-gen.sh, EACHLABS_API_KEY) from the REAL hub.json data and an art-director visual direction — phone, email, social links and a short impact phrase derived from the profile, laid out as a footer while RESPECTING the profile-photo safe zone (bottom-left guard ≈ left 500px × bottom 260px on desktop) and staying legible in the mobile center-crop. Outputs land in ~/career/<candidate>/linkedin/banner/ (final PNG + spec md/json + desktop/mobile crop previews); nothing is published — the user uploads manually. AI text is gated (up to 2 retries) with a deterministic crisp-text overlay fallback that guarantees correct phone/email/handle. Use when you need to create a LinkedIn cover banner for a candidate (command $flow-cv-banner; \"banner do LinkedIn\", \"banner do perfil\", \"capa do linkedin\" also trigger this skill). Career sector."
+  },
+  {
+    "legacy_name": "cv-linkedin-sync",
+    "name": "cf-cv-linkedin-sync",
+    "path": "skills/career/cv-linkedin-sync/SKILL.md",
+    "description": "Offline LinkedIn ↔ hub.json sync diff — parses the OFFICIAL LinkedIn \"Download My Data\" export (a local directory of CSVs; never scraped, never a URL) and diffs it against hub.json (headline, positions/experience, skills, education, languages, certifications), producing linkedin-sync.md (report in the user's language) + linkedin-sync.json (machine-readable, consumed by cv-linkedin and cv-optimize). Use when the user wants to compare the real LinkedIn profile with the hub, refresh an outdated hub from the official export, or decide which skills to add/promote/remove on LinkedIn (\"sync do LinkedIn\", \"comparar LinkedIn com hub\", \"diff linkedin\", \"export oficial do LinkedIn\", \"Download My Data\", \"atualizar hub pelo linkedin\" also trigger this skill). Career sector. Powered by scripts/cv/linkedin-sync.py."
+  },
+  {
+    "legacy_name": "cv-optimizer",
+    "name": "cf-cv-optimizer",
+    "path": "skills/career/cv-optimizer/SKILL.md",
+    "description": "Analyze and optimize a candidate's profile from hub.json — general qualifications, profile score (0-100 per section + global), target job profiles, CLT vs PJ market salary ranges ([INFERIDO] bands), context gaps, integrated objective-calibrated LinkedIn improvements (banner, headline literal, Sobre com logros, experiência com bullets, revisão de skills — consistent with cv-linkedin, referencing $flow-cv-banner / linkedin-optimization.md / linkedin-sync.json) and a prioritized action plan. Use when you need to analyze and improve a candidate's profile (command $flow-cv-optimize). Career sector."
+  },
+  {
+    "legacy_name": "cv-pdf",
+    "name": "cf-cv-pdf",
+    "path": "skills/career/cv-pdf/SKILL.md",
+    "description": "Generate a resume PDF from HTML — Chrome headless (--print-to-pdf, A4) with LibreOffice fallback. Use when you need to convert a tailored resume's HTML into a PDF, or any HTML into an A4 PDF. Career sector."
+  },
+  {
+    "legacy_name": "cv-tailor",
+    "name": "cf-cv-tailor",
+    "path": "skills/career/cv-tailor/SKILL.md",
+    "description": "Generate a resume tailored to a specific job from the candidate's hub.json. Analyzes the job (multi-portal, including LinkedIn, Indeed, Gupy, company sites — pasted text or official export files), extracts requirements/keywords, performs gap analysis vs the hub, adapts content (never fabricating) and generates the resume HTML + PDF in the job's language. Use when you need to create a custom resume for an application (command $flow-cv-tailor). Career sector."
+  },
+  {
+    "legacy_name": "channel-economics",
+    "name": "cf-channel-economics",
+    "path": "skills/commercial/channel-economics/SKILL.md",
+    "description": "Channel economics and partner profitability — margin design, incentive structures, rebate programs, tier economics, ROI analysis."
+  },
+  {
+    "legacy_name": "commercial-forecasting",
+    "name": "cf-commercial-forecasting",
+    "path": "skills/commercial/commercial-forecasting/SKILL.md",
+    "description": "Commercial forecasting and revenue modeling — pipeline conversion models, booking forecasts, scenario planning, board-ready commercial outlook."
+  },
+  {
+    "legacy_name": "deal-desk",
+    "name": "cf-deal-desk",
+    "path": "skills/commercial/deal-desk/SKILL.md",
+    "description": "Deal desk and deal structuring — non-standard terms, discount approval, executive review, margin protection, deal governance."
+  },
+  {
+    "legacy_name": "partnerships-architect",
+    "name": "cf-partnerships-architect",
+    "path": "skills/commercial/partnerships-architect/SKILL.md",
+    "description": "Partnership and alliance development — partner identification, program design, co-selling motions, ecosystem strategy, joint GTM."
+  },
+  {
+    "legacy_name": "pricing-strategist",
+    "name": "cf-pricing-strategist",
+    "path": "skills/commercial/pricing-strategist/SKILL.md",
+    "description": "Pricing strategy and optimization — value-based pricing, packaging design, monetization models, discounting governance, price elasticity."
+  },
+  {
+    "legacy_name": "rfp-responder",
+    "name": "cf-rfp-responder",
+    "path": "skills/commercial/rfp-responder/SKILL.md",
+    "description": "RFP and proposal response management — compliance matrices, win themes, response structure, competitive positioning, bid/no-bid decisions."
+  },
+  {
+    "legacy_name": "component-patterns",
+    "name": "cf-component-patterns",
+    "path": "skills/design/component-patterns/SKILL.md",
+    "description": "Component anatomy for the Adorable pipeline — primitives (Button, Badge, Icon, Avatar, Separator, Skeleton, Spinner) and composites (Card, DataTable, Form, Dropdown, Modal, Toast, CommandPalette). Use when building or reviewing a component to apply its canonical anatomy: parts, sizes, and states. Use quando precisar da anatomia canônica de um componente — \"componente\", \"anatomia\", \"button\", \"badge\", \"avatar\", \"modal\", \"dropdown\", \"toast\", \"formulário\" also trigger this skill."
+  },
+  {
+    "legacy_name": "design-tokens",
+    "name": "cf-design-tokens",
+    "path": "skills/design/design-tokens/SKILL.md",
+    "description": "Design token system for the Adorable pipeline — palette (6 functional layers + 2 accents + semantic), typography (2 families, scale xs-4xl), spacing (4pt base), radius tiers, shadow tiers, and motion durations. Use when defining or consuming tokens so every value resolves to the canonical system. Use quando precisar dos tokens de design — \"design tokens\", \"paleta de cores\", \"tipografia\", \"espaçamento\", \"sombras\", \"radius\", \"motion\", \"cores\" also trigger this skill."
+  },
+  {
+    "legacy_name": "reference-library",
+    "name": "cf-reference-library",
+    "path": "skills/design/reference-library/SKILL.md",
+    "description": "Concrete, testable UI patterns (Dashboard Card, Data Table, Nav Rail, Metric Display, Empty State, Command Palette) with exact CSS values for the Adorable pipeline. Use when implementing or auditing a specific UI pattern and needing the canonical values instead of prose descriptions. Use quando precisar do padrão canônico de um componente de dashboard — \"dashboard card\", \"data table\", \"nav rail\", \"metric display\", \"empty state\", \"command palette\", \"padrão de UI\", \"componente de dashboard\" also trigger this skill."
+  },
+  {
+    "legacy_name": "visual-hierarchy",
+    "name": "cf-visual-hierarchy",
+    "path": "skills/design/visual-hierarchy/SKILL.md",
+    "description": "Visual hierarchy rules for the Adorable pipeline — visual weight, WCAG AA contrast ratios, density modes, and responsive patterns. Use when laying out a surface so the most important content leads the eye and every ratio passes. Use quando precisar de hierarquia visual — \"hierarquia visual\", \"peso visual\", \"contraste\", \"densidade\", \"responsivo\", \"layout\" also trigger this skill."
+  },
+  {
+    "legacy_name": "auth-architecture",
+    "name": "cf-auth-architecture",
+    "path": "skills/development/auth/auth-architecture/SKILL.md",
+    "description": "Authentication and authorization architecture — JWT, OAuth 2.0, OIDC, RBAC/ABAC, multi-tenancy, session management, token lifecycle, database design for auth, and security hardening for SaaS/CRM/ERP systems."
+  },
+  {
+    "legacy_name": "bug-triage",
+    "name": "cf-bug-triage",
+    "path": "skills/development/bug-triage/SKILL.md",
+    "description": "Bug triage for the lean discovery track — the single source of the bug prioritization score matrix, escalation triggers, and the aging policy. Use when triaging a bug issue during PO discovery (primary decider), validating a derived bug priority (QA, secondary escalation), or applying the aging re-triage rule. \"triagem de bugs\", \"bug triage\", \"prioridade de bug\", \"escalar bug\" also trigger this skill."
+  },
+  {
+    "legacy_name": "delivery-session-planner",
+    "name": "cf-delivery-session-planner",
+    "path": "skills/development/delivery-session-planner/SKILL.md",
+    "description": "Plan and generate delivery-session prompts that batch refined (ready) issues into sequential/parallel Codex sessions for any pipeline-tracked repo. Use when the user wants to accelerate delivery, batch-develop multiple known_issues, create a delivery prompt, split work across sessions to save tokens, or order issues by effort and git-conflict safety."
+  },
+  {
+    "legacy_name": "go-api-design",
+    "name": "cf-go-api-design",
+    "path": "skills/development/go/go-api-design/SKILL.md",
+    "description": "Exported Go APIs, constructors, options, call-site shape, backward compatibility, and public contract decisions. Use when changing exported functions, public types, return surfaces, config patterns, or when an API choice may affect callers."
+  },
+  {
+    "legacy_name": "go-doc-contract",
+    "name": "cf-go-doc-contract",
+    "path": "skills/development/go/go-doc-contract/SKILL.md",
+    "description": "Go doc comments, package docs, examples, deprecations, doc links, and caller-facing contracts. Use when writing or refining Go documentation for exported symbols, package comments, examples, or non-obvious caller obligations."
+  },
+  {
+    "legacy_name": "go-package-design",
+    "name": "cf-go-package-design",
+    "path": "skills/development/go/go-package-design/SKILL.md",
+    "description": "analyze and recommend idiomatic go package boundaries, directory layout, internal/cmd usage, package naming, subpackage extraction, and dependency direction. use when working in go codebases with go.mod, internal/, cmd/, new packages, package splits, import cycles, generic utility packages, or doubts about whether code should stay in one package, move to a child package, or become a sibling package."
+  },
+  {
+    "legacy_name": "go-style-review",
+    "name": "cf-go-style-review",
+    "path": "skills/development/go/go-style-review/SKILL.md",
+    "description": "Go idiomatic review for naming, interfaces, errors, comments, context, receivers, formatting, and implementation-level clarity. Use when reviewing Go code quality, refining Go implementation details, or checking whether code feels idiomatic."
+  },
+  {
+    "legacy_name": "go-testing",
+    "name": "cf-go-testing",
+    "path": "skills/development/go/go-testing/SKILL.md",
+    "description": "Go testing style for table-driven tests, test helpers, useful failures, black-box testing, and realistic integrations. Use when writing or refining *_test.go files, testing handlers, stores, services, or reviewing Go test quality."
+  },
+  {
+    "legacy_name": "flask-api-design",
+    "name": "cf-flask-api-design",
+    "path": "skills/development/python/flask-api-design/SKILL.md",
+    "description": "Flask API design for senior-engineer decisions in large-company services. Use when designing or reviewing Flask HTTP endpoints, resource models, URI shape, HTTP semantics, error contracts, pagination, filtering, versioning, and API evolution discipline."
+  },
+  {
+    "legacy_name": "python-docstrings",
+    "name": "cf-python-docstrings",
+    "path": "skills/development/python/python-docstrings/SKILL.md",
+    "description": "Python module, class, function, and method docstrings. Use when writing or refining public Python documentation using PEP 257, PEP 8 docstring guidance, and the Google Python Style Guide."
+  },
+  {
+    "legacy_name": "python-style-review",
+    "name": "cf-python-style-review",
+    "path": "skills/development/python/python-style-review/SKILL.md",
+    "description": "Python naming, imports, exceptions, comprehensions, decorators, properties, and readability tradeoffs. Use when reviewing or refining idiomatic Python style, especially around PEP 8, PEP 20, and the Google Python Style Guide."
+  },
+  {
+    "legacy_name": "python-typing",
+    "name": "cf-python-typing",
+    "path": "skills/development/python/python-typing/SKILL.md",
+    "description": "Python type hints, annotations, generics, aliases, callables, ClassVar, and typing compatibility. Use when designing or reviewing Python typing using the stdlib typing docs, typing.python.org, PEP 484, and PEP 526."
+  },
+  {
+    "legacy_name": "owasp-asvs",
+    "name": "cf-owasp-asvs",
+    "path": "skills/development/security/owasp-asvs/SKILL.md",
+    "description": "OWASP Application Security Verification Standard (ASVS) 4.0 — chapter guidance, verification levels L1/L2/L3, and how to apply them to application security verification and review. Use when verifying applications against ASVS, mapping controls to verification levels, or deciding which ASVS level applies to an application."
+  },
+  {
+    "legacy_name": "owasp-samm",
+    "name": "cf-owasp-samm",
+    "path": "skills/development/security/owasp-samm/SKILL.md",
+    "description": "OWASP Software Assurance Maturity Model (SAMM) — business functions, security practices, maturity levels, and how to assess an organization's software security posture. Use when assessing or planning security program maturity, benchmarking security practices, or building a security improvement roadmap."
+  },
+  {
+    "legacy_name": "owasp-top10",
+    "name": "cf-owasp-top10",
+    "path": "skills/development/security/owasp-top10/SKILL.md",
+    "description": "OWASP Top 10 (2021) web application security risks — categories, CWE mapping table, risk factors, detection guidance, and mitigation. Use when reviewing or auditing web application security, classifying vulnerabilities, or mapping findings to OWASP Top 10 categories and CWEs."
+  },
+  {
+    "legacy_name": "owasp-wstg",
+    "name": "cf-owasp-wstg",
+    "path": "skills/development/security/owasp-wstg/SKILL.md",
+    "description": "OWASP Web Security Testing Guide (WSTG) — testing categories and concrete test cases per category, with technique and expected result. Use when performing manual web application security testing, planning penetration test coverage, or deriving test scenarios for specific vulnerability classes."
+  },
+  {
+    "legacy_name": "secure-code-review",
+    "name": "cf-secure-code-review",
+    "path": "skills/development/security/secure-code-review/SKILL.md",
+    "description": "Secure code review checklist and severity classification — injection, auth, access control, crypto, secrets, SSRF, deserialization, file handling, error handling, logging, and dependency review. Use when reviewing code for security vulnerabilities, classifying findings by severity, or producing a security review report."
+  },
+  {
+    "legacy_name": "threat-modeling",
+    "name": "cf-threat-modeling",
+    "path": "skills/development/security/threat-modeling/SKILL.md",
+    "description": "STRIDE-based threat modeling methodology — system decomposition, threat identification per STRIDE category, risk ranking (DREAD), and mitigation planning. Use when analyzing architecture for threats, reviewing designs for security, or producing a threat model as part of secure design (OWASP ASVS V1)."
+  },
+  {
+    "legacy_name": "test-runner",
+    "name": "cf-test-runner",
+    "path": "skills/development/test-runner/SKILL.md",
+    "description": "Single test entry point with a result cache (fingerprint) for development agents. Use when you need to validate tests (check/run/status), consume a fresh cache without re-executing, or run the suite for your own use when there is no cache. Never invoke ad hoc test commands (go test, pytest, npm test) — use this runner."
+  },
+  {
+    "legacy_name": "budgeting",
+    "name": "cf-budgeting",
+    "path": "skills/finance/budgeting/SKILL.md",
+    "description": "Budget planning and variance analysis — budget allocation, rolling forecasts, headcount planning, OPEX management, variance commentary."
+  },
+  {
+    "legacy_name": "cfo-advisory",
+    "name": "cf-cfo-advisory",
+    "path": "skills/finance/cfo-advisory/SKILL.md",
+    "description": "Strategic CFO advisory — fundraising strategy, cap table management, board preparation, strategic finance, M&A support, investor relations."
+  },
+  {
+    "legacy_name": "cost-analytics",
+    "name": "cf-cost-analytics",
+    "path": "skills/finance/cost-analytics/SKILL.md",
+    "description": "Cost structure analysis and optimization — cost categorization, efficiency metrics, burn rate analysis, unit cost, margin analysis."
+  },
+  {
+    "legacy_name": "financial-modeling",
+    "name": "cf-financial-modeling",
+    "path": "skills/finance/financial-modeling/SKILL.md",
+    "description": "Financial modeling and projections — 3-statement models, SaaS unit economics, DCF valuation, scenario analysis, sensitivity tables, fundraising models."
+  },
+  {
+    "legacy_name": "financial-reporting",
+    "name": "cf-financial-reporting",
+    "path": "skills/finance/financial-reporting/SKILL.md",
+    "description": "Financial reporting and board materials — income statements, balance sheets, cash flow, board decks, management reports, variance commentary."
+  },
+  {
+    "legacy_name": "revenue-analytics",
+    "name": "cf-revenue-analytics",
+    "path": "skills/finance/revenue-analytics/SKILL.md",
+    "description": "Revenue analysis and SaaS metrics — MRR/ARR decomposition, revenue recognition (ASC 606), cohort retention, churn analysis, LTV, NRR, expansion revenue."
+  },
+  {
+    "legacy_name": "ab-testing",
+    "name": "cf-ab-testing",
+    "path": "skills/marketing/ab-testing/SKILL.md",
+    "description": "A/B testing and experimentation — experiment design, sample size calculation, statistical analysis, growth experimentation programs."
+  },
+  {
+    "legacy_name": "ads-campaign",
+    "name": "cf-ads-campaign",
+    "path": "skills/marketing/ads/SKILL.md",
+    "description": "Ad campaign strategy, copywriting, and performance optimization across Google Ads, Meta, LinkedIn, and other platforms."
+  },
+  {
+    "legacy_name": "cold-email",
+    "name": "cf-cold-email",
+    "path": "skills/marketing/cold-email/SKILL.md",
+    "description": "B2B cold email outreach — sequence architecture, offer crafting, deliverability, reply rate optimization, Hormozi frameworks."
+  },
+  {
+    "legacy_name": "competitor-intelligence",
+    "name": "cf-competitor-intelligence",
+    "path": "skills/marketing/competitor-intelligence/SKILL.md",
+    "description": "Competitive intelligence and market positioning — competitor profiling, messaging analysis, positioning gap identification, comparison page creation."
+  },
+  {
+    "legacy_name": "content-strategy",
+    "name": "cf-content-strategy",
+    "path": "skills/marketing/content-strategy/SKILL.md",
+    "description": "Content operations and editorial strategy — content audits, editorial calendars, topic clusters, content repurposing, and full lifecycle management."
+  },
+  {
+    "legacy_name": "conversion-optimization",
+    "name": "cf-conversion-optimization",
+    "path": "skills/marketing/conversion-optimization/SKILL.md",
+    "description": "Conversion Rate Optimization — landing page audits, funnel analysis, friction identification, experiment design, and scientific testing methodology."
+  },
+  {
+    "legacy_name": "copywriting",
+    "name": "cf-copywriting",
+    "path": "skills/marketing/copywriting/SKILL.md",
+    "description": "Marketing copywriting and copy-editing across all channels — homepage, landing pages, emails, ads, social posts, and SEO content. Includes brand voice development, persuasion frameworks, and editorial quality gates."
+  },
+  {
+    "legacy_name": "customer-research",
+    "name": "cf-customer-research",
+    "path": "skills/marketing/customer-research/SKILL.md",
+    "description": "Customer and market research — ICP definition, persona development, competitor intelligence, survey design, insight synthesis."
+  },
+  {
+    "legacy_name": "email-marketing",
+    "name": "cf-email-marketing",
+    "path": "skills/marketing/email-marketing/SKILL.md",
+    "description": "Lifecycle email strategy and execution — welcome flows, nurture sequences, retention campaigns, abandoned cart, winback, and launch emails with deliverability best practices."
+  },
+  {
+    "legacy_name": "frontend-design",
+    "name": "cf-frontend-design",
+    "path": "skills/marketing/frontend-design/SKILL.md",
+    "description": "Frontend design system and marketing page generation — aesthetic direction, design tokens, typography, color systems, CSS architecture, responsive layout, accessibility."
+  },
+  {
+    "legacy_name": "influencer-marketing",
+    "name": "cf-influencer-marketing",
+    "path": "skills/marketing/influencer-marketing/SKILL.md",
+    "description": "Influencer and creator marketing — partner identification, outreach, campaign structure, ambassador programs, measurement and ROI."
+  },
+  {
+    "legacy_name": "launch",
+    "name": "cf-launch",
+    "path": "skills/marketing/launch/SKILL.md",
+    "description": "Product launch and GTM campaign planning — launch strategy, announcement planning, multi-channel distribution, launch calendar, PR coordination."
+  },
+  {
+    "legacy_name": "linkedin-carousel",
+    "name": "cf-linkedin-carousel",
+    "path": "skills/marketing/linkedin-carousel/SKILL.md",
+    "description": "Generate a LinkedIn carousel deck (1:1, 1080×1080) as PDF from a researched topic — agent-driven phases (preflight assets/schema → web research with saved sources → editorial roteiro → per-slide canonical spec → image-model background art [optional] + deterministic Chrome typography/logo overlay → deck.pdf). Runs INSIDE the target project (docs/assets/person.json + logo); identity never invented; prompts-only fallback without EACHLABS_API_KEY; nothing is published (manual upload). Use when the user asks to create a LinkedIn carousel, generate a slide deck PDF from a topic, or \"carrossel LinkedIn\", \"deck linkedin\", \"carrossel para o linkedin\" also trigger this skill. Marketing sector."
+  },
+  {
+    "legacy_name": "marketing-analytics",
+    "name": "cf-marketing-analytics",
+    "path": "skills/marketing/marketing-analytics/SKILL.md",
+    "description": "Marketing measurement and analytics — KPI frameworks, dashboard design, attribution modeling, traffic diagnostics, and executive reporting."
+  },
+  {
+    "legacy_name": "marketing-plan",
+    "name": "cf-marketing-plan",
+    "path": "skills/marketing/marketing-plan/SKILL.md",
+    "description": "Comprehensive marketing and campaign planning — GTM strategy, marketing calendars, budget allocation, channel mix, integrated campaigns."
+  },
+  {
+    "legacy_name": "marketing-psychology",
+    "name": "cf-marketing-psychology",
+    "path": "skills/marketing/marketing-psychology/SKILL.md",
+    "description": "Behavioral science applied to marketing — cognitive biases, mental models, Cialdini principles, Kahneman frameworks, and persuasion engineering."
+  },
+  {
+    "legacy_name": "landing-pages",
+    "name": "cf-landing-pages",
+    "path": "skills/marketing/pages/SKILL.md",
+    "description": "Landing page design, persuasive copywriting, CRO, and conversion optimization for marketing campaigns."
+  },
+  {
+    "legacy_name": "presentations",
+    "name": "cf-presentations",
+    "path": "skills/marketing/presentations/SKILL.md",
+    "description": "Professional presentation design — narrative structure, data visualization, and slideware creation for client meetings and events."
+  },
+  {
+    "legacy_name": "public-relations",
+    "name": "cf-public-relations",
+    "path": "skills/marketing/public-relations/SKILL.md",
+    "description": "Public relations and earned media — press releases, media outreach, journalist targeting, crisis communications, thought leadership positioning."
+  },
+  {
+    "legacy_name": "marketing-reports",
+    "name": "cf-marketing-reports",
+    "path": "skills/marketing/reports/SKILL.md",
+    "description": "Marketing analytics reports, dashboards, KPI tracking, and executive summaries with actionable insights."
+  },
+  {
+    "legacy_name": "market-research",
+    "name": "cf-market-research",
+    "path": "skills/marketing/research/SKILL.md",
+    "description": "Market research, competitor analysis, audience segmentation, and trend analysis for strategic marketing decisions."
+  },
+  {
+    "legacy_name": "SEO Optimizer",
+    "name": "cf-seo-optimizer",
+    "path": "skills/marketing/seo-optimizer/SKILL.md",
+    "description": "Search Engine Optimization specialist for content strategy, technical SEO, keyword research, ranking improvements, and social sharing previews. Use when optimizing website content, improving search rankings, conducting keyword analysis, implementing SEO best practices, auditing or fixing Open Graph / social sharing meta (og:image, og:description, Twitter Cards, image_src), making link previews work on Facebook, WhatsApp, LinkedIn, Twitter/X, or designing og:image cards. Expert in on-page SEO, meta tags, schema markup, and Core Web Vitals."
+  },
+  {
+    "legacy_name": "social-media",
+    "name": "cf-social-media",
+    "path": "skills/marketing/social/SKILL.md",
+    "description": "Social media strategy, content planning, copywriting, engagement, and performance analytics across all major platforms."
+  },
+  {
+    "legacy_name": "marketing-templates",
+    "name": "cf-marketing-templates",
+    "path": "skills/marketing/templates/SKILL.md",
+    "description": "Reusable marketing templates for documents, presentations, emails, social posts, and ads with brand guideline enforcement."
+  },
+  {
+    "legacy_name": "theme-factory",
+    "name": "cf-theme-factory",
+    "path": "skills/marketing/theme-factory/SKILL.md",
+    "description": "Design token and theme generation — color palette creation, typography systems, spacing scales, light/dark themes, CSS variable systems."
+  },
+  {
+    "legacy_name": "video-production",
+    "name": "cf-video-production",
+    "path": "skills/marketing/video-production/SKILL.md",
+    "description": "Video marketing strategy and production — scriptwriting, storyboarding, AI video generation, UGC ads, product demos, social video formats."
+  },
+  {
+    "legacy_name": "account-management",
+    "name": "cf-account-management",
+    "path": "skills/sales/account-management/SKILL.md",
+    "description": "Account management and customer success — expansion, retention, QBRs, health scoring, upsell, cross-sell, churn prevention."
+  },
+  {
+    "legacy_name": "proposals",
+    "name": "cf-proposals",
+    "path": "skills/sales/proposals/SKILL.md",
+    "description": "Sales proposals and contract writing — proposal structure, SOWs, pricing tables, negotiation strategy, value articulation, close planning."
+  },
+  {
+    "legacy_name": "prospecting",
+    "name": "cf-prospecting",
+    "path": "skills/sales/prospecting/SKILL.md",
+    "description": "Sales prospecting and lead generation — ICP scoring, account research, intent signals, multi-channel outreach sequences, social selling on LinkedIn."
+  },
+  {
+    "legacy_name": "sales-enablement",
+    "name": "cf-sales-enablement",
+    "path": "skills/sales/sales-enablement/SKILL.md",
+    "description": "Sales enablement content and tools — pitch decks, battle cards, objection handling, demo scripts, case studies, ROI calculators, competitive positioning."
+  },
+  {
+    "legacy_name": "sales-pipeline",
+    "name": "cf-sales-pipeline",
+    "path": "skills/sales/sales-pipeline/SKILL.md",
+    "description": "Sales pipeline management and forecasting — CRM ops, pipeline stages, velocity analysis, MEDDIC qualification, forecast modeling, deal inspection, win/loss analysis."
+  },
+  {
+    "legacy_name": "sales-psychology",
+    "name": "cf-sales-psychology",
+    "path": "skills/sales/sales-psychology/SKILL.md",
+    "description": "Sales psychology and buyer behavior — cognitive biases in B2B buying, rapport frameworks, objection psychology, decision dynamics, emotional arc management."
+  },
+  {
+    "legacy_name": "agent-frontmatter",
+    "name": "cf-agent-frontmatter",
+    "path": "skills/shared/agent-frontmatter/SKILL.md",
+    "description": "Create, review, revise, and validate AI agent files that use YAML frontmatter followed by Markdown instructions. Use this skill whenever someone asks to audit an existing agent, create or improve a frontmatter agent, check agent metadata or tool permissions, or work with OpenCode agents, Claude Code subagents, GitHub Copilot custom agents, or VS Code custom agents. Identify the exact host and file format first; their schemas and defaults are not interchangeable. When an agent creator is available, use it and independently validate its output."
+  },
+  {
+    "legacy_name": "graphify",
+    "name": "cf-graphify",
+    "path": "skills/shared/graphify/SKILL.md",
+    "description": "Generate Mermaid.js diagrams from code structure, architecture, agent pipeline, and tracked issues"
+  },
+  {
+    "legacy_name": "issue-manager",
+    "name": "cf-issue-manager",
+    "path": "skills/shared/issue-manager/SKILL.md",
+    "description": "Maintain the tracked work register with code-backed evidence and remote sync"
+  },
+  {
+    "legacy_name": "locale-loader",
+    "name": "cf-locale-loader",
+    "path": "skills/shared/locale-loader/SKILL.md",
+    "description": "Use when you need to access or reference standards documents (code-review, branching, commits, issues, PR template) or when deciding the response/output language for user-facing content. Loads locale-appropriate versions from standards/{locale}/ based on the locale file in .codex/locale or ~/.codex/flow/locale, and resolves the canonical response-language rule (input language → project locale → global locale → English)."
+  },
+  {
+    "legacy_name": "openwa-notifier",
+    "name": "cf-openwa-notifier",
+    "path": "skills/shared/openwa-notifier/SKILL.md",
+    "description": "Sends WhatsApp notifications via the OpenWA API when an Codex command finishes or when an agent needs a response from the user. Use when finishing long tasks, reporting results, or asking the user for input when they may be away from the terminal (\"notificar no whatsapp\", \"aviso whatsapp\", \"notificação whatsapp\" also trigger this skill)."
+  },
+  {
+    "legacy_name": "skill-creator",
+    "name": "cf-skill-creator",
+    "path": "skills/shared/skill-creator/SKILL.md",
+    "description": "Create new skills, modify and improve existing skills, and measure skill performance. Use when users want to create a skill from scratch, edit, or optimize an existing skill, run evals to test a skill, benchmark skill performance with variance analysis, or optimize a skill's description for better triggering accuracy."
+  },
+  {
+    "legacy_name": "skill-importer",
+    "name": "cf-skill-importer",
+    "path": "skills/shared/skill-importer/SKILL.md",
+    "description": "Import external skills (GitHub/GitLab) into Codex as git clones. Clones the repo into ~/.codex/flow/vendor/ and registers each discovered skill in Codex.json — never copies SKILL.md files into skills/. Use when importing skills from a repository URL, owner/repo shorthand, or when asked to install a third-party skill."
+  },
+  {
+    "legacy_name": "telegram-notifier",
+    "name": "cf-telegram-notifier",
+    "path": "skills/shared/telegram-notifier/SKILL.md",
+    "description": "Sends Telegram notifications via the Bot API when an Codex command finishes or when an agent needs a response from the user. Use when finishing long tasks, reporting results, or asking the user for input when they may be away from the terminal (\"notificar\", \"telegram\", \"avisar no telegram\" also trigger this skill)."
+  }
+]

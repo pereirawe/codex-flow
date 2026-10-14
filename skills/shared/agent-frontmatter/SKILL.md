@@ -1,7 +1,36 @@
 ---
-name: agent-frontmatter
-description: Create, review, revise, and validate AI agent files that use YAML frontmatter followed by Markdown instructions. Use this skill whenever someone asks to audit an existing agent, create or improve a frontmatter agent, check agent metadata or tool permissions, or work with OpenCode agents, Claude Code subagents, GitHub Copilot custom agents, or VS Code custom agents. Identify the exact host and file format first; their schemas and defaults are not interchangeable. When an agent creator is available, use it and independently validate its output.
+name: cf-agent-frontmatter
+description: Create, review, revise, and validate AI agent files that use YAML frontmatter
+  followed by Markdown instructions. Use this skill whenever someone asks to audit
+  an existing agent, create or improve a frontmatter agent, check agent metadata or
+  tool permissions, or work with OpenCode agents, Claude Code subagents, GitHub Copilot
+  custom agents, or VS Code custom agents. Identify the exact host and file format
+  first; their schemas and defaults are not interchangeable. When an agent creator
+  is available, use it and independently validate its output.
 ---
+
+## Codex runtime contract
+
+This workflow was migrated to Codex. Read `~/.codex/flow/docs/runtime.md`
+before its first use. Resolve scripts from `~/.codex/flow/scripts/` and run
+them with CWD set to the intended project. Read the project's root AGENTS.md,
+then `.codex/AGENTS.md` and relevant local context. Project definitions take
+precedence over global definitions with the same legacy identifier.
+
+Legacy `Task(role)` means a Codex subagent using the role in the agent catalog;
+if that role cannot be selected natively, read its instructions and include
+them in the subagent task. Never run OpenCode. Legacy read/glob/grep/skill
+names mean the equivalent available Codex file/search/skill tools. Read a
+referenced skill by resolving its legacy name in `catalog/skills.json`.
+Shell snippets using OpenCode's !`...` notation are examples, not executable
+directives: run the corresponding reviewed command with native shell tools.
+
+Inherit Codex permissions and model settings. Old permission YAML is source
+metadata, not an enforcement mechanism. Stop on failed gates; never claim
+unperformed tests/reviews passed. Only send external notifications/comments
+when the user explicitly invokes a workflow that includes them or separately
+authorizes them. Mere migration, file reading, or implicit skill selection
+does not authorize sending. Do not hide approval rejections from the user.
 
 # Frontmatter Agent Authoring and Review
 
@@ -30,7 +59,7 @@ Use the path and project configuration to distinguish formats. In mixed-host rep
 
 | Host / format | Common locations and identification | Important distinctions |
 | --- | --- | --- |
-| OpenCode | Global `~/.config/opencode/agents/<name>.md`; project `.opencode/agents/<name>.md`; Markdown agent definitions | Current V2 uses fields such as `description`, `mode`, `model`, and ordered `permissions` rules. A missing `mode` defaults a new custom agent to primary. The Markdown body supplies the system prompt. Do not copy legacy V1 fields into V2 definitions. |
+| OpenCode | Global `~/.codex/flow/agents/<name>.md`; project `.codex/agents/<name>.md`; Markdown agent definitions | Current V2 uses fields such as `description`, `mode`, `model`, and ordered `permissions` rules. A missing `mode` defaults a new custom agent to primary. The Markdown body supplies the system prompt. Do not copy legacy V1 fields into V2 definitions. |
 | Claude Code | Project `.claude/agents/` or user `~/.claude/agents/`; Markdown files with YAML frontmatter | `name` and `description` are required for normal subagent files. Field spelling and casing are significant (`disallowedTools`, `permissionMode`, `mcpServers`, `maxTurns`). The Markdown body is the system prompt. Plugin agents have additional restrictions. |
 | GitHub Copilot cloud agent | Repository `.github/agents/<name>.agent.md` (some docs/examples also accept Markdown files); organization/enterprise locations vary | `description` is required; `tools` omitted enables all available tools, while `tools: []` disables them. Copilot configuration uses `mcp-servers`; this differs from Claude's `mcpServers`. Check whether each property applies to the selected Copilot product surface. |
 | VS Code custom agent | Workspace `.github/agents/`; user agents commonly under `~/.copilot/agents/`; `.agent.md` | Supports VS Code-specific options including `argument-hint`, `handoffs`, and `agents`. It can also load Claude-format profiles from `.claude/agents/`. Copilot cloud support for a property may differ from VS Code support. |

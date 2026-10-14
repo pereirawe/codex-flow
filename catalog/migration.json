@@ -1,0 +1,16 @@
+{
+  "source_repo": "https://github.com/pereirawe/opencode-flow",
+  "source_commit": "0965aaf430bb8f2f2032f2cb2d9825388ed70531",
+  "own_skills": 100,
+  "agent_roles": 116,
+  "commands": 37,
+  "vendors": 19,
+  "retired_commands": [
+    "reset-web",
+    "restart-web",
+    "setup-web",
+    "start-web",
+    "stop-web"
+  ],
+  "provider_migration": "Existing Codex provider/model retained; OpenCode-specific providers and DCP do not apply."
+}

@@ -1,4 +1,4 @@
-## /ocf:review-external
+## $flow-review-external
 
 ---
 description: Review external branches/MRs with structured report generation
@@ -18,7 +18,7 @@ Accepts one of:
 ### Usage
 
 ```
-/ocf:review-external <mr-url|remote-branch>
+$flow-review-external <mr-url|remote-branch>
 ```
 
 If invoked without arguments, the agent prompts for the MR URL or remote branch.
@@ -58,7 +58,7 @@ If invoked without arguments, the agent prompts for the MR URL or remote branch.
    NOT documented in the MR/issue, classify as `incomplete-spec` (not `bug`)
    and register as a new issue in `known_issues.md`.
 8. **Generate report** — Save a structured report to
-   `.opencode/reviews/review-<branch>-<timestamp>.md`
+   `.codex/reviews/review-<branch>-<timestamp>.md`
    (report path is under the target project's opencode directory).
 9. **Post critical/high findings to MR** (if applicable):
    - Only findings classified as `critical` or `high` are eligible
@@ -77,7 +77,7 @@ If invoked without arguments, the agent prompts for the MR URL or remote branch.
 
 ### Report Format
 
-The report is saved to `.opencode/reviews/review-<branch>-<timestamp>.md` and
+The report is saved to `.codex/reviews/review-<branch>-<timestamp>.md` and
 includes: review metadata, files reviewed, diff summary, findings table,
 summary statistics by severity, incomplete specs list, and recommendations.
 

@@ -1,4 +1,4 @@
-## /ocf:bump-version
+## $flow-bump-version
 
 ---
 
@@ -30,5 +30,5 @@ The highest classification found determines the bump.
 ### Usage
 
 ```
-/ocf:bump-version
+$flow-bump-version
 ```

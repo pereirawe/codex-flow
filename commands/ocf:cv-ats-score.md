@@ -1,10 +1,10 @@
-## /ocf:cv-ats-score <candidate-directory> <job-slug>
+## $flow-cv-ats-score <candidate-directory> <job-slug>
 
 ---
 description: Score the ATS compatibility of a generated resume against the job's requirements — extracts the resume text from the PDF (pdftotext, best-effort), loads job keywords from the cv-tailor gap analysis, computes keyword density, detects ATS red flags (tables, images as text, multi-column layouts, missing standard sections), produces a 0-100 score (keyword_match 40%, section_completeness 30%, format_compliance 30%) with actionable recommendations; outputs ats-score.md in the job's slug directory, in the user's communication language
 ---
 
-Scores how well a generated resume (from `/ocf:cv-tailor`) matches a job's
+Scores how well a generated resume (from `$flow-cv-tailor`) matches a job's
 ATS keywords and format, closing the generate → measure → optimize loop. The
 resume PDF is analyzed with `pdftotext` (best-effort), the job keywords come
 from the cv-tailor gap analysis, and the output is a 0-100 score broken down
@@ -16,8 +16,8 @@ computed from the actual resume text and job requirements.
 ### Prerequisite
 
 The candidate needs a valid hub at `~/career/<candidate-name>/hub.json`
-(built with `/ocf:cv-hub`) AND a resume generated for the job slug by
-`/ocf:cv-tailor`:
+(built with `$flow-cv-hub`) AND a resume generated for the job slug by
+`$flow-cv-tailor`:
 
 ```
 ~/career/<candidate-name>/resumes/<job-slug>/
@@ -26,13 +26,13 @@ The candidate needs a valid hub at `~/career/<candidate-name>/hub.json`
 └── gap-analysis.md       # Job context + Required/Desirable requirements
 ```
 
-If the hub is missing, run `/ocf:cv-hub` first; if the resume artifacts are
-missing, run `/ocf:cv-tailor` for the job slug first.
+If the hub is missing, run `$flow-cv-hub` first; if the resume artifacts are
+missing, run `$flow-cv-tailor` for the job slug first.
 
 ### Usage
 
 ```
-/ocf:cv-ats-score ~/career/maria-silva backend-engineer-remote
+$flow-cv-ats-score ~/career/maria-silva backend-engineer-remote
 ```
 
 - `<candidate-directory>` — the candidate directory with `hub.json`.
@@ -45,9 +45,9 @@ missing, run `/ocf:cv-tailor` for the job slug first.
    resume PDF (named `<FirstName> <LastName> - <JobTitle>.pdf` per the
    cv-tailor commercial name rule — locate it by listing the `*.pdf` files),
    plus `index.html` and `gap-analysis.md`; missing → tell the user to run
-   `/ocf:cv-tailor` for the job slug first.
+   `$flow-cv-tailor` for the job slug first.
 2. **Validate hub** — `python3 $SCRIPTS_DIR/cv/validate.py hub.json`; if the
-   hub is missing/invalid, tell the user to run `/ocf:cv-hub` first.
+   hub is missing/invalid, tell the user to run `$flow-cv-hub` first.
 3. **Invoke the agent** `career/cv-ats-score` via `task:` with the candidate
    directory and the job slug.
 4. **Extract resume text** — `pdftotext "<resume pdf>" -` on the located

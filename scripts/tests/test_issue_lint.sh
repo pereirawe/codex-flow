@@ -22,7 +22,7 @@
 #   t06 — issue-lint.sh parses clean (bash -n) after the fix
 #
 # Self-contained: mktemp + trap; the script under test resolves its issues
-# file via config.sh from the CWD (`.opencode/known_issues.md`), so each case
+# file via config.sh from the CWD (`.codex/known_issues.md`), so each case
 # runs with `cd` into an isolated fixture dir.
 
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -37,7 +37,7 @@ trap 'rm -rf "$TMP"' EXIT
 RUN_OUT="$TMP/run.out"
 
 # run_lint <dir> <id> [--strict] — runs issue-lint.sh with CWD = <dir> so
-# config.sh resolves PROJECT_ISSUES_FILE to <dir>/.opencode/known_issues.md;
+# config.sh resolves PROJECT_ISSUES_FILE to <dir>/.codex/known_issues.md;
 # echoes the exit code, stdout+stderr captured in $RUN_OUT.
 run_lint() {
   local dir="$1" id="$2"; shift 2
@@ -52,7 +52,7 @@ run_lint() {
 # deterministicamente com exit 141 e saída vazia (SIGPIPE no awk do field()
 # quando o head -1 saía cedo).
 # ===========================================================================
-big="$TMP/big"; mkdir -p "$big/.opencode"
+big="$TMP/big"; mkdir -p "$big/.codex"
 {
   printf '## Known Issues\n\n'
   printf '### 1. Entry with a large multi-line Business rules block\n'
@@ -67,7 +67,7 @@ big="$TMP/big"; mkdir -p "$big/.opencode"
   done
   printf -- '- Acceptance criteria:\n  1. criterio um\n  2. criterio dois\n'
   printf -- '- Tests:\n  1. cenario A -> outcome A\n  2. cenario B -> outcome B\n  3. cenario C -> outcome C\n'
-} > "$big/.opencode/known_issues.md"
+} > "$big/.codex/known_issues.md"
 
 rc=$(run_lint "$big" 1 --strict)
 assert_eq "0" "$rc" "t01: large multi-line entry exits 0 (no 141 crash)"
@@ -77,13 +77,13 @@ assert_not_contains "$RUN_OUT" "141" "t01: no 141 in output"
 # ===========================================================================
 # t02 — short canonical entry (chore, Tests: -) → exit 0 (no regression)
 # ===========================================================================
-short="$TMP/short"; mkdir -p "$short/.opencode"
+short="$TMP/short"; mkdir -p "$short/.codex"
 {
   printf '## Known Issues\n\n'
   printf '### 1. Short chore entry\n'
   printf -- '- Status: ready\n- Type: chore\n- Severity: low\n'
   printf -- '- Base branch: main\n- Reviewers: 1 (backend)\n- Tests: -\n'
-} > "$short/.opencode/known_issues.md"
+} > "$short/.codex/known_issues.md"
 
 rc=$(run_lint "$short" 1)
 assert_eq "0" "$rc" "t02: short canonical chore entry exits 0"
@@ -92,14 +92,14 @@ assert_eq "0" "$rc" "t02: short canonical chore entry exits 0"
 # t03 — schema-invalid entry (missing Reviewers) → exit 2 + FAIL verdict
 # (no regression — the FAIL path still works, verdict is emitted)
 # ===========================================================================
-bad="$TMP/bad"; mkdir -p "$bad/.opencode"
+bad="$TMP/bad"; mkdir -p "$bad/.codex"
 {
   printf '## Known Issues\n\n'
   printf '### 1. Bug entry without Reviewers\n'
   printf -- '- Status: ready\n- Type: bug\n- Severity: low\n'
   printf -- '- Base branch: main\n- Business rules: none\n'
   printf -- '- Tests:\n  1. cenario A -> outcome A\n'
-} > "$bad/.opencode/known_issues.md"
+} > "$bad/.codex/known_issues.md"
 
 rc=$(run_lint "$bad" 1)
 assert_eq "2" "$rc" "t03: schema-invalid entry exits 2 (FAIL)"

@@ -1,11 +1,9 @@
 [Unit]
-Description=OpenCode aibot watcher timer — poll remote issue comments every 2 minutes
+Description=Codex Flow issue watcher timer
 
 [Timer]
-# Fire every 2 minutes (BR 12). Persistent: catch up after boot/downtime.
 OnCalendar=*:0/2
 Persistent=true
-Unit=aibot-watcher.service
 
 [Install]
 WantedBy=timers.target

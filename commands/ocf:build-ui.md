@@ -1,4 +1,4 @@
-## /ocf:build-ui
+## $flow-build-ui
 
 ---
 description: Orchestrate the 4-pass greenfield design pipeline (art-director → ui-architect → ui-implementer → ui-critic) with deterministic output files
@@ -7,12 +7,12 @@ description: Orchestrate the 4-pass greenfield design pipeline (art-director →
 Turn a design brief into production UI through the **Adorable pipeline**: four
 passes that each consume and produce structured JSON, chained end-to-end with
 no ambiguous text between agents. The pipeline is greenfield-only — for
-existing codebases use `/ocf:audit-ui`.
+existing codebases use `$flow-audit-ui`.
 
 ### Usage
 
 ```
-/ocf:build-ui <brief|file-path|session-id>
+$flow-build-ui <brief|file-path|session-id>
 ```
 
 The argument is a design brief — either inline text or a path to a file
@@ -31,9 +31,9 @@ If no argument is provided, the command asks the user for a brief.
 ### Examples
 
 ```
-/ocf:build-ui "A landing page for a boutique coffee roaster, warm and editorial"
-/ocf:build-ui briefs/coffee-roaster.md
-/ocf:build-ui 2026-08-17T14-30-00
+$flow-build-ui "A landing page for a boutique coffee roaster, warm and editorial"
+$flow-build-ui briefs/coffee-roaster.md
+$flow-build-ui 2026-08-17T14-30-00
 ```
 
 ### Pipeline passes
@@ -45,7 +45,7 @@ If no argument is provided, the command asks the user for a brief.
 | 3 | `design/ui-implementer` | `<dir>/design_spec.json` + `<dir>/component_tree.json` + project root | Production code |
 | 4 | `design/ui-critic` | Implemented code + `<dir>/design_spec.json` + `<dir>/component_tree.json` | `<dir>/quality_report.json` |
 
-`<dir>` = `.opencode/design-outputs/<session-id>/`.
+`<dir>` = `.codex/design-outputs/<session-id>/`.
 
 1. **Pass 1 — `design/art-director`**: produces the design spec JSON
    (`brief_analysis`, `rejected_defaults`, `directions_considered`,
@@ -65,7 +65,7 @@ If no argument is provided, the command asks the user for a brief.
 ### Session and output conventions
 
 A session id (UTC timestamp `YYYY-MM-DDTHH-MM-SS`) and an output directory
-`.opencode/design-outputs/<session-id>/` are created at command start. All
+`.codex/design-outputs/<session-id>/` are created at command start. All
 stage outputs land in that directory. On resumption the existing session id
 and its output directory are REUSED as-is — a new session id/directory is
 created only on the first run, never on a resume run. See
@@ -82,7 +82,7 @@ next stage.
 ### Resumption
 
 Re-running the command with the same session id
-(e.g. `/ocf:build-ui <session-id>`) REUSES the same session id and its output
+(e.g. `$flow-build-ui <session-id>`) REUSES the same session id and its output
 directory — never creating a new one — and skips stages whose output files
 already exist, continuing from the first missing stage.
 

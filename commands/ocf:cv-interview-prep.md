@@ -1,11 +1,11 @@
-## /ocf:cv-interview-prep <candidate-directory> <job>
+## $flow-cv-interview-prep <candidate-directory> <job>
 
 ---
 description: Generate a structured interview preparation kit from the candidate hub and a target job — likely interview questions (behavioral + technical), suggested STAR-format answers mapped to real hub experience, questions to ask the interviewer, and technical topics to review; outputs interview-preparation.md in the user's communication language (never fabricates experience)
 ---
 
 Generates a structured interview preparation kit for a specific job
-application, from the candidate's `hub.json` (built with `/ocf:cv-hub`) and
+application, from the candidate's `hub.json` (built with `$flow-cv-hub`) and
 the job description. The kit covers the four preparation blocks — **likely
 interview questions** (behavioral + technical), **suggested STAR answers**
 mapped to real hub experience, **questions to ask the interviewer** and
@@ -17,12 +17,12 @@ requirements and seniority.
 ### Prerequisite
 
 The candidate needs a valid hub at `~/career/<candidate-name>/hub.json`.
-If it does not exist, run `/ocf:cv-hub` first.
+If it does not exist, run `$flow-cv-hub` first.
 
 ### Usage
 
 ```
-/ocf:cv-interview-prep ~/career/maria-silva "job description text"
+$flow-cv-interview-prep ~/career/maria-silva "job description text"
 ```
 
 The job can be provided as:
@@ -36,7 +36,7 @@ URL, ask them to paste the job description text instead.
 ### Flow
 
 1. **Validate hub** — `python3 $SCRIPTS_DIR/cv/validate.py hub.json`; if the
-   hub is missing/invalid, tell the user to run `/ocf:cv-hub` first.
+   hub is missing/invalid, tell the user to run `$flow-cv-hub` first.
 2. **Invoke the agent** `career/cv-interview-prep` via `task:` with the
    candidate directory and the job.
 3. **Analyze the job** — required/desirable requirements, keywords, seniority,

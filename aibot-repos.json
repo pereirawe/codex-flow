@@ -6,8 +6,8 @@
       "comment": "opcional — nota sobre o repo"
     }
   },
-  "pereirawe/opencode-flow": {
-    "workspace": "~/.config/opencode",
-    "comment": "Exemplo: o proprio repositorio de config do opencode. O tracker real deste repo vive em ~/.config/opencode/known_issues.md (o .opencode/known_issues.md e o template vazio); o watcher resolve isso automaticamente. Em projetos padrao, o tracker e o .opencode/known_issues.md do workspace."
+  "pereirawe/codex-flow": {
+    "workspace": "~/.codex/flow",
+    "comment": "Exemplo: o proprio repositorio de config do opencode. O tracker real deste repo vive em ~/.codex/flow/known_issues.md (o .codex/known_issues.md e o template vazio); o watcher resolve isso automaticamente. Em projetos padrao, o tracker e o .codex/known_issues.md do workspace."
   }
 }

@@ -94,7 +94,7 @@ ln -sf "$MOCK_DATE/date" "$MOCK_GIT/date"
 make_fixture() {
   local d="$1" status="$2" remote="$3" pr="$4"
   local opened="${5:--}" ready="${6:--}" started="${7:--}"
-  mkdir -p "$d/.opencode"
+  mkdir -p "$d/.codex"
   git -C "$d" init -q
   git -C "$d" remote add origin "git@github.com:owner/repo.git"
   git -C "$d" -c user.email=t@t -c user.name=t commit -q --allow-empty -m init
@@ -109,7 +109,7 @@ make_fixture() {
     printf -- '- Remote: %s\n' "$remote"
     printf -- '- PR: %s\n' "$pr"
     printf -- '- Description: test description\n- Business rules:\n  1. rule one\n- Acceptance criteria:\n  1. criterion one\n- Tests:\n  1. scenario -> outcome\n- Suggested fix: test fix\n'
-  } > "$d/.opencode/known_issues.md"
+  } > "$d/.codex/known_issues.md"
 }
 
 # run <fixture-dir> <mock-dir> <script> <args...> — echoes rc; output in $RUN_OUT
@@ -144,11 +144,11 @@ pipe_confirm() {
 fix="$TMP/t01"; make_fixture "$fix" backlog - -
 rc=$(run "$fix" "$MOCK_GIT" "$PROMOTE" 1)
 assert_eq "0" "$rc" "t01: promote backlog→ready exit 0"
-assert_eq "ready" "$(field "$fix/.opencode/known_issues.md" Status)" "t01: status = ready"
-assert_eq "$FAKE_TODAY" "$(field "$fix/.opencode/known_issues.md" Ready)" "t01: Ready stamped with today"
-assert_eq "" "$(field "$fix/.opencode/known_issues.md" Opened)" "t01: Opened not stamped in mode 1"
-assert_eq "" "$(field "$fix/.opencode/known_issues.md" Started)" "t01: Started not stamped in mode 1"
-assert_eq "1" "$(cnt "$fix/.opencode/known_issues.md" '- Ready:')" "t01: single Ready line"
+assert_eq "ready" "$(field "$fix/.codex/known_issues.md" Status)" "t01: status = ready"
+assert_eq "$FAKE_TODAY" "$(field "$fix/.codex/known_issues.md" Ready)" "t01: Ready stamped with today"
+assert_eq "" "$(field "$fix/.codex/known_issues.md" Opened)" "t01: Opened not stamped in mode 1"
+assert_eq "" "$(field "$fix/.codex/known_issues.md" Started)" "t01: Started not stamped in mode 1"
+assert_eq "1" "$(cnt "$fix/.codex/known_issues.md" '- Ready:')" "t01: single Ready line"
 
 # ===========================================================================
 # t02 — promote mode 1 preserves an existing Opened (set-if-absent)
@@ -156,9 +156,9 @@ assert_eq "1" "$(cnt "$fix/.opencode/known_issues.md" '- Ready:')" "t01: single 
 fix="$TMP/t02"; make_fixture "$fix" backlog - - 2026-08-01
 rc=$(run "$fix" "$MOCK_GIT" "$PROMOTE" 1)
 assert_eq "0" "$rc" "t02: exit 0"
-assert_eq "2026-08-01" "$(field "$fix/.opencode/known_issues.md" Opened)" "t02: existing Opened preserved"
-assert_eq "$FAKE_TODAY" "$(field "$fix/.opencode/known_issues.md" Ready)" "t02: Ready stamped"
-assert_eq "1" "$(cnt "$fix/.opencode/known_issues.md" '- Opened:')" "t02: single Opened (no duplicate)"
+assert_eq "2026-08-01" "$(field "$fix/.codex/known_issues.md" Opened)" "t02: existing Opened preserved"
+assert_eq "$FAKE_TODAY" "$(field "$fix/.codex/known_issues.md" Ready)" "t02: Ready stamped"
+assert_eq "1" "$(cnt "$fix/.codex/known_issues.md" '- Opened:')" "t02: single Opened (no duplicate)"
 
 # ===========================================================================
 # t03 — promote mode 1 double-run: second run errors, no duplicate fields
@@ -167,9 +167,9 @@ fix="$TMP/t03"; make_fixture "$fix" backlog - -
 run "$fix" "$MOCK_GIT" "$PROMOTE" 1 >/dev/null
 rc=$(run "$fix" "$MOCK_GIT" "$PROMOTE" 1)
 assert_eq "1" "$rc" "t03: second promote errors (ready + Remote:- → remote gate)"
-assert_eq "ready" "$(field "$fix/.opencode/known_issues.md" Status)" "t03: status still ready"
-assert_eq "1" "$(cnt "$fix/.opencode/known_issues.md" '- Ready:')" "t03: single Ready (no duplicate)"
-assert_eq "" "$(field "$fix/.opencode/known_issues.md" Started)" "t03: Started not stamped"
+assert_eq "ready" "$(field "$fix/.codex/known_issues.md" Status)" "t03: status still ready"
+assert_eq "1" "$(cnt "$fix/.codex/known_issues.md" '- Ready:')" "t03: single Ready (no duplicate)"
+assert_eq "" "$(field "$fix/.codex/known_issues.md" Started)" "t03: Started not stamped"
 
 # ===========================================================================
 # t04 — promote ready→in-progress stamps Started and backfills Opened
@@ -177,21 +177,21 @@ assert_eq "" "$(field "$fix/.opencode/known_issues.md" Started)" "t03: Started n
 fix="$TMP/t04"; make_fixture "$fix" ready "#42" -
 rc=$(run "$fix" "$MOCK_GIT" "$PROMOTE" 1)
 assert_eq "0" "$rc" "t04: exit 0"
-assert_eq "in-progress" "$(field "$fix/.opencode/known_issues.md" Status)" "t04: status = in-progress"
-assert_eq "$FAKE_TODAY" "$(field "$fix/.opencode/known_issues.md" Opened)" "t04: Opened backfilled (BR 3 approximation)"
-assert_eq "$FAKE_TODAY" "$(field "$fix/.opencode/known_issues.md" Started)" "t04: Started stamped"
-assert_eq "1" "$(cnt "$fix/.opencode/known_issues.md" '- Opened:')" "t04: single Opened"
-assert_eq "1" "$(cnt "$fix/.opencode/known_issues.md" '- Started:')" "t04: single Started"
+assert_eq "in-progress" "$(field "$fix/.codex/known_issues.md" Status)" "t04: status = in-progress"
+assert_eq "$FAKE_TODAY" "$(field "$fix/.codex/known_issues.md" Opened)" "t04: Opened backfilled (BR 3 approximation)"
+assert_eq "$FAKE_TODAY" "$(field "$fix/.codex/known_issues.md" Started)" "t04: Started stamped"
+assert_eq "1" "$(cnt "$fix/.codex/known_issues.md" '- Opened:')" "t04: single Opened"
+assert_eq "1" "$(cnt "$fix/.codex/known_issues.md" '- Started:')" "t04: single Started"
 
 # ===========================================================================
 # t05 — (regression) promote mode 2 remote gate: Remote:- blocks, no changes
 # ===========================================================================
 fix="$TMP/t05"; make_fixture "$fix" ready - -
-cp "$fix/.opencode/known_issues.md" "$TMP/t05.before"
+cp "$fix/.codex/known_issues.md" "$TMP/t05.before"
 rc=$(run "$fix" "$MOCK_GIT" "$PROMOTE" 1)
 assert_eq "1" "$rc" "t05: remote gate blocks promotion"
 assert_contains "$RUN_OUT" "must be populated" "t05: gate message about Remote"
-diff -q "$TMP/t05.before" "$fix/.opencode/known_issues.md" >/dev/null \
+diff -q "$TMP/t05.before" "$fix/.codex/known_issues.md" >/dev/null \
   && t_ok "t05: tracker untouched on gate failure" \
   || t_fail "t05: tracker modified on gate failure"
 
@@ -200,9 +200,9 @@ diff -q "$TMP/t05.before" "$fix/.opencode/known_issues.md" >/dev/null \
 # ===========================================================================
 fix="$TMP/t06"; make_fixture "$fix" ready "#42" - 2026-08-01
 rc=$(run "$fix" "$MOCK_GIT" "$PROMOTE" 1)
-assert_eq "2026-08-01" "$(field "$fix/.opencode/known_issues.md" Opened)" "t06: existing Opened preserved"
-assert_eq "1" "$(cnt "$fix/.opencode/known_issues.md" '- Opened:')" "t06: no duplicate Opened"
-assert_eq "$FAKE_TODAY" "$(field "$fix/.opencode/known_issues.md" Started)" "t06: Started stamped"
+assert_eq "2026-08-01" "$(field "$fix/.codex/known_issues.md" Opened)" "t06: existing Opened preserved"
+assert_eq "1" "$(cnt "$fix/.codex/known_issues.md" '- Opened:')" "t06: no duplicate Opened"
+assert_eq "$FAKE_TODAY" "$(field "$fix/.codex/known_issues.md" Started)" "t06: Started stamped"
 
 # ===========================================================================
 # t07 — (regression) promote mode 2 creates the feature branch from Base branch
@@ -213,7 +213,7 @@ rc=$(run "$fix" "$MOCK_GIT" "$PROMOTE" 1)
 assert_eq "0" "$rc" "t07: exit 0"
 assert_contains "$GIT_LOG" "checkout main" "t07: base branch main checked out"
 assert_contains "$GIT_LOG" "checkout -b issue-1-" "t07: feature branch created from base"
-assert_eq "in-progress" "$(field "$fix/.opencode/known_issues.md" Status)" "t07: status = in-progress"
+assert_eq "in-progress" "$(field "$fix/.codex/known_issues.md" Status)" "t07: status = in-progress"
 
 # ===========================================================================
 # t08 — create_issue stamps Opened on remote creation success
@@ -222,9 +222,9 @@ fix="$TMP/t08"; make_fixture "$fix" ready - -
 GH_LOG="$TMP/t08.ghlog"; export GH_LOG; : > "$GH_LOG"
 rc=$(run "$fix" "$MOCK_NET" "$CREATE" 1)
 assert_eq "0" "$rc" "t08: create_issue exit 0"
-assert_eq "#42" "$(field "$fix/.opencode/known_issues.md" Remote)" "t08: Remote = #42"
-assert_eq "$FAKE_TODAY" "$(field "$fix/.opencode/known_issues.md" Opened)" "t08: Opened stamped on remote success"
-assert_eq "ready" "$(field "$fix/.opencode/known_issues.md" Status)" "t08: status stays ready"
+assert_eq "#42" "$(field "$fix/.codex/known_issues.md" Remote)" "t08: Remote = #42"
+assert_eq "$FAKE_TODAY" "$(field "$fix/.codex/known_issues.md" Opened)" "t08: Opened stamped on remote success"
+assert_eq "ready" "$(field "$fix/.codex/known_issues.md" Status)" "t08: status stays ready"
 assert_contains "$GH_LOG" "issue create" "t08: gh issue create invoked"
 
 # ===========================================================================
@@ -236,8 +236,8 @@ export GH_FAIL=1
 rc=$(run "$fix" "$MOCK_NET" "$CREATE" 1)
 unset GH_FAIL
 assert_eq "0" "$rc" "t09: create failure logged, script completes"
-assert_contains "$fix/.opencode/known_issues.md" "error:mock create failed" "t09: Remote: error:... recorded"
-assert_eq "" "$(field "$fix/.opencode/known_issues.md" Opened)" "t09: Opened NOT stamped on failure"
+assert_contains "$fix/.codex/known_issues.md" "error:mock create failed" "t09: Remote: error:... recorded"
+assert_eq "" "$(field "$fix/.codex/known_issues.md" Opened)" "t09: Opened NOT stamped on failure"
 
 # ===========================================================================
 # t10 — create_issue idempotent: second run aborts, no duplicates
@@ -247,9 +247,9 @@ GH_LOG="$TMP/t10.ghlog"; export GH_LOG; : > "$GH_LOG"
 run "$fix" "$MOCK_NET" "$CREATE" 1 >/dev/null
 rc=$(run "$fix" "$MOCK_NET" "$CREATE" 1)
 assert_eq "1" "$rc" "t10: second create aborts (already has remote)"
-assert_eq "#42" "$(field "$fix/.opencode/known_issues.md" Remote)" "t10: Remote unchanged"
-assert_eq "1" "$(cnt "$fix/.opencode/known_issues.md" '- Opened:')" "t10: single Opened"
-assert_eq "1" "$(cnt "$fix/.opencode/known_issues.md" '#42')" "t10: single Remote #42"
+assert_eq "#42" "$(field "$fix/.codex/known_issues.md" Remote)" "t10: Remote unchanged"
+assert_eq "1" "$(cnt "$fix/.codex/known_issues.md" '- Opened:')" "t10: single Opened"
+assert_eq "1" "$(cnt "$fix/.codex/known_issues.md" '#42')" "t10: single Remote #42"
 
 # ===========================================================================
 # t11 — create_issue preserves an existing Opened (set-if-absent)
@@ -257,8 +257,8 @@ assert_eq "1" "$(cnt "$fix/.opencode/known_issues.md" '#42')" "t10: single Remot
 fix="$TMP/t11"; make_fixture "$fix" ready - - 2026-08-01
 GH_LOG="$TMP/t11.ghlog"; export GH_LOG; : > "$GH_LOG"
 rc=$(run "$fix" "$MOCK_NET" "$CREATE" 1)
-assert_eq "2026-08-01" "$(field "$fix/.opencode/known_issues.md" Opened)" "t11: existing Opened preserved"
-assert_eq "1" "$(cnt "$fix/.opencode/known_issues.md" '- Opened:')" "t11: single Opened"
+assert_eq "2026-08-01" "$(field "$fix/.codex/known_issues.md" Opened)" "t11: existing Opened preserved"
+assert_eq "1" "$(cnt "$fix/.codex/known_issues.md" '- Opened:')" "t11: single Opened"
 
 # ===========================================================================
 # t12 — legacy `open` path preserved (BR 7 / AC 11): status→in-progress,
@@ -268,9 +268,9 @@ fix="$TMP/t12"; make_fixture "$fix" open - -
 GH_LOG="$TMP/t12.ghlog"; export GH_LOG; : > "$GH_LOG"
 rc=$(run "$fix" "$MOCK_NET" "$CREATE" 1)
 assert_eq "0" "$rc" "t12: open path exit 0"
-assert_eq "in-progress" "$(field "$fix/.opencode/known_issues.md" Status)" "t12: open → in-progress"
-assert_eq "#42" "$(field "$fix/.opencode/known_issues.md" Remote)" "t12: Remote set"
-assert_eq "$FAKE_TODAY" "$(field "$fix/.opencode/known_issues.md" Opened)" "t12: Opened stamped"
+assert_eq "in-progress" "$(field "$fix/.codex/known_issues.md" Status)" "t12: open → in-progress"
+assert_eq "#42" "$(field "$fix/.codex/known_issues.md" Remote)" "t12: Remote set"
+assert_eq "$FAKE_TODAY" "$(field "$fix/.codex/known_issues.md" Opened)" "t12: Opened stamped"
 git -C "$fix" branch --list 'issue-42-*' | grep -q 'issue-42-test-issue' \
   && t_ok "t12: legacy branch issue-42-test-issue created (real git)" \
   || t_fail "t12: legacy branch not created"
@@ -279,14 +279,14 @@ git -C "$fix" branch --list 'issue-42-*' | grep -q 'issue-42-test-issue' \
 # t13 — (regression) close_issue rejects non-closeable statuses
 # ===========================================================================
 fix="$TMP/t13"; make_fixture "$fix" ready - -
-cp "$fix/.opencode/known_issues.md" "$TMP/t13.before"
+cp "$fix/.codex/known_issues.md" "$TMP/t13.before"
 rc=$(run "$fix" "$MOCK_NET" "$CLOSE" 1)
 assert_eq "1" "$rc" "t13: close rejects ready status"
 assert_contains "$RUN_OUT" "cannot be closed" "t13: rejection message"
-diff -q "$TMP/t13.before" "$fix/.opencode/known_issues.md" >/dev/null \
+diff -q "$TMP/t13.before" "$fix/.codex/known_issues.md" >/dev/null \
   && t_ok "t13: tracker untouched" \
   || t_fail "t13: tracker modified"
-if [[ -f "$fix/.opencode/resolved_issues.md" ]]; then
+if [[ -f "$fix/.codex/resolved_issues.md" ]]; then
   t_fail "t13: archive written despite rejection"
 else
   t_ok "t13: no archive written"
@@ -302,17 +302,17 @@ rc=$(pipe_confirm "$fix" "s")
 assert_eq "0" "$rc" "t14: close exit 0"
 assert_contains "$GH_LOG" "pr view 9" "t14: PR merge verified before close"
 assert_contains "$GH_LOG" "issue close 42" "t14: remote issue closed"
-assert_contains "$fix/.opencode/resolved_issues.md" "- Resolved: $FAKE_TODAY" "t14: Resolved stamped (close date)"
-assert_contains "$fix/.opencode/resolved_issues.md" "- Durations:" "t14: Durations present"
-assert_contains "$fix/.opencode/resolved_issues.md" "- Severity: medium" "t14: Severity in archive"
-assert_not_contains "$fix/.opencode/known_issues.md" "### 1." "t14: entry removed from tracker"
+assert_contains "$fix/.codex/resolved_issues.md" "- Resolved: $FAKE_TODAY" "t14: Resolved stamped (close date)"
+assert_contains "$fix/.codex/resolved_issues.md" "- Durations:" "t14: Durations present"
+assert_contains "$fix/.codex/resolved_issues.md" "- Severity: medium" "t14: Severity in archive"
+assert_not_contains "$fix/.codex/known_issues.md" "### 1." "t14: entry removed from tracker"
 
 # ===========================================================================
 # t15 — exact per-stage durations (normal dates)
 # ===========================================================================
 fix="$TMP/t15"; make_fixture "$fix" in-publish "#42" "#9" 2026-08-01 2026-08-03 2026-08-05
 pipe_confirm "$fix" "s" >/dev/null
-assert_contains "$fix/.opencode/resolved_issues.md" \
+assert_contains "$fix/.codex/resolved_issues.md" \
   "- Durations: backlog=2d waiting=2d dev=9d review=- qa=- publish=- total=13d" \
   "t15: exact per-stage durations (Opened 08-01 → Resolved 08-14)"
 
@@ -321,7 +321,7 @@ assert_contains "$fix/.opencode/resolved_issues.md" \
 # ===========================================================================
 fix="$TMP/t16"; make_fixture "$fix" in-publish "#42" "#9" 2026-08-10 2026-08-01 2026-08-05
 pipe_confirm "$fix" "s" >/dev/null
-assert_contains "$fix/.opencode/resolved_issues.md" \
+assert_contains "$fix/.codex/resolved_issues.md" \
   "- Durations: backlog=- waiting=4d dev=9d review=- qa=- publish=- total=4d" \
   "t16: start>end component renders '-' (backlog), others computed"
 
@@ -330,7 +330,7 @@ assert_contains "$fix/.opencode/resolved_issues.md" \
 # ===========================================================================
 fix="$TMP/t17"; make_fixture "$fix" in-publish "#42" "#9" 2026-08-14 2026-08-14 2026-08-14
 pipe_confirm "$fix" "s" >/dev/null
-assert_contains "$fix/.opencode/resolved_issues.md" \
+assert_contains "$fix/.codex/resolved_issues.md" \
   "- Durations: backlog=0h waiting=0h dev=0h review=- qa=- publish=- total=0h" \
   "t17: zero-day differences render 0h"
 
@@ -339,14 +339,14 @@ assert_contains "$fix/.opencode/resolved_issues.md" \
 # ===========================================================================
 fix="$TMP/t18"; make_fixture "$fix" in-publish "#42" "#9"
 pipe_confirm "$fix" "s" >/dev/null
-assert_contains "$fix/.opencode/resolved_issues.md" "- Durations: -" "t18: all-missing renders literal '- Durations: -'"
+assert_contains "$fix/.codex/resolved_issues.md" "- Durations: -" "t18: all-missing renders literal '- Durations: -'"
 
 # ===========================================================================
 # t19 — double-run close: exactly one archive entry, pre-existing entries
 #       preserved verbatim (AC 4 / BR 13)
 # ===========================================================================
 fix="$TMP/t19"; make_fixture "$fix" in-publish "#42" "#9" 2026-08-01 2026-08-03 2026-08-05
-cat > "$fix/.opencode/resolved_issues.md" <<'EOF'
+cat > "$fix/.codex/resolved_issues.md" <<'EOF'
 # Resolved Issues
 
 Issues resolved from `known_issues.md`. See `standards/resolved-issue.md` for format.
@@ -362,9 +362,9 @@ EOF
 pipe_confirm "$fix" "s" >/dev/null
 rc=$(pipe_confirm "$fix" "s")
 assert_eq "1" "$rc" "t19: second close aborts (issue not found)"
-assert_eq "1" "$(grep -cE '^### 1\.' "$fix/.opencode/resolved_issues.md")" "t19: exactly one archive entry for id 1"
-assert_contains "$fix/.opencode/resolved_issues.md" "### 5. Old issue" "t19: pre-existing entry preserved"
-assert_contains "$fix/.opencode/resolved_issues.md" "old summary preserved verbatim" "t19: pre-existing body preserved"
+assert_eq "1" "$(grep -cE '^### 1\.' "$fix/.codex/resolved_issues.md")" "t19: exactly one archive entry for id 1"
+assert_contains "$fix/.codex/resolved_issues.md" "### 5. Old issue" "t19: pre-existing entry preserved"
+assert_contains "$fix/.codex/resolved_issues.md" "old summary preserved verbatim" "t19: pre-existing body preserved"
 
 # ===========================================================================
 # t20 — auto-close default vs opt-in prompt: non-interactive runs never hang
@@ -379,7 +379,7 @@ rc=$(pipe_confirm "$fix" "n")
 assert_eq "0" "$rc" "t20: non-interactive close completes without TTY"
 assert_contains "$GH_LOG" "pr view" "t20: PR merge still checked"
 assert_contains "$GH_LOG" "issue close 42" "t20: default auto-closes remote (no prompt)"
-assert_contains "$fix/.opencode/resolved_issues.md" "- Resolved:" "t20: local archive still written"
+assert_contains "$fix/.codex/resolved_issues.md" "- Resolved:" "t20: local archive still written"
 
 fix="$TMP/t20b"; make_fixture "$fix" in-publish "#42" "#9" 2026-08-01 2026-08-03 2026-08-05
 GH_LOG="$TMP/t20b.ghlog"; export GH_LOG; : > "$GH_LOG"
@@ -388,7 +388,7 @@ rc=0
 assert_eq "0" "$rc" "t20b: opt-in prompt (n) completes without hang"
 assert_contains "$GH_LOG" "pr view" "t20b: PR merge still checked"
 assert_not_contains "$GH_LOG" "issue close" "t20b: remote close skipped on 'n'"
-assert_contains "$fix/.opencode/resolved_issues.md" "- Resolved:" "t20b: local archive still written"
+assert_contains "$fix/.codex/resolved_issues.md" "- Resolved:" "t20b: local archive still written"
 
 # ===========================================================================
 # t21 — DST spring-forward: UTC-anchored parse is DST-robust (BR 4 / AC 10)
@@ -400,7 +400,7 @@ rc=0
 ( cd "$fix" && PATH="$MOCK_NET:$PATH" TZ=America/New_York FAKE_TODAY=2026-03-11 \
     bash "$CLOSE" 1 ) <<< "s" >"$RUN_OUT" 2>&1 || rc=$?
 assert_eq "0" "$rc" "t21: close exit 0 under DST timezone"
-assert_contains "$fix/.opencode/resolved_issues.md" \
+assert_contains "$fix/.codex/resolved_issues.md" \
   "- Durations: backlog=1d waiting=1d dev=1d review=- qa=- publish=- total=3d" \
   "t21: spring-forward DST passes with UTC-anchored parse (naive local would give 0d)"
 
@@ -409,7 +409,7 @@ assert_contains "$fix/.opencode/resolved_issues.md" \
 # ===========================================================================
 fix="$TMP/t22"; make_fixture "$fix" in-publish "#42" "#9" 2026-08-09
 pipe_confirm "$fix" "s" >/dev/null
-assert_contains "$fix/.opencode/resolved_issues.md" \
+assert_contains "$fix/.codex/resolved_issues.md" \
   "- Durations: backlog=- waiting=- dev=- review=- qa=- publish=- total=5d" \
   "t22: missing dates render '-'; total computed from available timestamps"
 
@@ -421,7 +421,7 @@ GH_LOG="$TMP/t23.ghlog"; export GH_LOG; : > "$GH_LOG"
 run "$fix" "$MOCK_GIT" "$PROMOTE" 1 >/dev/null
 run "$fix" "$MOCK_NET" "$CREATE" 1 >/dev/null
 run "$fix" "$MOCK_GIT" "$PROMOTE" 1 >/dev/null
-f="$fix/.opencode/known_issues.md"
+f="$fix/.codex/known_issues.md"
 s=$(grep -nF -- "- Status:" "$f" | cut -d: -f1)
 o=$(grep -nF -- "- Opened:" "$f" | cut -d: -f1)
 r=$(grep -nF -- "- Ready:" "$f" | cut -d: -f1)
@@ -470,7 +470,7 @@ GH_LOG="$TMP/t25.ghlog"; export GH_LOG; : > "$GH_LOG"
 run "$fix" "$MOCK_GIT" "$PROMOTE" 1 >/dev/null
 run "$fix" "$MOCK_NET" "$CREATE" 1 >/dev/null
 run "$fix" "$MOCK_GIT" "$PROMOTE" 1 >/dev/null
-f="$fix/.opencode/known_issues.md"
+f="$fix/.codex/known_issues.md"
 assert_eq "in-progress" "$(field "$f" Status)" "t25: status in-progress after full promote"
 assert_eq "$FAKE_TODAY" "$(field "$f" Opened)" "t25: Opened stamped via create_issue"
 assert_eq "$FAKE_TODAY" "$(field "$f" Ready)" "t25: Ready stamped via promote mode 1"
@@ -479,11 +479,11 @@ sed -i 's/^- Status: in-progress/- Status: in-publish/' "$f"
 sed -i 's/^- PR: -/- PR: #9/' "$f"
 rc=$(pipe_confirm "$fix" "s")
 assert_eq "0" "$rc" "t25: close exit 0"
-assert_contains "$fix/.opencode/resolved_issues.md" "- Resolved: $FAKE_TODAY" "t25: Resolved in archive"
-assert_contains "$fix/.opencode/resolved_issues.md" "- Durations: backlog=0h waiting=0h dev=0h review=- qa=- publish=- total=0h" "t25: durations computed (same-day lifecycle)"
+assert_contains "$fix/.codex/resolved_issues.md" "- Resolved: $FAKE_TODAY" "t25: Resolved in archive"
+assert_contains "$fix/.codex/resolved_issues.md" "- Durations: backlog=0h waiting=0h dev=0h review=- qa=- publish=- total=0h" "t25: durations computed (same-day lifecycle)"
 assert_contains "$GH_LOG" "issue close 42" "t25: remote closed exactly once"
-assert_eq "1" "$(grep -cE '^### 1\.' "$fix/.opencode/resolved_issues.md")" "t25: exactly one archive entry"
-assert_not_contains "$fix/.opencode/known_issues.md" "### 1." "t25: tracker entry removed"
+assert_eq "1" "$(grep -cE '^### 1\.' "$fix/.codex/resolved_issues.md")" "t25: exactly one archive entry"
+assert_not_contains "$fix/.codex/known_issues.md" "### 1." "t25: tracker entry removed"
 
 # ===========================================================================
 # t26 — transition.sh stamps per-stage timestamps (issue #81): in-progress ->
@@ -491,7 +491,7 @@ assert_not_contains "$fix/.opencode/known_issues.md" "### 1." "t25: tracker entr
 # ===========================================================================
 fix="$TMP/t26"; make_fixture "$fix" ready "#42" -
 run "$fix" "$MOCK_DATE" "$TRANSITION" 1 in-progress >/dev/null
-f="$fix/.opencode/known_issues.md"
+f="$fix/.codex/known_issues.md"
 assert_eq "in-progress" "$(field "$f" Status)" "t26: status in-progress after transition"
 assert_eq "$FAKE_TODAY" "$(field "$f" Started)" "t26: Started stamped on in-progress"
 run "$fix" "$MOCK_DATE" "$TRANSITION" 1 in-review >/dev/null
@@ -509,7 +509,7 @@ assert_eq "$FAKE_TODAY" "$(field "$f" "In publish")" "t26: In publish stamped on
 # ===========================================================================
 fix="$TMP/t27"; make_fixture "$fix" ready "#42" -
 run "$fix" "$MOCK_DATE" "$TRANSITION" 1 in-review >/dev/null
-f="$fix/.opencode/known_issues.md"
+f="$fix/.codex/known_issues.md"
 sed -i 's/^- In review: .*/&/' "$f"   # no-op; keep line
 run "$fix" "$MOCK_DATE" "$TRANSITION" 1 in-review >/dev/null
 assert_eq "1" "$(grep -c '^- In review:' "$f")" "t27: single In review (no duplicate)"
@@ -523,13 +523,13 @@ assert_eq "1" "$(grep -c '^- In QA:' "$f")" "t27: single In QA (no duplicate)"
 #       publish computed from per-stage timestamps at close time
 # ===========================================================================
 fix="$TMP/t28"; make_fixture "$fix" in-publish "#42" "#9" 2026-08-01 2026-08-03 2026-08-05
-f="$fix/.opencode/known_issues.md"
+f="$fix/.codex/known_issues.md"
 sed -i 's/^- Status: in-publish/- Status: in-publish/' "$f"
 # Append per-stage timestamps after Started (Started 08-05, review 08-07, qa 08-09, publish 08-11)
 awk '/^- Started:/ { print; print "- In review: 2026-08-07"; print "- In QA: 2026-08-09"; print "- In publish: 2026-08-11"; next } { print }' "$f" > "$f.tmp" && mv "$f.tmp" "$f"
 rc=$(pipe_confirm "$fix" "s")
 assert_eq "0" "$rc" "t28: close exit 0"
-assert_contains "$fix/.opencode/resolved_issues.md" \
+assert_contains "$fix/.codex/resolved_issues.md" \
   "- Durations: backlog=2d waiting=2d dev=2d review=2d qa=2d publish=3d total=13d" \
   "t28: per-stage durations (dev 08-05→08-07, review 08-07→08-09, qa 08-09→08-11, publish 08-11→08-14)"
 
@@ -539,6 +539,6 @@ assert_contains "$fix/.opencode/resolved_issues.md" \
 fix="$TMP/t29"; make_fixture "$fix" ready "#42" -
 rc=$(run "$fix" "$MOCK_DATE" "$TRANSITION" 1 bogus)
 assert_eq "1" "$rc" "t29: invalid status rejected"
-assert_eq "ready" "$(field "$fix/.opencode/known_issues.md" Status)" "t29: status unchanged on invalid transition"
+assert_eq "ready" "$(field "$fix/.codex/known_issues.md" Status)" "t29: status unchanged on invalid transition"
 
 t_finish

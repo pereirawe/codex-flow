@@ -4,7 +4,7 @@ source "$(dirname "$0")/config.sh"
 
 # Usage: merge-and-close.sh <local_issue_id> [base_branch]
 #
-# Mechanical end-of-pipeline step for /ocf:develop-full (and /ocf:delivery after
+# Mechanical end-of-pipeline step for \$develop-full (and /ocf:delivery after
 # merge): once review + QA approved and the Committer gate passed (Status:
 # in-publish), this script merges the MR, returns the local checkout to the
 # updated base branch, and archives the issue via close_issue.sh.

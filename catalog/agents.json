@@ -1,0 +1,2028 @@
+[
+  {
+    "legacy_name": "bi/analytics-engineering",
+    "name": "cf_bi_analytics_engineering",
+    "path": "agents/bi/analytics-engineering.md",
+    "config_file": "codex-agents/cf_bi_analytics_engineering.toml",
+    "description": "Analytics engineering — data pipelines, ETL/ELT, data warehousing, dbt models, data modeling",
+    "source_settings": {
+      "mode": "subagent"
+    }
+  },
+  {
+    "legacy_name": "bi/dashboard-design",
+    "name": "cf_bi_dashboard_design",
+    "path": "agents/bi/dashboard-design.md",
+    "config_file": "codex-agents/cf_bi_dashboard_design.toml",
+    "description": "Dashboard and visualization design — KPI selection, chart types, dashboard layout, BI tools, data storytelling",
+    "source_settings": {
+      "mode": "subagent"
+    }
+  },
+  {
+    "legacy_name": "bi/data-analysis",
+    "name": "cf_bi_data_analysis",
+    "path": "agents/bi/data-analysis.md",
+    "config_file": "codex-agents/cf_bi_data_analysis.toml",
+    "description": "Data analysis — exploratory analysis, statistical testing, cohort analysis, funnel analysis, insight generation",
+    "source_settings": {
+      "mode": "subagent"
+    }
+  },
+  {
+    "legacy_name": "bi/data-governance",
+    "name": "cf_bi_data_governance",
+    "path": "agents/bi/data-governance.md",
+    "config_file": "codex-agents/cf_bi_data_governance.toml",
+    "description": "Data governance — data quality, catalog, lineage, metadata management, compliance, data policies",
+    "source_settings": {
+      "mode": "subagent"
+    }
+  },
+  {
+    "legacy_name": "bi/report-automation",
+    "name": "cf_bi_report_automation",
+    "path": "agents/bi/report-automation.md",
+    "config_file": "codex-agents/cf_bi_report_automation.toml",
+    "description": "Report automation — scheduled reports, automated insights, alerting, anomaly detection, executive summaries",
+    "source_settings": {
+      "mode": "subagent"
+    }
+  },
+  {
+    "legacy_name": "business-ops/capacity-planner",
+    "name": "cf_business_ops_capacity_planner",
+    "path": "agents/business-ops/capacity-planner.md",
+    "config_file": "codex-agents/cf_business_ops_capacity_planner.toml",
+    "description": "Capacity planning — resource allocation, staffing models, demand forecasting, utilization analysis, headcount planning",
+    "source_settings": {
+      "mode": "subagent"
+    }
+  },
+  {
+    "legacy_name": "business-ops/internal-comms",
+    "name": "cf_business_ops_internal_comms",
+    "path": "agents/business-ops/internal-comms.md",
+    "config_file": "codex-agents/cf_business_ops_internal_comms.toml",
+    "description": "Internal communications — organizational announcements, change management comms, company updates, leadership messages",
+    "source_settings": {
+      "mode": "subagent"
+    }
+  },
+  {
+    "legacy_name": "business-ops/knowledge-ops",
+    "name": "cf_business_ops_knowledge_ops",
+    "path": "agents/business-ops/knowledge-ops.md",
+    "config_file": "codex-agents/cf_business_ops_knowledge_ops.toml",
+    "description": "Knowledge operations — knowledge base management, documentation systems, information architecture, knowledge sharing",
+    "source_settings": {
+      "mode": "subagent"
+    }
+  },
+  {
+    "legacy_name": "business-ops/process-mapper",
+    "name": "cf_business_ops_process_mapper",
+    "path": "agents/business-ops/process-mapper.md",
+    "config_file": "codex-agents/cf_business_ops_process_mapper.toml",
+    "description": "Process mapping — workflow design, SOP creation, process optimization, swimlane diagrams, RACI matrices",
+    "source_settings": {
+      "mode": "subagent"
+    }
+  },
+  {
+    "legacy_name": "business-ops/procurement-optimizer",
+    "name": "cf_business_ops_procurement_optimizer",
+    "path": "agents/business-ops/procurement-optimizer.md",
+    "config_file": "codex-agents/cf_business_ops_procurement_optimizer.toml",
+    "description": "Procurement optimization — strategic sourcing, spend analysis, supplier consolidation, contract optimization, cost reduction",
+    "source_settings": {
+      "mode": "subagent"
+    }
+  },
+  {
+    "legacy_name": "business-ops/proposal-writer",
+    "name": "cf_business_ops_proposal_writer",
+    "path": "agents/business-ops/proposal-writer.md",
+    "config_file": "codex-agents/cf_business_ops_proposal_writer.toml",
+    "description": "Commercial proposal writer — turns an approved tech spec into a client-ready commercial proposal (scope, deliverables, timeline, investment, terms), invokes C-level experts for pricing and positioning validation, and embeds the company logo. Responds in the project locale.",
+    "source_settings": {
+      "mode": "all",
+      "temperature": 0.5,
+      "tools": {
+        "write": true,
+        "edit": true,
+        "bash": true
+      }
+    }
+  },
+  {
+    "legacy_name": "business-ops/spec-writer",
+    "name": "cf_business_ops_spec_writer",
+    "path": "agents/business-ops/spec-writer.md",
+    "config_file": "codex-agents/cf_business_ops_spec_writer.toml",
+    "description": "Technical specification writer — refines raw ideas into rigorous tech specs through structured discovery, invokes C-level experts (CTO, CMO, CFO, COO), and produces markdown specs with embedded company logo assets. Responds in the project locale.",
+    "source_settings": {
+      "mode": "all",
+      "temperature": 0.4,
+      "tools": {
+        "write": true,
+        "edit": true,
+        "bash": true
+      }
+    }
+  },
+  {
+    "legacy_name": "business-ops/vendor-management",
+    "name": "cf_business_ops_vendor_management",
+    "path": "agents/business-ops/vendor-management.md",
+    "config_file": "codex-agents/cf_business_ops_vendor_management.toml",
+    "description": "Vendor management — vendor selection, evaluation, contract negotiation, performance tracking, relationship management",
+    "source_settings": {
+      "mode": "subagent"
+    }
+  },
+  {
+    "legacy_name": "career/cv-ats-score",
+    "name": "cf_career_cv_ats_score",
+    "path": "agents/career/cv-ats-score.md",
+    "config_file": "codex-agents/cf_career_cv_ats_score.toml",
+    "description": "Scores the ATS compatibility of a generated resume (from $flow-cv-tailor) against the job's requirements — extracts the resume text from the PDF via pdftotext (best-effort, HTML fallback), loads job keywords from the gap analysis, computes keyword density, detects ATS red flags (tables, images as text, multi-column layouts, missing standard sections), scores the resume 0-100 (keyword_match 40%, section_completeness 30%, format_compliance 30%), and writes ats-score.md in the job's slug directory in the user's communication language; read-only besides the report, never fabricates counts or scores",
+    "source_settings": {
+      "mode": "subagent",
+      "temperature": 0.2,
+      "permission": {
+        "edit": {
+          "*": "deny",
+          "~/career/**": "allow"
+        },
+        "bash": {
+          "*": "deny",
+          "*SCRIPTS_DIR/cv/validate.py*": "allow",
+          "pdftotext *": "allow",
+          "python3 *": "allow",
+          "ls *": "allow",
+          "grep *": "allow"
+        },
+        "read": "allow",
+        "glob": "allow"
+      }
+    }
+  },
+  {
+    "legacy_name": "career/cv-cover-letter",
+    "name": "cf_career_cv_cover_letter",
+    "path": "agents/career/cv-cover-letter.md",
+    "config_file": "codex-agents/cf_career_cv_cover_letter.toml",
+    "description": "Generates a tailored cover letter PDF (HTML -> PDF) from the candidate's hub.json and a job description — analyzes the job, reuses or builds the gap analysis vs the hub, drafts the letter in the job's language (never fabricating) and produces the letter HTML + PDF",
+    "source_settings": {
+      "mode": "subagent",
+      "temperature": 0.2,
+      "permission": {
+        "edit": {
+          "*": "deny",
+          "~/career/**": "allow"
+        },
+        "bash": {
+          "*": "deny",
+          "*SCRIPTS_DIR/cv/pdf.sh*": "allow",
+          "*SCRIPTS_DIR/shared/html-to-pdf.sh*": "allow",
+          "*SCRIPTS_DIR/cv/validate.py*": "allow",
+          "*SCRIPTS_DIR/cv/check-inference.sh*": "allow",
+          "python3 *": "allow",
+          "pdftotext *": "allow",
+          "ls *": "allow",
+          "mkdir -p *": "allow",
+          "mv *": "allow",
+          "curl -L*": "allow",
+          "file *": "allow",
+          "realpath *": "allow"
+        },
+        "read": "allow",
+        "glob": "allow",
+        "grep": "allow"
+      }
+    }
+  },
+  {
+    "legacy_name": "career/cv-extractor",
+    "name": "cf_career_cv_extractor",
+    "path": "agents/career/cv-extractor.md",
+    "config_file": "codex-agents/cf_career_cv_extractor.toml",
+    "description": "Extracts data from the candidate's resume (CV PDF + official LinkedIn export + extras) and consolidates it into hub.json + README.md; in update mode, merges new information into an existing hub.json",
+    "source_settings": {
+      "mode": "subagent",
+      "temperature": 0.2,
+      "permission": {
+        "edit": {
+          "*": "deny",
+          "~/career/**": "allow",
+          "~/career/**/hub.json": "allow"
+        },
+        "bash": {
+          "*": "deny",
+          "pdftotext*": "allow",
+          "python3 *": "allow",
+          "*SCRIPTS_DIR/cv/validate.py*": "allow",
+          "ls *": "allow",
+          "mkdir -p *": "allow",
+          "cp *": "allow",
+          "mv *": "allow",
+          "chmod *": "allow"
+        },
+        "read": "allow",
+        "glob": "allow",
+        "grep": "allow"
+      }
+    }
+  },
+  {
+    "legacy_name": "career/cv-interview-prep",
+    "name": "cf_career_cv_interview_prep",
+    "path": "agents/career/cv-interview-prep.md",
+    "config_file": "codex-agents/cf_career_cv_interview_prep.toml",
+    "description": "Generates an interview preparation kit from the candidate's hub.json and a target job — likely interview questions (behavioral + technical), suggested STAR-format answers mapped to real hub experience, questions the candidate should ask the interviewer, technical topics to review, and preparation gaps; outputs interview-preparation.md in the user's communication language (never fabricates experience)",
+    "source_settings": {
+      "mode": "subagent",
+      "temperature": 0.2,
+      "permission": {
+        "edit": {
+          "*": "deny",
+          "~/career/**": "allow"
+        },
+        "bash": {
+          "*": "deny",
+          "*SCRIPTS_DIR/cv/validate.py*": "allow",
+          "python3 *": "allow",
+          "ls *": "allow",
+          "realpath *": "allow"
+        },
+        "read": "allow",
+        "glob": "allow",
+        "grep": "allow"
+      }
+    }
+  },
+  {
+    "legacy_name": "career/cv-linkedin",
+    "name": "cf_career_cv_linkedin",
+    "path": "agents/career/cv-linkedin.md",
+    "config_file": "codex-agents/cf_career_cv_linkedin.toml",
+    "description": "Generates an objective-driven LinkedIn profile action report from the candidate's hub.json — confirmed profile objective (issue",
+    "source_settings": {
+      "mode": "subagent",
+      "temperature": 0.2,
+      "permission": {
+        "edit": {
+          "*": "deny",
+          "~/career/**": "allow"
+        },
+        "bash": {
+          "*": "deny",
+          "*SCRIPTS_DIR/cv/validate.py*": "allow",
+          "python3 *": "allow",
+          "ls *": "allow",
+          "realpath *": "allow"
+        },
+        "read": "allow",
+        "glob": "allow",
+        "grep": "allow"
+      }
+    }
+  },
+  {
+    "legacy_name": "career/cv-optimizer",
+    "name": "cf_career_cv_optimizer",
+    "path": "agents/career/cv-optimizer.md",
+    "config_file": "codex-agents/cf_career_cv_optimizer.toml",
+    "description": "Analyzes the candidate hub and generates an improvement plan — profile score, target job profiles, CLT vs PJ market salary ranges, context gaps, integrated objective-calibrated LinkedIn improvements (banner/headline/Sobre/experiência/skills, consistent with cv-linkedin) and a prioritized action plan",
+    "source_settings": {
+      "mode": "subagent",
+      "temperature": 0.2,
+      "permission": {
+        "edit": {
+          "*": "deny",
+          "~/career/**": "allow",
+          "~/career/**/hub.json": "deny"
+        },
+        "bash": {
+          "*": "deny",
+          "python3 *": "allow",
+          "*SCRIPTS_DIR/cv/validate.py*": "allow",
+          "*SCRIPTS_DIR/cv/pdf.sh*": "allow",
+          "*SCRIPTS_DIR/shared/html-to-pdf.sh*": "allow",
+          "ls *": "allow",
+          "mkdir -p *": "allow"
+        },
+        "read": "allow",
+        "glob": "allow",
+        "grep": "allow"
+      }
+    }
+  },
+  {
+    "legacy_name": "career/cv-tailor",
+    "name": "cf_career_cv_tailor",
+    "path": "agents/career/cv-tailor.md",
+    "config_file": "codex-agents/cf_career_cv_tailor.toml",
+    "description": "Analyzes a job and generates a targeted resume PDF (HTML -> PDF) from the candidate's hub.json, with gap analysis",
+    "source_settings": {
+      "mode": "subagent",
+      "temperature": 0.2,
+      "permission": {
+        "edit": {
+          "*": "deny",
+          "~/career/**": "allow"
+        },
+        "bash": {
+          "*": "deny",
+          "*SCRIPTS_DIR/cv/pdf.sh*": "allow",
+          "*SCRIPTS_DIR/shared/html-to-pdf.sh*": "allow",
+          "*SCRIPTS_DIR/cv/validate.py*": "allow",
+          "*SCRIPTS_DIR/cv/check-inference.sh*": "allow",
+          "python3 *": "allow",
+          "ls *": "allow",
+          "mkdir -p *": "allow",
+          "mv *": "allow",
+          "file *": "allow",
+          "realpath *": "allow"
+        },
+        "read": "allow",
+        "glob": "allow",
+        "grep": "allow"
+      }
+    }
+  },
+  {
+    "legacy_name": "ceo",
+    "name": "cf_ceo",
+    "path": "agents/ceo.md",
+    "config_file": "codex-agents/cf_ceo.toml",
+    "description": "CEO agent — orchestrates cross-sector strategy, planning, and execution across all business sectors like marketing, sales, BI, finance, commercial, business-ops, and development",
+    "source_settings": {
+      "mode": "all",
+      "temperature": 0.6,
+      "tools": {
+        "write": true,
+        "edit": true,
+        "bash": false
+      }
+    }
+  },
+  {
+    "legacy_name": "cfo",
+    "name": "cf_cfo",
+    "path": "agents/cfo.md",
+    "config_file": "codex-agents/cf_cfo.toml",
+    "description": "CFO — financial strategy, fundraising, board materials, budgeting, strategic finance, M&A",
+    "source_settings": {
+      "mode": "all",
+      "temperature": 0.5,
+      "tools": {
+        "write": true
+      }
+    }
+  },
+  {
+    "legacy_name": "cmo",
+    "name": "cf_cmo",
+    "path": "agents/cmo.md",
+    "config_file": "codex-agents/cf_cmo.toml",
+    "description": "CMO — marketing strategy, brand, demand generation, growth, GTM, customer intelligence",
+    "source_settings": {
+      "mode": "all",
+      "temperature": 0.7,
+      "tools": {
+        "write": true
+      }
+    }
+  },
+  {
+    "legacy_name": "commercial/channel-economics",
+    "name": "cf_commercial_channel_economics",
+    "path": "agents/commercial/channel-economics.md",
+    "config_file": "codex-agents/cf_commercial_channel_economics.toml",
+    "description": "Channel economics — partner margins, incentive design, tier programs, channel ROI, partner profitability, rebate structures",
+    "source_settings": {
+      "mode": "subagent"
+    }
+  },
+  {
+    "legacy_name": "commercial/commercial-forecasting",
+    "name": "cf_commercial_commercial_forecasting",
+    "path": "agents/commercial/commercial-forecasting.md",
+    "config_file": "codex-agents/cf_commercial_commercial_forecasting.toml",
+    "description": "Commercial forecasting — pipeline-to-revenue models, booking forecasts, scenario planning, board-ready commercial outlook",
+    "source_settings": {
+      "mode": "subagent"
+    }
+  },
+  {
+    "legacy_name": "commercial/deal-desk",
+    "name": "cf_commercial_deal_desk",
+    "path": "agents/commercial/deal-desk.md",
+    "config_file": "codex-agents/cf_commercial_deal_desk.toml",
+    "description": "Deal desk — deal structuring, approval workflows, discount governance, non-standard terms, executive deal review",
+    "source_settings": {
+      "mode": "subagent"
+    }
+  },
+  {
+    "legacy_name": "commercial/partnerships-architect",
+    "name": "cf_commercial_partnerships_architect",
+    "path": "agents/commercial/partnerships-architect.md",
+    "config_file": "codex-agents/cf_commercial_partnerships_architect.toml",
+    "description": "Partnerships — channel partnerships, strategic alliances, ecosystem development, co-selling, joint GTM, partner programs",
+    "source_settings": {
+      "mode": "subagent"
+    }
+  },
+  {
+    "legacy_name": "commercial/pricing-strategist",
+    "name": "cf_commercial_pricing_strategist",
+    "path": "agents/commercial/pricing-strategist.md",
+    "config_file": "codex-agents/cf_commercial_pricing_strategist.toml",
+    "description": "Pricing strategy — value-based pricing, packaging, monetization models, price differentiation, discounting strategy",
+    "source_settings": {
+      "mode": "subagent"
+    }
+  },
+  {
+    "legacy_name": "commercial/rfp-responder",
+    "name": "cf_commercial_rfp_responder",
+    "path": "agents/commercial/rfp-responder.md",
+    "config_file": "codex-agents/cf_commercial_rfp_responder.toml",
+    "description": "RFP response — structured proposal responses, compliance matrices, win themes, competitive positioning in RFPs",
+    "source_settings": {
+      "mode": "subagent"
+    }
+  },
+  {
+    "legacy_name": "coo",
+    "name": "cf_coo",
+    "path": "agents/coo.md",
+    "config_file": "codex-agents/cf_coo.toml",
+    "description": "COO — operations, processes, vendor management, capacity planning, procurement, business efficiency",
+    "source_settings": {
+      "mode": "subagent"
+    }
+  },
+  {
+    "legacy_name": "cto",
+    "name": "cf_cto",
+    "path": "agents/cto.md",
+    "config_file": "codex-agents/cf_cto.toml",
+    "description": "CTO — technical vision, architecture strategy, engineering leadership, technology decisions",
+    "source_settings": {
+      "mode": "all",
+      "temperature": 0.5,
+      "tools": {
+        "write": true,
+        "edit": true,
+        "bash": false
+      }
+    }
+  },
+  {
+    "legacy_name": "design/art-director",
+    "name": "cf_design_art_director",
+    "path": "agents/design/art-director.md",
+    "config_file": "codex-agents/cf_design_art_director.toml",
+    "description": "Senior Art Director agent — receives a brief and produces a complete, opinionated design spec with its own identity, never generic. Exclusive structured JSON output (design_spec.json) consumed by the ui-architect and ui-implementer agents. First pass of the 4-pass Adorable pipeline (art-director → ui-architect → ui-implementer → ui-critic). Does not write code.\n",
+    "source_settings": {
+      "mode": "subagent",
+      "temperature": 0.7,
+      "permission": {
+        "edit": "deny",
+        "bash": "deny"
+      }
+    }
+  },
+  {
+    "legacy_name": "design/ui-architect",
+    "name": "cf_design_ui_architect",
+    "path": "agents/design/ui-architect.md",
+    "config_file": "codex-agents/cf_design_ui_architect.toml",
+    "description": "Senior UI Architect agent — consumes the art-director's design_spec JSON and produces the complete component architecture: layout regions, component tree, props contracts, exhaustive state machines, structural accessibility, interaction map, and build order. Exclusive structured JSON output (component_tree.json) consumed by the ui-implementer. Second pass of the 4-pass Adorable pipeline. Does not write code, CSS, or decide colors.\n",
+    "source_settings": {
+      "mode": "subagent",
+      "temperature": 0.2,
+      "permission": {
+        "edit": "deny",
+        "bash": "deny"
+      }
+    }
+  },
+  {
+    "legacy_name": "design/ui-auditor",
+    "name": "cf_design_ui_auditor",
+    "path": "agents/design/ui-auditor.md",
+    "config_file": "codex-agents/cf_design_ui_auditor.toml",
+    "description": "Stack-agnostic UI Auditor agent — reads an existing codebase exactly as it is and produces a complete diagnostic (audit_report.json): detected stack, file inventory, visual, structural, state, accessibility, responsiveness and performance findings, 1–5 severity scores per dimension, CRIT-xxx issues with file+line citations, and preserved_patterns. Entry pass for existing codebases; output consumed by the ui-refactor-planner. Uses detection-only bash (read-only commands), never writes or edits.\n",
+    "source_settings": {
+      "mode": "subagent",
+      "temperature": 0.1,
+      "permission": {
+        "edit": "deny",
+        "bash": "allow"
+      }
+    }
+  },
+  {
+    "legacy_name": "design/ui-critic",
+    "name": "cf_design_ui_critic",
+    "path": "agents/design/ui-critic.md",
+    "config_file": "codex-agents/cf_design_ui_critic.toml",
+    "description": "UI Critic agent — the quality gate of the 4-pass Adorable pipeline. Receives the implemented code plus the design_spec and component_tree JSONs, evaluates the code against the full checklist, and returns APPROVED or ISSUES_FOUND with component-specific feedback. Blocks delivery on ANY checklist failure — no partial approvals. Final pass of the pipeline.\n",
+    "source_settings": {
+      "mode": "subagent",
+      "temperature": 0.3,
+      "permission": {
+        "edit": "deny",
+        "bash": "deny"
+      }
+    }
+  },
+  {
+    "legacy_name": "design/ui-implementer",
+    "name": "cf_design_ui_implementer",
+    "path": "agents/design/ui-implementer.md",
+    "config_file": "codex-agents/cf_design_ui_implementer.toml",
+    "description": "Senior UI Implementer agent — consumes the art-director's design_spec JSON and the ui-architect's component_tree JSON and writes production code. Stack-agnostic: React, Vue, Next.js, PHP+HTML, with Tailwind, Bootstrap, CSS Modules, or vanilla CSS. Never takes design or architecture decisions — executes the contracts with precision. Writes code files, not JSON. Third pass of the 4-pass Adorable pipeline.\n",
+    "source_settings": {
+      "mode": "subagent",
+      "temperature": 0.1,
+      "permission": {
+        "edit": "allow",
+        "bash": "allow"
+      }
+    }
+  },
+  {
+    "legacy_name": "design/ui-refactor-planner",
+    "name": "cf_design_ui_refactor_planner",
+    "path": "agents/design/ui-refactor-planner.md",
+    "config_file": "codex-agents/cf_design_ui_refactor_planner.toml",
+    "description": "Stack-agnostic UI Refactor Planner agent — consumes the ui-auditor's audit_report.json and the art-director's design_spec.json and produces the migration contract (refactor_plan.json): Group A/B/C issue triage, per-stack token strategy, component decisions (PRESERVE/ADAPT/REFACTOR/SPLIT/REPLACE/ DEPRECATE), a phased plan with rollback, a dependency map, and a token mapping. Consumed by the ui-architect and ui-implementer. Never plans big bang; never deletes before replacing.\n",
+    "source_settings": {
+      "mode": "subagent",
+      "temperature": 0.2,
+      "permission": {
+        "edit": "deny",
+        "bash": "deny"
+      }
+    }
+  },
+  {
+    "legacy_name": "designer",
+    "name": "cf_designer",
+    "path": "agents/designer.md",
+    "config_file": "codex-agents/cf_designer.toml",
+    "description": "Frontend product agent — turns ideas into polished, functional UI. Use when you need to build, iterate, or redesign interfaces from a description. Invoke with @designer or select with Tab.\n",
+    "source_settings": {
+      "mode": "all",
+      "permission": {
+        "edit": {
+          "*": "ask",
+          "src/**": "allow",
+          "app/**": "allow",
+          "components/**": "allow",
+          "public/**": "allow"
+        },
+        "bash": {
+          "*": "ask",
+          "npm run dev": "allow",
+          "npm install *": "allow",
+          "npx *": "allow"
+        }
+      }
+    }
+  },
+  {
+    "legacy_name": "development/aibot",
+    "name": "cf_development_aibot",
+    "path": "agents/development/aibot.md",
+    "config_file": "codex-agents/cf_development_aibot.toml",
+    "description": "aibot — posts standardized PT-BR messages on remote issues (GitHub/GitLab) during the aibot-watcher cycle",
+    "source_settings": {
+      "mode": "subagent",
+      "temperature": 0.2,
+      "permission": {
+        "read": {
+          "~/.ssh/**": "deny",
+          "~/.codex/flow/state/**": "deny"
+        },
+        "bash": {
+          "*": "deny",
+          "gh *": "allow",
+          "glab *": "allow",
+          "git *": "allow",
+          "git push --force*": "deny",
+          "git push -f*": "deny",
+          "git reset --hard*": "deny",
+          "git clean -f*": "deny",
+          "git branch -D *": "deny"
+        },
+        "edit": "deny",
+        "webfetch": "deny",
+        "websearch": "deny"
+      }
+    }
+  },
+  {
+    "legacy_name": "development/auth-architect",
+    "name": "cf_development_auth_architect",
+    "path": "agents/development/auth-architect.md",
+    "config_file": "codex-agents/cf_development_auth_architect.toml",
+    "description": "Expert in authentication/authorization architecture — login flows, JWT, OAuth, RBAC, multi-tenancy, session management, and data protection for SaaS/CRM/ERP systems",
+    "source_settings": {
+      "mode": "subagent",
+      "temperature": 0.1,
+      "permission": {
+        "edit": {
+          "*": "allow",
+          "~/.codex/flow/opencode.json": "deny",
+          "~/.codex/flow/aibot-repos.json": "deny",
+          "~/.codex/flow/scripts/aibot-watcher.sh": "deny",
+          "~/.codex/flow/state/**": "deny",
+          "~/.ssh/**": "deny"
+        },
+        "bash": "allow"
+      }
+    }
+  },
+  {
+    "legacy_name": "development/backup",
+    "name": "cf_development_backup",
+    "path": "agents/development/backup.md",
+    "config_file": "codex-agents/cf_development_backup.toml",
+    "description": "Creates intelligent timestamped backups of project directories",
+    "source_settings": {
+      "mode": "subagent",
+      "temperature": 0.1,
+      "permission": {
+        "bash": "allow",
+        "edit": "allow"
+      }
+    }
+  },
+  {
+    "legacy_name": "development/close-requester",
+    "name": "cf_development_close_requester",
+    "path": "agents/development/close-requester.md",
+    "config_file": "codex-agents/cf_development_close_requester.toml",
+    "description": "Closes remote issues after MR merge and archives to resolved_issues.md",
+    "source_settings": {
+      "mode": "subagent",
+      "temperature": 0.1,
+      "permission": {
+        "bash": "allow",
+        "edit": "allow"
+      }
+    }
+  },
+  {
+    "legacy_name": "development/committer",
+    "name": "cf_development_committer",
+    "path": "agents/development/committer.md",
+    "config_file": "codex-agents/cf_development_committer.toml",
+    "description": "Gatekeeper that verifies pipeline gates before MR creation",
+    "source_settings": {
+      "mode": "subagent",
+      "temperature": 0.1,
+      "permission": {
+        "bash": {
+          "*": "deny",
+          "git *": "allow",
+          "gh *": "allow",
+          "glab *": "allow",
+          "ls *": "allow",
+          "cat *": "allow",
+          "find *": "allow",
+          "head *": "allow",
+          "tail *": "allow",
+          "wc *": "allow",
+          "rg *": "allow",
+          "find * -delete*": "deny",
+          "find * -exec*": "deny",
+          "find * -ok*": "deny",
+          "*scripts/transition.sh *": "allow",
+          "git push --force*": "deny",
+          "git push -f*": "deny",
+          "git reset --hard*": "deny",
+          "git clean -f*": "deny",
+          "git branch -D *": "deny"
+        },
+        "edit": {
+          "*": "allow",
+          ".codex/cache/**": "deny"
+        }
+      }
+    }
+  },
+  {
+    "legacy_name": "development/cto",
+    "name": "cf_development_cto",
+    "path": "agents/development/cto.md",
+    "config_file": "codex-agents/cf_development_cto.toml",
+    "description": "CTO AGENT — Defines technical vision and guidelines for the project",
+    "source_settings": {
+      "mode": "subagent",
+      "temperature": 0.2,
+      "permission": {
+        "bash": "allow",
+        "edit": "allow"
+      }
+    }
+  },
+  {
+    "legacy_name": "development/developer",
+    "name": "cf_development_developer",
+    "path": "agents/development/developer.md",
+    "config_file": "codex-agents/cf_development_developer.toml",
+    "description": "Implements features and writes automated tests",
+    "source_settings": {
+      "mode": "subagent",
+      "temperature": 0.2,
+      "permission": {
+        "edit": {
+          "*": "allow",
+          "~/.codex/flow/opencode.json": "deny",
+          "~/.codex/flow/aibot-repos.json": "deny",
+          "~/.codex/flow/scripts/aibot-watcher.sh": "deny",
+          "~/.codex/flow/state/**": "deny",
+          "~/.ssh/**": "deny",
+          ".codex/cache/**": "deny"
+        },
+        "bash": {
+          "*": "deny",
+          "git *": "allow",
+          "ls *": "allow",
+          "cat *": "allow",
+          "find *": "allow",
+          "head *": "allow",
+          "tail *": "allow",
+          "wc *": "allow",
+          "rg *": "allow",
+          "find * -delete*": "deny",
+          "find * -exec*": "deny",
+          "find * -ok*": "deny",
+          "*scripts/git-cred-cache.sh *": "allow",
+          "*scripts/test-runner.sh *": "allow",
+          "*scripts/transition.sh *": "allow",
+          "git push --force*": "deny",
+          "git push -f*": "deny",
+          "git reset --hard*": "deny",
+          "git clean -f*": "deny",
+          "git branch -D *": "deny"
+        }
+      }
+    }
+  },
+  {
+    "legacy_name": "development/devs/golang",
+    "name": "cf_development_devs_golang",
+    "path": "agents/development/devs/golang.md",
+    "config_file": "codex-agents/cf_development_devs_golang.toml",
+    "description": "Builds and refactors idiomatic Go code with package-first design, explicit dependencies, clear naming, and test-ready structure.",
+    "source_settings": {
+      "mode": "subagent",
+      "temperature": 0.2
+    }
+  },
+  {
+    "legacy_name": "development/devs/python",
+    "name": "cf_development_devs_python",
+    "path": "agents/development/devs/python.md",
+    "config_file": "codex-agents/cf_development_devs_python.toml",
+    "description": "Builds and refactors idiomatic Python code with readability-first design, explicit behavior, modern typing when appropriate, and testable structure.",
+    "source_settings": {
+      "mode": "subagent",
+      "temperature": 0.2
+    }
+  },
+  {
+    "legacy_name": "development/discovery",
+    "name": "cf_development_discovery",
+    "path": "agents/development/discovery.md",
+    "config_file": "codex-agents/cf_development_discovery.toml",
+    "description": "Discovery orchestrator — routes by Type+severity into a LOOP (feat-full / bug-expedite / bug-lean / chore) and writes a canonical, linted issue",
+    "source_settings": {
+      "mode": "subagent",
+      "temperature": 0.2,
+      "permission": {
+        "task": "allow",
+        "read": "allow",
+        "glob": "allow",
+        "grep": "allow",
+        "edit": {
+          ".codex/prioritization.md": "allow",
+          "known_issues.md": "allow"
+        },
+        "bash": {
+          "*": "deny",
+          "scripts/*.sh *": "allow",
+          "ls *": "allow",
+          "cat *": "allow",
+          "find *": "allow",
+          "head *": "allow",
+          "tail *": "allow",
+          "wc *": "allow",
+          "rg *": "allow",
+          "find * -delete*": "deny",
+          "find * -exec*": "deny",
+          "find * -ok*": "deny"
+        }
+      }
+    }
+  },
+  {
+    "legacy_name": "development/documentation",
+    "name": "cf_development_documentation",
+    "path": "agents/development/documentation.md",
+    "config_file": "codex-agents/cf_development_documentation.toml",
+    "description": "Creates and maintains project documentation",
+    "source_settings": {
+      "mode": "subagent",
+      "temperature": 0.1,
+      "permission": {
+        "bash": "allow",
+        "edit": "allow"
+      }
+    }
+  },
+  {
+    "legacy_name": "development/product-manager",
+    "name": "cf_development_product_manager",
+    "path": "agents/development/product-manager.md",
+    "config_file": "codex-agents/cf_development_product_manager.toml",
+    "description": "SaaS Product Manager — roadmap, prioritization, customer feedback synthesis, and metrics-driven decisions",
+    "source_settings": {
+      "mode": "subagent",
+      "temperature": 0.2,
+      "permission": {
+        "read": "allow",
+        "glob": "allow",
+        "grep": "allow",
+        "edit": "ask",
+        "bash": {
+          "*": "deny",
+          "git *": "allow"
+        }
+      }
+    }
+  },
+  {
+    "legacy_name": "development/product-owner",
+    "name": "cf_development_product_owner",
+    "path": "agents/development/product-owner.md",
+    "config_file": "codex-agents/cf_development_product_owner.toml",
+    "description": "Defines product priorities and creates user stories",
+    "source_settings": {
+      "mode": "subagent",
+      "temperature": 0.3,
+      "permission": {
+        "bash": "allow",
+        "edit": "allow"
+      }
+    }
+  },
+  {
+    "legacy_name": "development/project-manager",
+    "name": "cf_development_project_manager",
+    "path": "agents/development/project-manager.md",
+    "config_file": "codex-agents/cf_development_project_manager.toml",
+    "description": "Coordinates team activities and assigns tasks",
+    "source_settings": {
+      "mode": "subagent",
+      "temperature": 0.1,
+      "permission": {
+        "bash": "allow",
+        "edit": "allow"
+      }
+    }
+  },
+  {
+    "legacy_name": "development/publish-requester",
+    "name": "cf_development_publish_requester",
+    "path": "agents/development/publish-requester.md",
+    "config_file": "codex-agents/cf_development_publish_requester.toml",
+    "description": "Creates merge/pull requests for publishing changes",
+    "source_settings": {
+      "mode": "subagent",
+      "temperature": 0.1,
+      "permission": {
+        "bash": {
+          "*": "deny",
+          "git *": "allow",
+          "gh *": "allow",
+          "glab *": "allow",
+          "ls *": "allow",
+          "cat *": "allow",
+          "find *": "allow",
+          "head *": "allow",
+          "tail *": "allow",
+          "wc *": "allow",
+          "rg *": "allow",
+          "find * -delete*": "deny",
+          "find * -exec*": "deny",
+          "find * -ok*": "deny",
+          "git push --force*": "deny",
+          "git push -f*": "deny",
+          "git reset --hard*": "deny",
+          "git clean -f*": "deny",
+          "git branch -D *": "deny"
+        },
+        "edit": {
+          "*": "allow",
+          ".codex/cache/**": "deny"
+        }
+      }
+    }
+  },
+  {
+    "legacy_name": "development/quality-analyst",
+    "name": "cf_development_quality_analyst",
+    "path": "agents/development/quality-analyst.md",
+    "config_file": "codex-agents/cf_development_quality_analyst.toml",
+    "description": "Ensures quality standards and testability",
+    "source_settings": {
+      "mode": "subagent",
+      "temperature": 0.1,
+      "permission": {
+        "edit": {
+          ".codex/known_issues.md": "allow",
+          ".codex/reviews/**": "allow",
+          "*": "deny"
+        },
+        "bash": {
+          "*": "deny",
+          "git *": "allow",
+          "ls *": "allow",
+          "cat *": "allow",
+          "find *": "allow",
+          "head *": "allow",
+          "tail *": "allow",
+          "wc *": "allow",
+          "rg *": "allow",
+          "date": "allow",
+          "echo *": "allow",
+          "scripts/preflight.sh *": "allow",
+          "scripts/issue-lint.sh *": "allow",
+          "scripts/test-runner.sh --check*": "allow",
+          "scripts/test-runner.sh --status*": "allow",
+          "scripts/transition.sh *": "allow",
+          "scripts/append-issue.sh *": "allow",
+          "scripts/test-runner.sh --run*": "deny",
+          "git reset*": "deny",
+          "git push --force*": "deny",
+          "git branch -D*": "deny",
+          "rm -rf*": "deny",
+          "git clean*": "deny",
+          "git checkout -f*": "deny",
+          "git checkout -- *": "deny",
+          "git stash drop*": "deny",
+          "find * -delete*": "deny",
+          "find * -exec*": "deny"
+        }
+      }
+    }
+  },
+  {
+    "legacy_name": "development/review-external",
+    "name": "cf_development_review_external",
+    "path": "agents/development/review-external.md",
+    "config_file": "codex-agents/cf_development_review_external.toml",
+    "description": "Reviews external branches/MRs from other developers with structured report generation",
+    "source_settings": {
+      "mode": "subagent",
+      "temperature": 0.1,
+      "permission": {
+        "bash": "allow",
+        "edit": "allow"
+      }
+    }
+  },
+  {
+    "legacy_name": "development/security-owasp",
+    "name": "cf_development_security_owasp",
+    "path": "agents/development/security-owasp.md",
+    "config_file": "codex-agents/cf_development_security_owasp.toml",
+    "description": "OWASP security consultant, senior security reviewer (profile `security`), and critical/high vulnerability gate — OWASP Top 10 (2021), ASVS 4.0, WSTG, SAMM, threat modeling, and secure code review.",
+    "source_settings": {
+      "mode": "subagent",
+      "temperature": 0.1,
+      "permission": {
+        "bash": "allow",
+        "edit": {
+          "*": "deny",
+          ".codex/reviews/**": "allow"
+        }
+      }
+    }
+  },
+  {
+    "legacy_name": "development/senior-reviewers/backend",
+    "name": "cf_development_senior_reviewers_backend",
+    "path": "agents/development/senior-reviewers/backend.md",
+    "config_file": "codex-agents/cf_development_senior_reviewers_backend.toml",
+    "description": "Reviews server-side logic, APIs, and data flow",
+    "source_settings": {
+      "mode": "subagent",
+      "temperature": 0.1,
+      "permission": {
+        "edit": {
+          ".codex/known_issues.md": "allow",
+          ".codex/reviews/**": "allow",
+          "*": "deny"
+        },
+        "bash": {
+          "*": "deny",
+          "git *": "allow",
+          "ls *": "allow",
+          "cat *": "allow",
+          "find *": "allow",
+          "head *": "allow",
+          "tail *": "allow",
+          "wc *": "allow",
+          "rg *": "allow",
+          "date *": "allow",
+          "echo *": "allow",
+          "scripts/preflight.sh *": "allow",
+          "scripts/issue-lint.sh *": "allow",
+          "scripts/test-runner.sh --check*": "allow",
+          "scripts/test-runner.sh --status*": "allow",
+          "scripts/test-runner.sh --run*": "deny",
+          "git reset*": "deny",
+          "git push --force*": "deny",
+          "git branch -D*": "deny",
+          "rm -rf*": "deny",
+          "git clean*": "deny",
+          "git checkout -f*": "deny",
+          "git checkout -- *": "deny",
+          "git stash drop*": "deny",
+          "find * -delete*": "deny",
+          "find * -exec*": "deny"
+        }
+      }
+    }
+  },
+  {
+    "legacy_name": "development/senior-reviewers/data",
+    "name": "cf_development_senior_reviewers_data",
+    "path": "agents/development/senior-reviewers/data.md",
+    "config_file": "codex-agents/cf_development_senior_reviewers_data.toml",
+    "description": "Reviews database queries, schemas, and migrations",
+    "source_settings": {
+      "mode": "subagent",
+      "temperature": 0.1,
+      "permission": {
+        "edit": {
+          ".codex/known_issues.md": "allow",
+          ".codex/reviews/**": "allow",
+          "*": "deny"
+        },
+        "bash": {
+          "*": "deny",
+          "git *": "allow",
+          "ls *": "allow",
+          "cat *": "allow",
+          "find *": "allow",
+          "head *": "allow",
+          "tail *": "allow",
+          "wc *": "allow",
+          "rg *": "allow",
+          "date *": "allow",
+          "echo *": "allow",
+          "scripts/preflight.sh *": "allow",
+          "scripts/issue-lint.sh *": "allow",
+          "scripts/test-runner.sh --check*": "allow",
+          "scripts/test-runner.sh --status*": "allow",
+          "scripts/test-runner.sh --run*": "deny",
+          "git reset*": "deny",
+          "git push --force*": "deny",
+          "git branch -D*": "deny",
+          "rm -rf*": "deny",
+          "git clean*": "deny",
+          "git checkout -f*": "deny",
+          "git checkout -- *": "deny",
+          "git stash drop*": "deny",
+          "find * -delete*": "deny",
+          "find * -exec*": "deny"
+        }
+      }
+    }
+  },
+  {
+    "legacy_name": "development/senior-reviewers/devops",
+    "name": "cf_development_senior_reviewers_devops",
+    "path": "agents/development/senior-reviewers/devops.md",
+    "config_file": "codex-agents/cf_development_senior_reviewers_devops.toml",
+    "description": "Reviews infrastructure, CI/CD, and deployment code",
+    "source_settings": {
+      "mode": "subagent",
+      "temperature": 0.1,
+      "permission": {
+        "edit": {
+          ".codex/known_issues.md": "allow",
+          ".codex/reviews/**": "allow",
+          "*": "deny"
+        },
+        "bash": {
+          "*": "deny",
+          "git *": "allow",
+          "ls *": "allow",
+          "cat *": "allow",
+          "find *": "allow",
+          "head *": "allow",
+          "tail *": "allow",
+          "wc *": "allow",
+          "rg *": "allow",
+          "date *": "allow",
+          "echo *": "allow",
+          "scripts/preflight.sh *": "allow",
+          "scripts/issue-lint.sh *": "allow",
+          "scripts/test-runner.sh --check*": "allow",
+          "scripts/test-runner.sh --status*": "allow",
+          "scripts/test-runner.sh --run*": "deny",
+          "git reset*": "deny",
+          "git push --force*": "deny",
+          "git branch -D*": "deny",
+          "rm -rf*": "deny",
+          "git clean*": "deny",
+          "git checkout -f*": "deny",
+          "git checkout -- *": "deny",
+          "git stash drop*": "deny",
+          "find * -delete*": "deny",
+          "find * -exec*": "deny"
+        }
+      }
+    }
+  },
+  {
+    "legacy_name": "development/senior-reviewers/frontend",
+    "name": "cf_development_senior_reviewers_frontend",
+    "path": "agents/development/senior-reviewers/frontend.md",
+    "config_file": "codex-agents/cf_development_senior_reviewers_frontend.toml",
+    "description": "Reviews UI components, state management, and styling",
+    "source_settings": {
+      "mode": "subagent",
+      "temperature": 0.1,
+      "permission": {
+        "edit": {
+          ".codex/known_issues.md": "allow",
+          ".codex/reviews/**": "allow",
+          "*": "deny"
+        },
+        "bash": {
+          "*": "deny",
+          "git *": "allow",
+          "ls *": "allow",
+          "cat *": "allow",
+          "find *": "allow",
+          "head *": "allow",
+          "tail *": "allow",
+          "wc *": "allow",
+          "rg *": "allow",
+          "date *": "allow",
+          "echo *": "allow",
+          "scripts/preflight.sh *": "allow",
+          "scripts/issue-lint.sh *": "allow",
+          "scripts/test-runner.sh --check*": "allow",
+          "scripts/test-runner.sh --status*": "allow",
+          "scripts/test-runner.sh --run*": "deny",
+          "git reset*": "deny",
+          "git push --force*": "deny",
+          "git branch -D*": "deny",
+          "rm -rf*": "deny",
+          "git clean*": "deny",
+          "git checkout -f*": "deny",
+          "git checkout -- *": "deny",
+          "git stash drop*": "deny",
+          "find * -delete*": "deny",
+          "find * -exec*": "deny"
+        }
+      }
+    }
+  },
+  {
+    "legacy_name": "development/senior-reviewers/mobile",
+    "name": "cf_development_senior_reviewers_mobile",
+    "path": "agents/development/senior-reviewers/mobile.md",
+    "config_file": "codex-agents/cf_development_senior_reviewers_mobile.toml",
+    "description": "Reviews mobile-specific code and responsiveness",
+    "source_settings": {
+      "mode": "subagent",
+      "temperature": 0.1,
+      "permission": {
+        "edit": {
+          ".codex/known_issues.md": "allow",
+          ".codex/reviews/**": "allow",
+          "*": "deny"
+        },
+        "bash": {
+          "*": "deny",
+          "git *": "allow",
+          "ls *": "allow",
+          "cat *": "allow",
+          "find *": "allow",
+          "head *": "allow",
+          "tail *": "allow",
+          "wc *": "allow",
+          "rg *": "allow",
+          "date *": "allow",
+          "echo *": "allow",
+          "scripts/preflight.sh *": "allow",
+          "scripts/issue-lint.sh *": "allow",
+          "scripts/test-runner.sh --check*": "allow",
+          "scripts/test-runner.sh --status*": "allow",
+          "scripts/test-runner.sh --run*": "deny",
+          "git reset*": "deny",
+          "git push --force*": "deny",
+          "git branch -D*": "deny",
+          "rm -rf*": "deny",
+          "git clean*": "deny",
+          "git checkout -f*": "deny",
+          "git checkout -- *": "deny",
+          "git stash drop*": "deny",
+          "find * -delete*": "deny",
+          "find * -exec*": "deny"
+        }
+      }
+    }
+  },
+  {
+    "legacy_name": "development/senior-reviewers/performance",
+    "name": "cf_development_senior_reviewers_performance",
+    "path": "agents/development/senior-reviewers/performance.md",
+    "config_file": "codex-agents/cf_development_senior_reviewers_performance.toml",
+    "description": "Reviews optimization, caching, and resource usage",
+    "source_settings": {
+      "mode": "subagent",
+      "temperature": 0.1,
+      "permission": {
+        "edit": {
+          ".codex/known_issues.md": "allow",
+          ".codex/reviews/**": "allow",
+          "*": "deny"
+        },
+        "bash": {
+          "*": "deny",
+          "git *": "allow",
+          "ls *": "allow",
+          "cat *": "allow",
+          "find *": "allow",
+          "head *": "allow",
+          "tail *": "allow",
+          "wc *": "allow",
+          "rg *": "allow",
+          "date *": "allow",
+          "echo *": "allow",
+          "scripts/preflight.sh *": "allow",
+          "scripts/issue-lint.sh *": "allow",
+          "scripts/test-runner.sh --check*": "allow",
+          "scripts/test-runner.sh --status*": "allow",
+          "scripts/test-runner.sh --run*": "deny",
+          "git reset*": "deny",
+          "git push --force*": "deny",
+          "git branch -D*": "deny",
+          "rm -rf*": "deny",
+          "git clean*": "deny",
+          "git checkout -f*": "deny",
+          "git checkout -- *": "deny",
+          "git stash drop*": "deny",
+          "find * -delete*": "deny",
+          "find * -exec*": "deny"
+        }
+      }
+    }
+  },
+  {
+    "legacy_name": "development/senior-reviewers/qa",
+    "name": "cf_development_senior_reviewers_qa",
+    "path": "agents/development/senior-reviewers/qa.md",
+    "config_file": "codex-agents/cf_development_senior_reviewers_qa.toml",
+    "description": "Reviews test quality, coverage, and edge cases",
+    "source_settings": {
+      "mode": "subagent",
+      "temperature": 0.1,
+      "permission": {
+        "edit": {
+          ".codex/known_issues.md": "allow",
+          ".codex/reviews/**": "allow",
+          "*": "deny"
+        },
+        "bash": {
+          "*": "deny",
+          "git *": "allow",
+          "ls *": "allow",
+          "cat *": "allow",
+          "find *": "allow",
+          "head *": "allow",
+          "tail *": "allow",
+          "wc *": "allow",
+          "rg *": "allow",
+          "date *": "allow",
+          "echo *": "allow",
+          "scripts/preflight.sh *": "allow",
+          "scripts/issue-lint.sh *": "allow",
+          "scripts/test-runner.sh --check*": "allow",
+          "scripts/test-runner.sh --status*": "allow",
+          "scripts/test-runner.sh --run*": "deny",
+          "git reset*": "deny",
+          "git push --force*": "deny",
+          "git branch -D*": "deny",
+          "rm -rf*": "deny",
+          "git clean*": "deny",
+          "git checkout -f*": "deny",
+          "git checkout -- *": "deny",
+          "git stash drop*": "deny",
+          "find * -delete*": "deny",
+          "find * -exec*": "deny"
+        }
+      }
+    }
+  },
+  {
+    "legacy_name": "development/senior-reviewers/runtime",
+    "name": "cf_development_senior_reviewers_runtime",
+    "path": "agents/development/senior-reviewers/runtime.md",
+    "config_file": "codex-agents/cf_development_senior_reviewers_runtime.toml",
+    "description": "Reviews environment configuration, build, and packaging",
+    "source_settings": {
+      "mode": "subagent",
+      "temperature": 0.1,
+      "permission": {
+        "edit": {
+          ".codex/known_issues.md": "allow",
+          ".codex/reviews/**": "allow",
+          "*": "deny"
+        },
+        "bash": {
+          "*": "deny",
+          "git *": "allow",
+          "ls *": "allow",
+          "cat *": "allow",
+          "find *": "allow",
+          "head *": "allow",
+          "tail *": "allow",
+          "wc *": "allow",
+          "rg *": "allow",
+          "date *": "allow",
+          "echo *": "allow",
+          "scripts/preflight.sh *": "allow",
+          "scripts/issue-lint.sh *": "allow",
+          "scripts/test-runner.sh --check*": "allow",
+          "scripts/test-runner.sh --status*": "allow",
+          "scripts/test-runner.sh --run*": "deny",
+          "git reset*": "deny",
+          "git push --force*": "deny",
+          "git branch -D*": "deny",
+          "rm -rf*": "deny",
+          "git clean*": "deny",
+          "git checkout -f*": "deny",
+          "git checkout -- *": "deny",
+          "git stash drop*": "deny",
+          "find * -delete*": "deny",
+          "find * -exec*": "deny"
+        }
+      }
+    }
+  },
+  {
+    "legacy_name": "development/senior-reviewers/security",
+    "name": "cf_development_senior_reviewers_security",
+    "path": "agents/development/senior-reviewers/security.md",
+    "config_file": "codex-agents/cf_development_senior_reviewers_security.toml",
+    "description": "Reviews authentication, validation, and vulnerability concerns",
+    "source_settings": {
+      "mode": "subagent",
+      "temperature": 0.1,
+      "permission": {
+        "bash": "allow",
+        "edit": "deny"
+      }
+    }
+  },
+  {
+    "legacy_name": "development/senior-reviewers/ux-ui",
+    "name": "cf_development_senior_reviewers_ux_ui",
+    "path": "agents/development/senior-reviewers/ux-ui.md",
+    "config_file": "codex-agents/cf_development_senior_reviewers_ux_ui.toml",
+    "description": "Reviews user experience, accessibility, and design consistency",
+    "source_settings": {
+      "mode": "subagent",
+      "temperature": 0.1,
+      "permission": {
+        "edit": {
+          ".codex/known_issues.md": "allow",
+          ".codex/reviews/**": "allow",
+          "*": "deny"
+        },
+        "bash": {
+          "*": "deny",
+          "git *": "allow",
+          "ls *": "allow",
+          "cat *": "allow",
+          "find *": "allow",
+          "head *": "allow",
+          "tail *": "allow",
+          "wc *": "allow",
+          "rg *": "allow",
+          "date *": "allow",
+          "echo *": "allow",
+          "scripts/preflight.sh *": "allow",
+          "scripts/issue-lint.sh *": "allow",
+          "scripts/test-runner.sh --check*": "allow",
+          "scripts/test-runner.sh --status*": "allow",
+          "scripts/test-runner.sh --run*": "deny",
+          "git reset*": "deny",
+          "git push --force*": "deny",
+          "git branch -D*": "deny",
+          "rm -rf*": "deny",
+          "git clean*": "deny",
+          "git checkout -f*": "deny",
+          "git checkout -- *": "deny",
+          "git stash drop*": "deny",
+          "find * -delete*": "deny",
+          "find * -exec*": "deny"
+        }
+      }
+    }
+  },
+  {
+    "legacy_name": "development/sre",
+    "name": "cf_development_sre",
+    "path": "agents/development/sre.md",
+    "config_file": "codex-agents/cf_development_sre.toml",
+    "description": "Site Reliability Engineering — observability, incident response, SLOs, runbooks, and production resilience",
+    "source_settings": {
+      "mode": "subagent",
+      "temperature": 0.1,
+      "permission": {
+        "bash": "allow",
+        "read": "allow",
+        "glob": "allow",
+        "grep": "allow",
+        "edit": "ask"
+      }
+    }
+  },
+  {
+    "legacy_name": "development/tech-lead",
+    "name": "cf_development_tech_lead",
+    "path": "agents/development/tech-lead.md",
+    "config_file": "codex-agents/cf_development_tech_lead.toml",
+    "description": "Provides technical guidance and refines stories for implementation",
+    "source_settings": {
+      "mode": "subagent",
+      "temperature": 0.2,
+      "permission": {
+        "bash": "allow",
+        "edit": "allow"
+      }
+    }
+  },
+  {
+    "legacy_name": "development/technical-writer",
+    "name": "cf_development_technical_writer",
+    "path": "agents/development/technical-writer.md",
+    "config_file": "codex-agents/cf_development_technical_writer.toml",
+    "description": "Technical writing and developer experience — API docs, developer portals, SDK guides, release notes, and READMEs",
+    "source_settings": {
+      "mode": "subagent",
+      "temperature": 0.2,
+      "permission": {
+        "read": "allow",
+        "glob": "allow",
+        "grep": "allow",
+        "edit": "ask",
+        "bash": {
+          "*": "deny",
+          "git *": "allow"
+        }
+      }
+    }
+  },
+  {
+    "legacy_name": "development/test-automation",
+    "name": "cf_development_test_automation",
+    "path": "agents/development/test-automation.md",
+    "config_file": "codex-agents/cf_development_test_automation.toml",
+    "description": "Creates and maintains automated test suites",
+    "source_settings": {
+      "mode": "subagent",
+      "temperature": 0.1,
+      "permission": {
+        "bash": "allow",
+        "edit": "allow"
+      }
+    }
+  },
+  {
+    "legacy_name": "finance/budgeting",
+    "name": "cf_finance_budgeting",
+    "path": "agents/finance/budgeting.md",
+    "config_file": "codex-agents/cf_finance_budgeting.toml",
+    "description": "Budgeting and planning — budget allocation, variance analysis, rolling forecasts, headcount planning",
+    "source_settings": {
+      "mode": "subagent"
+    }
+  },
+  {
+    "legacy_name": "finance/cfo-advisory",
+    "name": "cf_finance_cfo_advisory",
+    "path": "agents/finance/cfo-advisory.md",
+    "config_file": "codex-agents/cf_finance_cfo_advisory.toml",
+    "description": "CFO advisory — fundraising strategy, cap table management, board materials, strategic finance, M&A support",
+    "source_settings": {
+      "mode": "subagent"
+    }
+  },
+  {
+    "legacy_name": "finance/cost-analytics",
+    "name": "cf_finance_cost_analytics",
+    "path": "agents/finance/cost-analytics.md",
+    "config_file": "codex-agents/cf_finance_cost_analytics.toml",
+    "description": "Cost analytics — cost structure analysis, efficiency metrics, burn rate, unit cost, optimization opportunities",
+    "source_settings": {
+      "mode": "subagent"
+    }
+  },
+  {
+    "legacy_name": "finance/financial-modeling",
+    "name": "cf_finance_financial_modeling",
+    "path": "agents/finance/financial-modeling.md",
+    "config_file": "codex-agents/cf_finance_financial_modeling.toml",
+    "description": "Financial modeling — 3-statement models, projections, unit economics, scenario analysis, valuation",
+    "source_settings": {
+      "mode": "subagent"
+    }
+  },
+  {
+    "legacy_name": "finance/financial-reporting",
+    "name": "cf_finance_financial_reporting",
+    "path": "agents/finance/financial-reporting.md",
+    "config_file": "codex-agents/cf_finance_financial_reporting.toml",
+    "description": "Financial reporting — income statements, balance sheets, cash flow, board decks, management reports",
+    "source_settings": {
+      "mode": "subagent"
+    }
+  },
+  {
+    "legacy_name": "finance/revenue-analytics",
+    "name": "cf_finance_revenue_analytics",
+    "path": "agents/finance/revenue-analytics.md",
+    "config_file": "codex-agents/cf_finance_revenue_analytics.toml",
+    "description": "Revenue analytics — MRR/ARR analysis, revenue recognition, churn analysis, LTV, cohort analysis, retention",
+    "source_settings": {
+      "mode": "subagent"
+    }
+  },
+  {
+    "legacy_name": "marketing/ab-testing",
+    "name": "cf_marketing_ab_testing",
+    "path": "agents/marketing/ab-testing.md",
+    "config_file": "codex-agents/cf_marketing_ab_testing.toml",
+    "description": "A/B testing specialist — experiment design, statistical analysis, test prioritization, growth experimentation",
+    "source_settings": {
+      "mode": "subagent"
+    }
+  },
+  {
+    "legacy_name": "marketing/ads",
+    "name": "cf_marketing_ads",
+    "path": "agents/marketing/ads.md",
+    "config_file": "codex-agents/cf_marketing_ads.toml",
+    "description": "Ads specialist — campaign strategy, copywriting, performance analysis, A/B testing",
+    "source_settings": {
+      "mode": "subagent"
+    }
+  },
+  {
+    "legacy_name": "marketing/analytics",
+    "name": "cf_marketing_analytics",
+    "path": "agents/marketing/analytics.md",
+    "config_file": "codex-agents/cf_marketing_analytics.toml",
+    "description": "Marketing analytics specialist — dashboards, attribution, KPI tracking, GA4, funnel analysis, reporting",
+    "source_settings": {
+      "mode": "subagent"
+    }
+  },
+  {
+    "legacy_name": "marketing/cold-email",
+    "name": "cf_marketing_cold_email",
+    "path": "agents/marketing/cold-email.md",
+    "config_file": "codex-agents/cf_marketing_cold_email.toml",
+    "description": "Cold email specialist — B2B outreach, sequences, offer crafting, deliverability, reply rate optimization",
+    "source_settings": {
+      "mode": "subagent"
+    }
+  },
+  {
+    "legacy_name": "marketing/competitors",
+    "name": "cf_marketing_competitors",
+    "path": "agents/marketing/competitors.md",
+    "config_file": "codex-agents/cf_marketing_competitors.toml",
+    "description": "Competitive intelligence specialist — competitor profiling, positioning analysis, market mapping, messaging gaps",
+    "source_settings": {
+      "mode": "subagent"
+    }
+  },
+  {
+    "legacy_name": "marketing/content",
+    "name": "cf_marketing_content",
+    "path": "agents/marketing/content.md",
+    "config_file": "codex-agents/cf_marketing_content.toml",
+    "description": "Content strategy specialist — editorial planning, content ops, SEO content, blog strategy, content calendars",
+    "source_settings": {
+      "mode": "subagent"
+    }
+  },
+  {
+    "legacy_name": "marketing/copywriting",
+    "name": "cf_marketing_copywriting",
+    "path": "agents/marketing/copywriting.md",
+    "config_file": "codex-agents/cf_marketing_copywriting.toml",
+    "description": "Copywriting & copy-editing specialist — marketing copy, landing pages, emails, ads, brand voice, SEO content",
+    "source_settings": {
+      "mode": "subagent"
+    }
+  },
+  {
+    "legacy_name": "marketing/cro",
+    "name": "cf_marketing_cro",
+    "path": "agents/marketing/cro.md",
+    "config_file": "codex-agents/cf_marketing_cro.toml",
+    "description": "CRO specialist — conversion rate optimization, landing page audits, funnel analysis, experiment design",
+    "source_settings": {
+      "mode": "subagent"
+    }
+  },
+  {
+    "legacy_name": "marketing/customer-research",
+    "name": "cf_marketing_customer_research",
+    "path": "agents/marketing/customer-research.md",
+    "config_file": "codex-agents/cf_marketing_customer_research.toml",
+    "description": "Customer research specialist — ICP definition, persona development, surveys, interviews, market intelligence",
+    "source_settings": {
+      "mode": "subagent"
+    }
+  },
+  {
+    "legacy_name": "marketing/email",
+    "name": "cf_marketing_email",
+    "path": "agents/marketing/email.md",
+    "config_file": "codex-agents/cf_marketing_email.toml",
+    "description": "Email marketing specialist — lifecycle emails, nurture sequences, welcome flows, automation, campaigns",
+    "source_settings": {
+      "mode": "subagent"
+    }
+  },
+  {
+    "legacy_name": "marketing/growth-engineer",
+    "name": "cf_marketing_growth_engineer",
+    "path": "agents/marketing/growth-engineer.md",
+    "config_file": "codex-agents/cf_marketing_growth_engineer.toml",
+    "description": "Growth engineering — product-led growth, activation, onboarding optimization, A/B tests, and viral loops",
+    "source_settings": {
+      "mode": "subagent",
+      "temperature": 0.2,
+      "permission": {
+        "read": "allow",
+        "glob": "allow",
+        "grep": "allow",
+        "edit": "ask",
+        "bash": {
+          "*": "deny",
+          "git *": "allow"
+        }
+      }
+    }
+  },
+  {
+    "legacy_name": "marketing/influencer",
+    "name": "cf_marketing_influencer",
+    "path": "agents/marketing/influencer.md",
+    "config_file": "codex-agents/cf_marketing_influencer.toml",
+    "description": "Influencer marketing specialist — creator partnerships, ambassador programs, campaign measurement, outreach",
+    "source_settings": {
+      "mode": "subagent"
+    }
+  },
+  {
+    "legacy_name": "marketing/launch",
+    "name": "cf_marketing_launch",
+    "path": "agents/marketing/launch.md",
+    "config_file": "codex-agents/cf_marketing_launch.toml",
+    "description": "Launch specialist — product launches, feature announcements, GTM campaigns, launch calendars, PR coordination",
+    "source_settings": {
+      "mode": "subagent"
+    }
+  },
+  {
+    "legacy_name": "marketing/linkedin-carousel",
+    "name": "cf_marketing_linkedin_carousel",
+    "path": "agents/marketing/linkedin-carousel.md",
+    "config_file": "codex-agents/cf_marketing_linkedin_carousel.toml",
+    "description": "LinkedIn carousel orchestrator — researches a topic on the web, writes the canonical deck.json spec (EN design prompt + user-language structured text per slide), and drives the deterministic scripts (preflight person.json/logo → each::sense background art when EACHLABS_API_KEY is set, else prompts-only fallback → deterministic Chrome typography/logo → deck.pdf). Outputs land in docs/carousel/<slug>/ of the target project; identity comes only from docs/assets/person.json; nothing is published (manual upload).",
+    "source_settings": {
+      "mode": "subagent",
+      "temperature": 0.2,
+      "permission": {
+        "edit": {
+          "*": "deny",
+          "**/docs/carousel/**": "allow",
+          "**/docs/assets/**": "allow"
+        },
+        "bash": {
+          "*": "deny",
+          "*SCRIPTS_DIR/marketing/*": "allow",
+          "*SCRIPTS_DIR/shared/*": "allow",
+          "*SCRIPTS_DIR/cv/banner-gen.sh*": "allow",
+          "python3 *": "allow",
+          "mkdir -p *": "allow",
+          "mv *": "allow",
+          "file *": "allow",
+          "realpath *": "allow",
+          "cp *": "allow",
+          "rm -f *": "allow"
+        },
+        "read": "allow",
+        "glob": "allow",
+        "grep": "allow"
+      }
+    }
+  },
+  {
+    "legacy_name": "marketing/pages",
+    "name": "cf_marketing_pages",
+    "path": "agents/marketing/pages.md",
+    "config_file": "codex-agents/cf_marketing_pages.toml",
+    "description": "Landing pages & web content specialist — copy, structure, CRO, conversion optimization",
+    "source_settings": {
+      "mode": "subagent"
+    }
+  },
+  {
+    "legacy_name": "marketing/planning",
+    "name": "cf_marketing_planning",
+    "path": "agents/marketing/planning.md",
+    "config_file": "codex-agents/cf_marketing_planning.toml",
+    "description": "Marketing planning specialist — campaign plans, GTM strategy, marketing calendars, integrated campaigns",
+    "source_settings": {
+      "mode": "subagent"
+    }
+  },
+  {
+    "legacy_name": "marketing/pr",
+    "name": "cf_marketing_pr",
+    "path": "agents/marketing/pr.md",
+    "config_file": "codex-agents/cf_marketing_pr.toml",
+    "description": "PR & communications specialist — press releases, media outreach, earned media, crisis comms, thought leadership",
+    "source_settings": {
+      "mode": "subagent"
+    }
+  },
+  {
+    "legacy_name": "marketing/presentations",
+    "name": "cf_marketing_presentations",
+    "path": "agents/marketing/presentations.md",
+    "config_file": "codex-agents/cf_marketing_presentations.toml",
+    "description": "Presentation specialist — decks, slideware, narrative structure, data storytelling",
+    "source_settings": {
+      "mode": "subagent"
+    }
+  },
+  {
+    "legacy_name": "marketing/psychology",
+    "name": "cf_marketing_psychology",
+    "path": "agents/marketing/psychology.md",
+    "config_file": "codex-agents/cf_marketing_psychology.toml",
+    "description": "Marketing psychology specialist — cognitive biases, behavioral science, persuasion frameworks, mental models",
+    "source_settings": {
+      "mode": "subagent"
+    }
+  },
+  {
+    "legacy_name": "marketing/reports",
+    "name": "cf_marketing_reports",
+    "path": "agents/marketing/reports.md",
+    "config_file": "codex-agents/cf_marketing_reports.toml",
+    "description": "Reports & analytics specialist — dashboards, metrics, insights, executive summaries",
+    "source_settings": {
+      "mode": "subagent"
+    }
+  },
+  {
+    "legacy_name": "marketing/research",
+    "name": "cf_marketing_research",
+    "path": "agents/marketing/research.md",
+    "config_file": "codex-agents/cf_marketing_research.toml",
+    "description": "Market research specialist — competitor analysis, audience research, trend spotting",
+    "source_settings": {
+      "mode": "subagent"
+    }
+  },
+  {
+    "legacy_name": "marketing/seo",
+    "name": "cf_marketing_seo",
+    "path": "agents/marketing/seo.md",
+    "config_file": "codex-agents/cf_marketing_seo.toml",
+    "description": "SEO specialist — keyword research, content strategy, technical SEO, social sharing & Open Graph previews, AI crawlers, llms.txt, robots.txt and sitemaps",
+    "source_settings": {
+      "mode": "subagent"
+    }
+  },
+  {
+    "legacy_name": "marketing/social",
+    "name": "cf_marketing_social",
+    "path": "agents/marketing/social.md",
+    "config_file": "codex-agents/cf_marketing_social.toml",
+    "description": "Social media specialist — content calendar, copywriting, engagement, platform strategy",
+    "source_settings": {
+      "mode": "subagent"
+    }
+  },
+  {
+    "legacy_name": "marketing/templates",
+    "name": "cf_marketing_templates",
+    "path": "agents/marketing/templates.md",
+    "config_file": "codex-agents/cf_marketing_templates.toml",
+    "description": "Templates & assets specialist — reusable templates, brand guidelines, asset management",
+    "source_settings": {
+      "mode": "subagent"
+    }
+  },
+  {
+    "legacy_name": "marketing/video-script-seo",
+    "name": "cf_marketing_video_script_seo",
+    "path": "agents/marketing/video-script-seo.md",
+    "config_file": "codex-agents/cf_marketing_video_script_seo.toml",
+    "description": "Video Script SEO subagent — YouTube titles, descriptions, tags and thumbnail concepts on the Codetomika CEO voice",
+    "source_settings": {
+      "mode": "subagent"
+    }
+  },
+  {
+    "legacy_name": "marketing/video-script-thumbnail",
+    "name": "cf_marketing_video_script_thumbnail",
+    "path": "agents/marketing/video-script-thumbnail.md",
+    "config_file": "codex-agents/cf_marketing_video_script_thumbnail.toml",
+    "description": "Video Script Thumbnail subagent — low-budget thumbnail briefs (phone-shot) on the Codetomika channel identity",
+    "source_settings": {
+      "mode": "subagent"
+    }
+  },
+  {
+    "legacy_name": "marketing/video-script-variations",
+    "name": "cf_marketing_video_script_variations",
+    "path": "agents/marketing/video-script-variations.md",
+    "config_file": "codex-agents/cf_marketing_video_script_variations.toml",
+    "description": "Video Script Variations subagent — hook variations and outline structures on the Codetomika CEO voice",
+    "source_settings": {
+      "mode": "subagent"
+    }
+  },
+  {
+    "legacy_name": "marketing/video-script-writer",
+    "name": "cf_marketing_video_script_writer",
+    "path": "agents/marketing/video-script-writer.md",
+    "config_file": "codex-agents/cf_marketing_video_script_writer.toml",
+    "description": "Codetomika Video Script Director — CEO-voice scripts with per-format structure and SEO, respecting the equipment constraint (mobile phone only)",
+    "source_settings": {
+      "mode": "subagent",
+      "temperature": 0.8
+    }
+  },
+  {
+    "legacy_name": "marketing/video",
+    "name": "cf_marketing_video",
+    "path": "agents/marketing/video.md",
+    "config_file": "codex-agents/cf_marketing_video.toml",
+    "description": "Video production specialist — scriptwriting, storyboarding, AI video generation, UGC, product demos",
+    "source_settings": {
+      "mode": "subagent"
+    }
+  },
+  {
+    "legacy_name": "sales/account-management",
+    "name": "cf_sales_account_management",
+    "path": "agents/sales/account-management.md",
+    "config_file": "codex-agents/cf_sales_account_management.toml",
+    "description": "Account management — expansion, retention, upsell, QBRs, health scoring, customer success handoff",
+    "source_settings": {
+      "mode": "subagent"
+    }
+  },
+  {
+    "legacy_name": "sales/closing",
+    "name": "cf_sales_closing",
+    "path": "agents/sales/closing.md",
+    "config_file": "codex-agents/cf_sales_closing.toml",
+    "description": "Sales closing — buying signals, trial closes, assumptive closes, urgency creation, decision-framing, next-step commitment",
+    "source_settings": {
+      "mode": "subagent"
+    }
+  },
+  {
+    "legacy_name": "sales/customer-success",
+    "name": "cf_sales_customer_success",
+    "path": "agents/sales/customer-success.md",
+    "config_file": "codex-agents/cf_sales_customer_success.toml",
+    "description": "Customer Success — onboarding, retention, health scoring, QBRs, expansion, and churn prevention",
+    "source_settings": {
+      "mode": "subagent",
+      "temperature": 0.2,
+      "permission": {
+        "read": "allow",
+        "glob": "allow",
+        "grep": "allow",
+        "edit": "ask",
+        "bash": {
+          "*": "deny",
+          "git *": "allow"
+        }
+      }
+    }
+  },
+  {
+    "legacy_name": "sales/deal-docs",
+    "name": "cf_sales_deal_docs",
+    "path": "agents/sales/deal-docs.md",
+    "config_file": "codex-agents/cf_sales_deal_docs.toml",
+    "description": "Deal documentation — CRM hygiene, MEDDIC notes, deal reviews, win/loss analysis, pipeline audits, forecast adjustments",
+    "source_settings": {
+      "mode": "subagent"
+    }
+  },
+  {
+    "legacy_name": "sales/discovery",
+    "name": "cf_sales_discovery",
+    "path": "agents/sales/discovery.md",
+    "config_file": "codex-agents/cf_sales_discovery.toml",
+    "description": "Sales discovery — needs assessment, qualification frameworks (BANT, MEDDIC, SPICED, SPIN, Gap, Challenger), pain mapping, multi-threading",
+    "source_settings": {
+      "mode": "subagent"
+    }
+  },
+  {
+    "legacy_name": "sales/negotiation",
+    "name": "cf_sales_negotiation",
+    "path": "agents/sales/negotiation.md",
+    "config_file": "codex-agents/cf_sales_negotiation.toml",
+    "description": "Sales negotiation — value-based negotiation, concession strategy, anchoring, trade-offs, mutual outcomes, deal construction",
+    "source_settings": {
+      "mode": "subagent"
+    }
+  },
+  {
+    "legacy_name": "sales/proposals",
+    "name": "cf_sales_proposals",
+    "path": "agents/sales/proposals.md",
+    "config_file": "codex-agents/cf_sales_proposals.toml",
+    "description": "Sales proposals — proposal writing, pricing structure, SOWs, contracts, negotiation support",
+    "source_settings": {
+      "mode": "subagent"
+    }
+  },
+  {
+    "legacy_name": "sales/prospecting",
+    "name": "cf_sales_prospecting",
+    "path": "agents/sales/prospecting.md",
+    "config_file": "codex-agents/cf_sales_prospecting.toml",
+    "description": "Sales prospecting — lead generation, account research, ICP targeting, intent signals, outbound lists",
+    "source_settings": {
+      "mode": "subagent"
+    }
+  },
+  {
+    "legacy_name": "sales/sales-enablement",
+    "name": "cf_sales_sales_enablement",
+    "path": "agents/sales/sales-enablement.md",
+    "config_file": "codex-agents/cf_sales_sales_enablement.toml",
+    "description": "Sales enablement — collateral, pitch decks, objection handling, demo scripts, competitive battle cards",
+    "source_settings": {
+      "mode": "subagent"
+    }
+  },
+  {
+    "legacy_name": "sales/sales-pipeline",
+    "name": "cf_sales_sales_pipeline",
+    "path": "agents/sales/sales-pipeline.md",
+    "config_file": "codex-agents/cf_sales_sales_pipeline.toml",
+    "description": "Sales pipeline management — CRM ops, pipeline stages, forecasting, velocity analysis, deal inspection",
+    "source_settings": {
+      "mode": "subagent"
+    }
+  },
+  {
+    "legacy_name": "sales/sales-psychology",
+    "name": "cf_sales_sales_psychology",
+    "path": "agents/sales/sales-psychology.md",
+    "config_file": "codex-agents/cf_sales_sales_psychology.toml",
+    "description": "Sales psychology — buyer behavior, cognitive biases, decision-making, rapport, empathy, social dynamics in B2B sales",
+    "source_settings": {
+      "mode": "subagent"
+    }
+  }
+]

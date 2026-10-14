@@ -5,7 +5,7 @@ source "$(dirname "$0")/config.sh"
 # skill-vendor.sh — manage external skills as git clones (vendor strategy).
 #
 # External skills are NEVER copied into skills/. They stay as git clones under
-# ~/.config/opencode/vendor/ and are loaded in-place via "skills.paths" in
+# ~/.codex/flow/vendor/ and are loaded in-place via "skills.paths" in
 # opencode.json. Updating is a plain `git pull` (no re-import).
 #
 # Usage:
@@ -19,8 +19,8 @@ source "$(dirname "$0")/config.sh"
 #   skill-vendor.sh add Leonxlnx/taste-skill --sparse skills/taste-skill skills/redesign-skill skills/minimalist-skill
 #   skill-vendor.sh update taste-skill
 
-VENDOR_DIR="${SKILL_VENDOR_DIR:-$HOME/.config/opencode/vendor}"
-OPENCODE_CONFIG="${SKILL_VENDOR_CONFIG:-$HOME/.config/opencode/opencode.json}"
+VENDOR_DIR="${SKILL_VENDOR_DIR:-$HOME/.codex/flow/vendor}"
+
 
 cmd="${1:-}"
 if [[ -z "$cmd" ]]; then
@@ -87,60 +87,9 @@ discover_names() {
 }
 
 # config_register_skills <name...> — add each skill to permission.skill (atomic)
-config_register_skills() {
-  [[ "$#" -gt 0 ]] || return 0
-  python3 -c '
-import json, os, sys
-path = sys.argv[1]
-names = sys.argv[2:]
-with open(path, encoding="utf-8") as fh:
-    cfg = json.load(fh)
-skill = cfg.setdefault("permission", {}).setdefault("skill", {})
-for n in names:
-    skill[n] = "allow"
-tmp = path + ".tmp"
-with open(tmp, "w", encoding="utf-8") as fh:
-    json.dump(cfg, fh, indent=4, ensure_ascii=False)
-    fh.write("\n")
-os.replace(tmp, path)
-' "$OPENCODE_CONFIG" "$@"
-}
-
-# config_unregister_skills <name...> — remove each skill from permission.skill (atomic)
-config_unregister_skills() {
-  [[ "$#" -gt 0 ]] || return 0
-  python3 -c '
-import json, os, sys
-path = sys.argv[1]
-names = set(sys.argv[2:])
-with open(path, encoding="utf-8") as fh:
-    cfg = json.load(fh)
-skill = cfg.get("permission", {}).get("skill", {})
-changed = False
-for n in names:
-    if n in skill:
-        del skill[n]
-        changed = True
-if changed:
-    tmp = path + ".tmp"
-    with open(tmp, "w", encoding="utf-8") as fh:
-        json.dump(cfg, fh, indent=4, ensure_ascii=False)
-        fh.write("\n")
-    os.replace(tmp, path)
-' "$OPENCODE_CONFIG" "$@"
-}
-
-# config_existing_skills <name...> — print names already registered as allow
-config_existing_skills() {
-  [[ "$#" -gt 0 ]] || return 0
-  python3 -c '
-import json, sys
-cfg = json.load(open(sys.argv[1], encoding="utf-8"))
-sk = cfg.get("permission", {}).get("skill", {})
-want = set(sys.argv[2:])
-print(" ".join(sorted(n for n in want if n in sk)))
-' "$OPENCODE_CONFIG" "$@"
-}
+config_register_skills() { python3 "$CONFIG_DIR/scripts/flowctl.py" vendor-register; }
+config_unregister_skills() { :; }
+config_existing_skills() { :; }
 
 # clone_repo <url> <dir> [sparse paths...] — clone with partial-clone fallback
 clone_repo() {
@@ -277,3 +226,5 @@ case "$cmd" in
     exit 1
     ;;
 esac
+
+python3 "$CONFIG_DIR/scripts/flowctl.py" vendor-register

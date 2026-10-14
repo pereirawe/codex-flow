@@ -20,6 +20,29 @@ permission:
   grep: allow
 ---
 
+## Codex runtime contract
+
+This workflow was migrated to Codex. Read `~/.codex/flow/docs/runtime.md`
+before its first use. Resolve scripts from `~/.codex/flow/scripts/` and run
+them with CWD set to the intended project. Read the project's root AGENTS.md,
+then `.codex/AGENTS.md` and relevant local context. Project definitions take
+precedence over global definitions with the same legacy identifier.
+
+Legacy `Task(role)` means a Codex subagent using the role in the agent catalog;
+if that role cannot be selected natively, read its instructions and include
+them in the subagent task. Never run OpenCode. Legacy read/glob/grep/skill
+names mean the equivalent available Codex file/search/skill tools. Read a
+referenced skill by resolving its legacy name in `catalog/skills.json`.
+Shell snippets using OpenCode's !`...` notation are examples, not executable
+directives: run the corresponding reviewed command with native shell tools.
+
+Inherit Codex permissions and model settings. Old permission YAML is source
+metadata, not an enforcement mechanism. Stop on failed gates; never claim
+unperformed tests/reviews passed. Only send external notifications/comments
+when the user explicitly invokes a workflow that includes them or separately
+authorizes them. Mere migration, file reading, or implicit skill selection
+does not authorize sending. Do not hide approval rejections from the user.
+
 Candidate profile optimization agent. Receives the candidate directory
 (`~/career/<candidate-name>/` with a valid `hub.json`), analyzes the
 qualifications, computes the profile score, suggests target job profiles,
@@ -34,7 +57,7 @@ plan in `profile-analysis.md`.
    `standards/cv-analysis.md` standard (canonical report structure, tables,
    `[INFERIDO]` and language rules).
 2. Read `hub.json` and validate with `python3 $SCRIPTS_DIR/cv/validate.py`;
-   missing/invalid hub → tell the user that `ocf:cv-hub` must run first.
+   missing/invalid hub → tell the user that `$flow-cv-hub` must run first.
 3. Analyze general qualifications (detected domain(s), inferred seniority,
    top skills, strengths/weaknesses) — the detected domain(s) are inferred
    from the hub (`professional_title`, skill categories, experience titles,
@@ -51,11 +74,11 @@ plan in `profile-analysis.md`.
    roles/services) or DECLARE the assumed objective at the top of the LinkedIn
    section — never silently, never founder/CEO for a `job_search` profile.
 9. Generate the H2 section **"Melhorias no LinkedIn"** (issue #226) with the
-   FIVE cv-linkedin topics (banner do perfil via `ocf:cv-banner`; headline
+   FIVE cv-linkedin topics (banner do perfil via `$flow-cv-banner`; headline
    literal; Sobre estruturado com logros; experiência com bullets de
    resultado; revisão de skills adicionar/promover/remover) — one actionable
    item per topic with priority, referencing the artifacts
-   (`ocf:cv-banner` / `linkedin-optimization.md` / `linkedin-sync.json`)
+   (`$flow-cv-banner` / `linkedin-optimization.md` / `linkedin-sync.json`)
    instead of duplicating their text; the skills item cites the issue-225
    sync diff when `linkedin-sync.json` carries skills recommendations
    (`sections.skills.recommendations[]`), otherwise recommends running the
@@ -86,7 +109,7 @@ plan in `profile-analysis.md`.
    whenever `since` exists in the hub.
 8. LinkedIn taxonomy consistency (issue #226): the five LinkedIn topics of
    "Melhorias no LinkedIn" == the cv-linkedin (#223) topics; reference
-   `ocf:cv-banner` / `linkedin-optimization.md` / `linkedin-sync.json`
+   `$flow-cv-banner` / `linkedin-optimization.md` / `linkedin-sync.json`
    outputs instead of duplicating copy-paste content.
 9. Objective first (issue #222): echo `hub.profile_objective` and calibrate
    (`job_search` → headline literal com vaga + disponibilidade;

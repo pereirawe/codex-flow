@@ -1,23 +1,23 @@
-node_modules
-package.json
-package-lock.json
-.opencode/reviews/
-state/
-.agents/
+node_modules/
 vendor/
+.local/
+state/
 __pycache__/
 *.pyc
+*.env
+*.env.*
+!*.env.example
+auth.json
+account.json
+credentials
+.codex/cache/
+.codex/preflight/
+.codex/reviews/
+.codex/test-cache/
+.codex/design-outputs/
+.codex/spikes/*
+!.codex/spikes/*.md
 docs/delivery-prompts/
-reviews/*.md
 hive/
 roster-backups/
 roster.json
-
-# opencode runtime/generated artifacts (never versioned)
-.opencode/preflight/
-.opencode/test-cache/
-.opencode/design-outputs/
-# Spikes keep their versioned markdown deliverables (issue #74); only transient
-# scratch files inside are ignored.
-.opencode/spikes/*
-!.opencode/spikes/*.md

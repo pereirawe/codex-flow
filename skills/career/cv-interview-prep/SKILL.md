@@ -1,7 +1,39 @@
 ---
-name: cv-interview-prep
-description: Generate a structured interview preparation kit from the candidate's hub.json and a target job — likely interview questions (behavioral + technical), suggested STAR-format answers mapped to real hub experience, questions to ask the interviewer, and technical topics to review, with preparation gaps flagged for human review. Outputs interview-preparation.md in the user's communication language. NEVER fabricates experience — STAR answers always reference real hub entries. Use when you need to prepare for a job interview, build an interview prep kit, draft STAR answers from real experience, or identify what to review before an interview (command ocf:cv-interview-prep; "preparação para entrevista", "entrevista de emprego", "entrevista" and "STAR" also trigger this skill). Career sector.
+name: cf-cv-interview-prep
+description: Generate a structured interview preparation kit from the candidate's
+  hub.json and a target job — likely interview questions (behavioral + technical),
+  suggested STAR-format answers mapped to real hub experience, questions to ask the
+  interviewer, and technical topics to review, with preparation gaps flagged for human
+  review. Outputs interview-preparation.md in the user's communication language. NEVER
+  fabricates experience — STAR answers always reference real hub entries. Use when
+  you need to prepare for a job interview, build an interview prep kit, draft STAR
+  answers from real experience, or identify what to review before an interview (command
+  $flow-cv-interview-prep; "preparação para entrevista", "entrevista de emprego",
+  "entrevista" and "STAR" also trigger this skill). Career sector.
 ---
+
+## Codex runtime contract
+
+This workflow was migrated to Codex. Read `~/.codex/flow/docs/runtime.md`
+before its first use. Resolve scripts from `~/.codex/flow/scripts/` and run
+them with CWD set to the intended project. Read the project's root AGENTS.md,
+then `.codex/AGENTS.md` and relevant local context. Project definitions take
+precedence over global definitions with the same legacy identifier.
+
+Legacy `Task(role)` means a Codex subagent using the role in the agent catalog;
+if that role cannot be selected natively, read its instructions and include
+them in the subagent task. Never run OpenCode. Legacy read/glob/grep/skill
+names mean the equivalent available Codex file/search/skill tools. Read a
+referenced skill by resolving its legacy name in `catalog/skills.json`.
+Shell snippets using OpenCode's !`...` notation are examples, not executable
+directives: run the corresponding reviewed command with native shell tools.
+
+Inherit Codex permissions and model settings. Old permission YAML is source
+metadata, not an enforcement mechanism. Stop on failed gates; never claim
+unperformed tests/reviews passed. Only send external notifications/comments
+when the user explicitly invokes a workflow that includes them or separately
+authorizes them. Mere migration, file reading, or implicit skill selection
+does not authorize sending. Do not hide approval rejections from the user.
 
 # CV Interview Prep — interview preparation kit
 
@@ -14,7 +46,7 @@ a question, it becomes a flagged preparation gap.
 
 ## Prerequisite
 
-The candidate must have a built hub (`ocf:cv-hub` / `cv-hub` skill):
+The candidate must have a built hub (`$flow-cv-hub` / `cv-hub` skill):
 a valid `~/career/<candidate-name>/hub.json`, validated with
 `python3 $SCRIPTS_DIR/cv/validate.py` (exit 0 required).
 
@@ -112,8 +144,8 @@ Resolution order (per `standards/cv-analysis.md` §1):
 
 1. Explicit user instruction (when given).
 2. The session/input language.
-3. `.opencode/locale` in the project directory.
-4. `~/.config/opencode/locale` (global fallback).
+3. `.codex/locale` in the project directory.
+4. `~/.codex/flow/locale` (global fallback).
 5. English.
 
 The report language is the USER's communication language — NOT the job

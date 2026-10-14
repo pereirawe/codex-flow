@@ -1,4 +1,4 @@
-## /ocf:maintain
+## $flow-maintain
 
 ---
 description: Maintain known_issues.md — sync, archive, clean
@@ -58,6 +58,6 @@ Output a summary:
 
 - `maintain.sh` is safe to run independently — it only reads remote state and reports, never modifies files
 - Actual archiving requires the assistant to run `close_issue.sh` after reviewing the report
-- Proposals in `.opencode/prioritization.md` (project-level) or
-  `~/.config/opencode/prioritization.md` (global fallback) should
+- Proposals in `.codex/prioritization.md` (project-level) or
+  `~/.codex/flow/prioritization.md` (global fallback) should
   be checked separately for items ready to promote

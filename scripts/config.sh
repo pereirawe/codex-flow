@@ -2,30 +2,34 @@
 # Source this file from any script to get absolute global paths.
 #
 # Usage:
-#   source "$(dirname "$0")/config.sh"
+#   source "$(dirname "${BASH_SOURCE[0]}")/config.sh"
 
-SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
 CONFIG_DIR="$(dirname "$SCRIPT_DIR")"
 SCRIPTS_DIR="$CONFIG_DIR/scripts"
 
-# Global issue tracker (opencode config-level issues)
+# Resolve the checkout root before choosing the project tracker.
 ISSUES_FILE="$CONFIG_DIR/known_issues.md"
-
-# Project-local issue tracker (project-specific issues)
-# Detected from CWD — falls back to global if no .opencode/ found
-if [ -f ".opencode/known_issues.md" ]; then
-  PROJECT_ISSUES_FILE="$(pwd -P)/.opencode/known_issues.md"
-  PROJECT_ISSUES_DIR="$(pwd -P)/.opencode"
+FLOW_PROJECT_ROOT="$(git rev-parse --show-toplevel 2>/dev/null || true)"
+[[ -n "$FLOW_PROJECT_ROOT" ]] || FLOW_PROJECT_ROOT="$(pwd -P)"
+if [[ "$FLOW_PROJECT_ROOT" == "$CONFIG_DIR" ]]; then
+  PROJECT_ISSUES_FILE="$ISSUES_FILE"
+  PROJECT_ISSUES_DIR="$CONFIG_DIR"
+  RESOLVED_FILE="$CONFIG_DIR/resolved_issues.md"
+elif [[ -f "$FLOW_PROJECT_ROOT/.codex/known_issues.md" ]]; then
+  PROJECT_ISSUES_FILE="$FLOW_PROJECT_ROOT/.codex/known_issues.md"
+  PROJECT_ISSUES_DIR="$FLOW_PROJECT_ROOT/.codex"
+  RESOLVED_FILE="$PROJECT_ISSUES_DIR/resolved_issues.md"
+elif git rev-parse --git-dir >/dev/null 2>&1; then
+  # Reusable helpers do not require an issue tracker. Never fall back to the
+  # global tracker for a Git project: issue scripts fail on the missing file.
+  PROJECT_ISSUES_DIR="$FLOW_PROJECT_ROOT/.codex"
+  PROJECT_ISSUES_FILE="$PROJECT_ISSUES_DIR/known_issues.md"
+  RESOLVED_FILE="$PROJECT_ISSUES_DIR/resolved_issues.md"
 else
   PROJECT_ISSUES_FILE="$ISSUES_FILE"
   PROJECT_ISSUES_DIR="$CONFIG_DIR"
-fi
-
-# Resolved issue archive — prefer project .opencode/ even when issues are global
-if [ -d ".opencode" ]; then
-  RESOLVED_FILE="$(pwd -P)/.opencode/resolved_issues.md"
-else
-  RESOLVED_FILE="$PROJECT_ISSUES_DIR/resolved_issues.md"
+  RESOLVED_FILE="$CONFIG_DIR/resolved_issues.md"
 fi
 
 # Reviewer count for branch/PR reviews (default: 1)
@@ -41,7 +45,7 @@ REVIEWER_COUNT="${REVIEWER_COUNT:-1}"
 # pipeline scripts behave exactly as before (zero Jira API calls).
 #
 # Config sources (per-field, env wins over file):
-#   - `.opencode/jira.json` (project) — {baseUrl, email, projectKey,
+#   - `.codex/jira.json` (project) — {baseUrl, email, projectKey,
 #     statusMap?, authMode?}
 #   - env vars: JIRA_BASE_URL, JIRA_PROJECT_KEY, JIRA_EMAIL, JIRA_AUTH_MODE,
 #     JIRA_STATUS_MAP (JSON), JIRA_API_TOKEN (required, env only)
@@ -69,7 +73,7 @@ jira_config_load() {
   local file_base_b64="" file_key_b64="" file_email_b64="" file_auth_b64="" file_status_map_b64=""
   local cfg="${JIRA_CONFIG_FILE:-}"
   if [[ -z "$cfg" ]]; then
-    for c in .opencode/jira.json "$CONFIG_DIR/.opencode/jira.json"; do
+    for c in .codex/jira.json "$CONFIG_DIR/.codex/jira.json"; do
       if [[ -f "$c" ]]; then cfg="$c"; break; fi
     done
   fi

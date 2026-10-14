@@ -1,29 +1,29 @@
-## /ocf:cv-optimize <candidate-directory>
+## $flow-cv-optimize <candidate-directory>
 
 ---
 description: Analyze the candidate profile and generate an improvement plan — profile score, target job profiles, CLT vs PJ salary ranges, context gaps, integrated objective-calibrated LinkedIn improvements (banner/headline/Sobre/experiência/skills consistent with cv-linkedin) and a prioritized action plan (profile-analysis.md + PDF)
 ---
 
-Analyzes a candidate's profile from the hub (built with `/ocf:cv-hub`) and
+Analyzes a candidate's profile from the hub (built with `$flow-cv-hub`) and
 generates an optimization report: per-section profile score, general
 qualifications, target job profiles, CLT vs PJ market salary ranges
 (`[INFERIDO]` bands), context gaps, an integrated **"Melhorias no LinkedIn"**
 section (banner/headline/Sobre/experiência/skills, calibrated by the profile
-objective and consistent with the `ocf:cv-linkedin` taxonomy) and a
+objective and consistent with the `$flow-cv-linkedin` taxonomy) and a
 prioritized action plan. The goal is
 to improve the profile substantially before generating tailored resumes with
-`/ocf:cv-tailor`.
+`$flow-cv-tailor`.
 
 ### Usage
 
 ```
-/ocf:cv-optimize ~/career/maria-silva
+$flow-cv-optimize ~/career/maria-silva
 ```
 
 ### Flow
 
 1. **Check the hub** — if `~/career/<candidate>/hub.json` does not exist or
-   is invalid, invoke the `/ocf:cv-hub` flow first (asking for the source
+   is invalid, invoke the `$flow-cv-hub` flow first (asking for the source
    paths) and then continue.
 2. **Validate** — `python3 $SCRIPTS_DIR/cv/validate.py hub.json`.
 3. **Invoke the agent** `career/cv-optimizer` via `task:` with the candidate
@@ -47,7 +47,7 @@ to improve the profile substantially before generating tailored resumes with
    - CLT vs PJ salary ranges (all `[INFERIDO]` for human review)
    - Context gaps in the hub
    - Melhorias no LinkedIn (H2 — objective-calibrated per step 4, five
-     cv-linkedin topics: banner via `ocf:cv-banner`, headline literal, Sobre
+     cv-linkedin topics: banner via `$flow-cv-banner`, headline literal, Sobre
      com logros, experiência com bullets, revisão de skills com o diff da
      issue 225)
    - Prioritized action plan (impact × effort) — every LinkedIn item mirrored
@@ -79,7 +79,7 @@ to improve the profile substantially before generating tailored resumes with
   `standards/cv-analysis.md` §1.
 - LinkedIn consistency (issue #226): the five LinkedIn topics of the
   "Melhorias no LinkedIn" section == the cv-linkedin taxonomy (#223); the
-  items reference `ocf:cv-banner` / `linkedin-optimization.md` /
+  items reference `$flow-cv-banner` / `linkedin-optimization.md` /
   `linkedin-sync.json` instead of duplicating their copy-paste content.
 - Objective first (issue #222): echo `hub.profile_objective` and calibrate
   the LinkedIn actions; absent → ask or explicitly declare the assumed

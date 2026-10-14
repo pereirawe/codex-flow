@@ -78,7 +78,7 @@ conflito de branch, falha de modelo). Nenhuma MR foi criada.
 — aibot
 ```
 
-## Chaves aceitas pelo `ocf:aibot-notify`
+## Chaves aceitas pelo `$flow-aibot-notify`
 
 | Chave | Uso |
 |-------|-----|

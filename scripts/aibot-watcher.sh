@@ -3,7 +3,7 @@ set -euo pipefail
 
 # aibot-watcher.sh — Poll remote issue comments for `@aibot:develop` triggers.
 #
-# For each allowlisted repo in ~/.config/opencode/aibot-repos.json:
+# For each allowlisted repo in ~/.codex/flow/aibot-repos.json:
 #   - fetch NEW issue comments since the per-repo cursor (issue comments only,
 #     never PR comments / merge states — BR 14 / BR 18). On FIRST run the
 #     cursor is initialized to the newest comment so historical comments
@@ -14,19 +14,19 @@ set -euo pipefail
 #       * find the matching locally-tracked issue (`Remote: #<id>` in the
 #         workspace tracker) — BR 4
 #       * re-check the issue status inside the per-repo flock — BR 5
-#       * trigger `opencode run --attach ... --command "ocf:develop-full" <id>`
-#         (BR 7 — NO `--` separator; see opencode_run) capped per tick
-#         (MAX_TRIGGERS_PER_TICK — Security M3). `ocf:develop-full` is used so
+#       * trigger `codex exec (legacy log: --attach) ... --command "develop-full" <id>`
+#         (BR 7 — NO `--` separator; see codex_run) capped per tick
+#         (MAX_TRIGGERS_PER_TICK — Security M3). `\$develop-full` is used so
 #         the auto-merge semantics of `@aibot:develop` are preserved (issue
-#         #211: `ocf:develop` now stops at MR creation with a manual merge).
-#       * post the standardized result message via `ocf:aibot-notify` (BR 8-10)
+#         #211: `\$develop` now stops at MR creation with a manual merge).
+#       * post the standardized result message via `\$flow-aibot-notify` (BR 8-10)
 #
 # Run via systemd timer (aibot-watcher.timer, OnCalendar=*:0/2) under the
 # opencode user — BR 12. The web server health-check happens first and the
 # tick exits cleanly when it is down (BR 12 / AC 9).
 #
 # State (cursor + per-repo lock + develop logs) lives in
-# ~/.config/opencode/state/aibot/ (BR 15, mode 0700). The cursor persists
+# ~/.codex/flow/state/aibot/ (BR 15, mode 0700). The cursor persists
 # across restarts so comments are never re-processed (BR 2 / AC 8 / AC 13).
 #
 # Security boundary (BR 13 / AC 19): allowlist of repos in aibot-repos.json +
@@ -49,7 +49,7 @@ AIBOT_STATE_DIR="${AIBOT_STATE_DIR:-$CONFIG_ROOT/state/aibot}"
 AIBOT_WEB_URL="${AIBOT_WEB_URL:-http://127.0.0.1:4096}"
 # Qualified provider/model id — the server rejects the bare id with
 # ProviderModelNotFoundError (R-B2).
-AIBOT_MODEL="${AIBOT_MODEL:-opencode-go/deepseek-v4-flash}"
+AIBOT_MODEL="${AIBOT_MODEL:-}"
 AIBOT_TOKEN="${AIBOT_TOKEN:-@aibot:develop}"
 # Comma-separated list of extra authors to exclude (beyond the local identity)
 AIBOT_AUTHORS="${AIBOT_AUTHORS:-}"
@@ -59,7 +59,7 @@ AIBOT_SERVER_USERNAME="${AIBOT_SERVER_USERNAME:-}"
 AIBOT_SERVER_PASSWORD="${AIBOT_SERVER_PASSWORD:-}"
 # Cap of actual develop pipeline spawns per repo per tick (Security M3)
 MAX_TRIGGERS_PER_TICK="${MAX_TRIGGERS_PER_TICK:-1}"
-OPENCODE_BIN="${OPENCODE_BIN:-opencode}"
+CODEX_BIN="${CODEX_BIN:-codex}"
 
 log() { printf '[aibot-watcher] %s %s\n' "$(date +%Y-%m-%dT%H:%M:%S%z)" "$*" >&2; }
 
@@ -72,11 +72,7 @@ fail() { log "ERROR: $*"; exit 1; }
 # web_healthy — 0 when the opencode web server answers on $AIBOT_WEB_URL (BR 12).
 # -f: any 4xx/5xx response counts as unhealthy (Runtime m1).
 web_healthy() {
-  if ! command -v curl >/dev/null 2>&1; then
-    log "curl not available — assuming web server is down"
-    return 1
-  fi
-  curl -fsS -o /dev/null --max-time 5 "$AIBOT_WEB_URL" 2>/dev/null
+  command -v "$CODEX_BIN" >/dev/null 2>&1
 }
 
 # list_repos — print "key<TAB>workspace" for every allowlisted repo entry.
@@ -129,14 +125,14 @@ write_cursor() {
   printf '%s\n' "$2" > "$tmp" && mv "$tmp" "$f" || rm -f "$tmp"
 }
 
-# resolve_tracker <workspace> — BR 4: prefer the workspace .opencode tracker,
-# falling back to the workspace root tracker when the .opencode one has no
+# resolve_tracker <workspace> — BR 4: prefer the workspace .codex tracker,
+# falling back to the workspace root tracker when the .codex one has no
 # real entries (e.g. the opencode config repo ships an empty template).
 has_entries() { grep -qE '^### [0-9]+\.' "$1" 2>/dev/null; }
 
 resolve_tracker() {
   local workspace="$1"
-  local local_tracker="$workspace/.opencode/known_issues.md"
+  local local_tracker="$workspace/.codex/known_issues.md"
   local root_tracker="$workspace/known_issues.md"
   if [[ -f "$local_tracker" ]] && has_entries "$local_tracker"; then
     printf '%s\n' "$local_tracker"; return 0
@@ -316,35 +312,22 @@ fetch_comments() {
   esac
 }
 
-# opencode_run <workspace> <args...> — invoke `opencode run --attach` against the
+# codex_run <workspace> <args...> — invoke `codex exec (legacy log: --attach)` against the
 # web server. Auth is passed via OPENCODE_SERVER_* env vars (never argv — a
 # `--password` would be visible in `ps`, Security M4). NOTE: the BR 7 command
 # form has NO `--` separator before the args — on opencode 1.18.7 the
 # `--command <cmd> -- <arg>` form crashes with "G.includes is not a function"
 # (R-B1); args must follow the --command value directly.
-opencode_run() {
-  local workspace="$1"
-  shift
-  local -a run_env=(env)
-  if [[ -n "$AIBOT_SERVER_USERNAME" ]]; then
-    run_env+=(OPENCODE_SERVER_USERNAME="$AIBOT_SERVER_USERNAME")
-  fi
-  if [[ -n "$AIBOT_SERVER_PASSWORD" ]]; then
-    run_env+=(OPENCODE_SERVER_PASSWORD="$AIBOT_SERVER_PASSWORD")
-  fi
-  if ! command -v "$OPENCODE_BIN" >/dev/null 2>&1; then
-    log "opencode binary '$OPENCODE_BIN' not found (set OPENCODE_BIN)"
-    return 127
-  fi
-  # BR 13: --auto auto-approves everything NOT explicitly denied; the explicit
-  # deny rules in opencode.json + agent configs still hold (security review).
-  "${run_env[@]}" "$OPENCODE_BIN" run --attach "$AIBOT_WEB_URL" --auto \
-    --dir "$workspace" --model "$AIBOT_MODEL" "$@"
+codex_run() {
+  local workspace="$1"; shift
+  [[ "${1:-}" != --command ]] || shift
+  local workflow="${1:?workflow required}"; shift
+  "$SCRIPT_DIR/codex-run.sh" "$workspace" "$workflow" "$@"
 }
 
 # run_develop <workspace> <local_id> — run the full continuous pipeline
 # (promote → develop → senior review → QA → committer → MR → auto-merge →
-# close/archive) on the web server via `ocf:develop-full` (issue #211 — the
+# close/archive) on the web server via `\$develop-full` (issue #211 — the
 # full variant keeps the auto-merge the watcher's `@aibot:develop` depends on).
 # Output streams to a per-run log file (never buffered in memory — Runtime m3);
 # on failure the tail of the log is emitted to stderr. Returns the opencode
@@ -355,13 +338,13 @@ run_develop() {
   logdir="$AIBOT_STATE_DIR/logs"
   mkdir -p -m 700 "$logdir" 2>/dev/null || true
   logf="$logdir/develop-$(date +%Y%m%d-%H%M%S)-#$local_id.log"
-  log "triggering: opencode run --attach $AIBOT_WEB_URL --auto --dir $workspace --model $AIBOT_MODEL --command ocf:develop-full $local_id (log: $logf)"
+  log "triggering: codex exec (legacy log: --attach) $AIBOT_WEB_URL --auto --dir $workspace --model $AIBOT_MODEL --command \$develop-full $local_id (log: $logf)"
   # < /dev/null: never let the develop run consume the comment stream that the
   # calling while/read loop feeds from (process substitution stdin inheritance).
-  opencode_run "$workspace" --command "ocf:develop-full" "$local_id" \
+  codex_run "$workspace" --command "develop-full" "$local_id" \
     < /dev/null >"$logf" 2>&1 || rc=$?
   rc="${rc:-0}"
-  log "ocf:develop-full #$local_id exit=$rc"
+  log "\$develop-full #$local_id exit=$rc"
   if [[ "$rc" -ne 0 ]]; then
     tail -n 15 "$logf" >&2
   fi
@@ -369,18 +352,18 @@ run_develop() {
 }
 
 # notify_issue <workspace> <remote_id> <message_key> [pr_number] — post exactly
-# one standardized aibot message to the remote issue via ocf:aibot-notify
+# one standardized aibot message to the remote issue via \$flow-aibot-notify
 # (BR 10). Runs synchronously; failures are logged, never fatal.
 notify_issue() {
   local workspace="$1" remote_id="$2" msg_key="$3" pr_number="${4:-}"
-  if ! command -v "$OPENCODE_BIN" >/dev/null 2>&1; then
-    log "WARN: opencode binary not found — message '$msg_key' for #$remote_id not posted"
+  if ! command -v "$CODEX_BIN" >/dev/null 2>&1; then
+    log "WARN: Codex binary not found — message '$msg_key' for #$remote_id not posted"
     return 0
   fi
-  log "notifying: ocf:aibot-notify #$remote_id '$msg_key'${pr_number:+ (PR $pr_number)}"
-  local args=(--command "ocf:aibot-notify" "$remote_id" "$msg_key")
+  log "notifying: \$flow-aibot-notify #$remote_id '$msg_key'${pr_number:+ (PR $pr_number)}"
+  local args=(--command "flow-aibot-notify" "$remote_id" "$msg_key")
   [[ -n "$pr_number" ]] && args+=("$pr_number")
-  opencode_run "$workspace" "${args[@]}" < /dev/null >/dev/null 2>&1 \
+  codex_run "$workspace" "${args[@]}" < /dev/null >/dev/null 2>&1 \
     || log "WARN: failed to post message '$msg_key' for #$remote_id"
 }
 
@@ -402,6 +385,10 @@ handle_comment() {
     return 0
   fi
 
+  if [[ -z "${AIBOT_TRIGGER_AUTHORS:-}" ]] || ! printf '%s\n' "$AIBOT_TRIGGER_AUTHORS" | tr ',' '\n' | grep -qxF "$cauthor"; then
+    log "comment $cid ignored: author is not authorized in AIBOT_TRIGGER_AUTHORS"
+    return 0
+  fi
   local body=""
   body="$(jq -r '.body' <<<"$cjson" 2>/dev/null || echo "")"
 

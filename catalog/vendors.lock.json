@@ -1,0 +1,190 @@
+[
+  {
+    "name": "agent-skills",
+    "url": "https://github.com/supabase/agent-skills",
+    "commit": "8331f910845103c08d51f6ca1d86ebb7d1f745e3",
+    "sparse_patterns": []
+  },
+  {
+    "name": "agent-skills-marketing",
+    "url": "https://github.com/whyashthakker/agent-skills-marketing",
+    "commit": "985b4becb89bf441c1abd714177a8f99079bd25e",
+    "sparse_patterns": [
+      "/*",
+      "!/*/",
+      "/.claude/",
+      "!/.claude/*/",
+      "/.claude/skills/",
+      "!/.claude/skills/*/",
+      "/.claude/skills/seo-geo/"
+    ]
+  },
+  {
+    "name": "ai",
+    "url": "https://github.com/twilio/ai",
+    "commit": "8aba46fb65dc8d9a20f4b301a68352064b4159a5",
+    "sparse_patterns": [
+      "/*",
+      "!/*/",
+      "/skills/"
+    ]
+  },
+  {
+    "name": "brand-to-design-md-skill",
+    "url": "https://github.com/shaom/brand-to-design-md-skill",
+    "commit": "bfebb5010039e3166bf3eccc90ef4aa07ed308c6",
+    "sparse_patterns": []
+  },
+  {
+    "name": "claude-code-nextjs-skills",
+    "url": "https://github.com/laguagu/claude-code-nextjs-skills",
+    "commit": "1c62bc6ab53120885a4a9e06aecc6662933b1751",
+    "sparse_patterns": [
+      "/*",
+      "!/*/",
+      "/skills/",
+      "!/skills/*/",
+      "/skills/next-best-practices/",
+      "/skills/nextjs-seo/"
+    ]
+  },
+  {
+    "name": "claude-skills",
+    "url": "https://github.com/alirezarezvani/claude-skills",
+    "commit": "aa8d778811a557a2c28ccadda4cf3d0bd028a4cc",
+    "sparse_patterns": [
+      "/*",
+      "!/*/",
+      "/engineering-team/",
+      "!/engineering-team/*/",
+      "/engineering-team/skills/",
+      "!/engineering-team/skills/*/",
+      "/engineering-team/skills/senior-frontend/"
+    ]
+  },
+  {
+    "name": "cto-os-skills",
+    "url": "https://github.com/rinaldofesta/cto-os-skills",
+    "commit": "861135841815863aba289b5a4b675dcea67fac3e",
+    "sparse_patterns": []
+  },
+  {
+    "name": "dot-skills",
+    "url": "https://github.com/pproenca/dot-skills",
+    "commit": "c9228d2d0c1391190168845824ceb4e33bb844fb",
+    "sparse_patterns": [
+      "/*",
+      "!/*/",
+      "/skills/",
+      "!/skills/*/",
+      "/skills/.curated/",
+      "!/skills/.curated/*/",
+      "/skills/.curated/tailwind/"
+    ]
+  },
+  {
+    "name": "eachlabs-skills",
+    "url": "https://github.com/eachlabs/skills",
+    "commit": "dbd25b764305f84e5b9df3e095d5e444e6ee94e5",
+    "sparse_patterns": [
+      "/*",
+      "!/*/",
+      "/skills/",
+      "!/skills/*/",
+      "/skills/poster-design-generation/"
+    ]
+  },
+  {
+    "name": "frontend-designer-skill",
+    "url": "https://github.com/kozz36/frontend-designer-skill",
+    "commit": "5e4dc12811bd106e3184a863656e141aed398a3f",
+    "sparse_patterns": [
+      "/*",
+      "!/*/",
+      "/versions/",
+      "!/versions/*/",
+      "/versions/v3.0/"
+    ]
+  },
+  {
+    "name": "icon-generator-skill",
+    "url": "https://github.com/anhao/icon-generator-skill",
+    "commit": "1ae6249313329e84e331d6baa8ac87429e8648e2",
+    "sparse_patterns": []
+  },
+  {
+    "name": "lovable-skills",
+    "url": "https://github.com/charanjit-singh/lovable-skills",
+    "commit": "a8114463b40f2650ba5d06e557d770938cdf8ad8",
+    "sparse_patterns": []
+  },
+  {
+    "name": "marketing-skills",
+    "url": "https://github.com/kostja94/marketing-skills",
+    "commit": "70987bad4ebe9dce1f74858c1c64f3f8810f18e4",
+    "sparse_patterns": [
+      "/*",
+      "!/*/",
+      "/skills/",
+      "!/skills/*/",
+      "/skills/analytics/",
+      "!/skills/analytics/*/",
+      "/skills/analytics/seo/",
+      "!/skills/analytics/seo/*/",
+      "/skills/platforms/",
+      "!/skills/platforms/*/",
+      "/skills/analytics/seo/google-search-console/",
+      "/skills/platforms/youtube/"
+    ]
+  },
+  {
+    "name": "motion-design-skill",
+    "url": "https://github.com/LottieFiles/motion-design-skill",
+    "commit": "f9a8a041b85185ee4881b3471d3415e939aac772",
+    "sparse_patterns": []
+  },
+  {
+    "name": "responsive-craft",
+    "url": "https://github.com/kylezantos/responsive-craft",
+    "commit": "4863701762d243d0517b38cb36473b9a70861b72",
+    "sparse_patterns": []
+  },
+  {
+    "name": "skill.color-expert",
+    "url": "https://github.com/meodai/skill.color-expert",
+    "commit": "6aa1d1315dddd93be74a9481d62712291059253e",
+    "sparse_patterns": []
+  },
+  {
+    "name": "skills",
+    "url": "https://github.com/wispbit-ai/skills",
+    "commit": "8b2c7d0ceca0204634dd308970629c4cd4a5a05f",
+    "sparse_patterns": [
+      "/*",
+      "!/*/",
+      "/skills/",
+      "!/skills/*/",
+      "/skills/python-expert-best-practices-code-review/"
+    ]
+  },
+  {
+    "name": "taste-skill",
+    "url": "https://github.com/Leonxlnx/taste-skill",
+    "commit": "e988add20dab0fa97d7a76781c48961c8184288e",
+    "sparse_patterns": [
+      "/*",
+      "!/*/",
+      "/skills/",
+      "!/skills/*/",
+      "/skills/minimalist-skill/",
+      "/skills/redesign-skill/",
+      "/skills/taste-skill/"
+    ]
+  },
+  {
+    "name": "ux-flow-designer",
+    "url": "https://github.com/ThomasPraun/ux-flow-designer",
+    "commit": "4d2052b3cb69884758a8f1f823ed9ecbb571c60a",
+    "sparse_patterns": []
+  }
+]

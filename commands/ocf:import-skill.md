@@ -1,4 +1,4 @@
-## /ocf:import-skill <git-url|owner/repo>
+## $flow-import-skill <git-url|owner/repo>
 
 ---
 description: Import external skills as git clones via skill-vendor.sh
@@ -6,7 +6,7 @@ description: Import external skills as git clones via skill-vendor.sh
 
 Import an external skill (or a repo containing several skills) using the
 **vendor clone strategy** — the upstream repo is cloned into
-`~/.config/opencode/vendor/` and loaded in-place via `skills.paths`, so it can
+`~/.codex/flow/vendor/` and loaded in-place via `skills.paths`, so it can
 be updated with `git pull` and never diverges from upstream. Skills are never
 copied into `skills/`.
 
@@ -18,7 +18,7 @@ copied into `skills/`.
    ask which folders to check out as sparse paths (e.g.
    `skills/taste-skill skills/redesign-skill skills/minimalist-skill`).
 3. Run `scripts/skill-vendor.sh add <url> [--sparse <paths...>]`, which:
-   - clones the repo into `~/.config/opencode/vendor/<name>`,
+   - clones the repo into `~/.codex/flow/vendor/<name>`,
    - discovers every `SKILL.md` frontmatter `name` inside the clone,
    - registers each discovered skill as `allow` in `permission.skill`
      (atomic write to `opencode.json`).
@@ -37,6 +37,6 @@ scripts/skill-vendor.sh remove <name>   # also unregisters its skills
 ### Usage
 
 ```
-/ocf:import-skill meodai/skill.color-expert
-/ocf:import-skill Leonxlnx/taste-skill --sparse skills/taste-skill skills/redesign-skill skills/minimalist-skill
+$flow-import-skill meodai/skill.color-expert
+$flow-import-skill Leonxlnx/taste-skill --sparse skills/taste-skill skills/redesign-skill skills/minimalist-skill
 ```

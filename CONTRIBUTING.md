@@ -21,7 +21,7 @@ This project follows its own pipeline. Every change must:
 ## Local Setup
 
 ```bash
-git clone https://github.com/pereirawe/opencode-flow ~/.config/opencode
+git clone https://github.com/pereirawe/codex-flow ~/.codex/flow
 make help
 ```
 
@@ -33,10 +33,10 @@ make help
 make promote id=<n>
 
 # 3. Start development
-# Run /ocf:develop <id> in the assistant
+# Run $develop <id> in the assistant
 
 # 4. Review
-# Run /ocf:review-branch in the assistant
+# Run $flow-review-branch in the assistant
 
 # 5. After merge, close the issue
 make close-issue id=<n>
@@ -50,4 +50,4 @@ make close-issue id=<n>
 
 ## Questions?
 
-Open a [GitHub Discussion](https://github.com/pereirawe/opencode-flow/discussions).
+Open a [GitHub Discussion](https://github.com/pereirawe/codex-flow/discussions).

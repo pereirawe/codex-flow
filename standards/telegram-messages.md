@@ -42,10 +42,10 @@ and follows a category-specific template.
 
 Example:
 ```
-🔹 [opencode-flow]
+🔹 [codex-flow]
 ✅ Pipeline completed — issue #42
 
-MR: https://github.com/pereirawe/opencode-flow/pull/34
+MR: https://github.com/pereirawe/codex-flow/pull/34
 ```
 
 ### `fail` — task failed with error
@@ -82,7 +82,7 @@ pytest core/tests/test_auth.py - 2 assertion errors
 
 Example:
 ```
-🔹 [opencode-flow]
+🔹 [codex-flow]
 💬 Select reviewer count for issue #28
 
 How many Senior Reviewers should review this branch?
@@ -122,10 +122,10 @@ Issue #15 (feat) has no `Business rules:` field.
 
 Example:
 ```
-🔹 [opencode-flow]
+🔹 [codex-flow]
 🏁 Version 1.8.0 published
 
-https://github.com/pereirawe/opencode-flow/releases/tag/v1.8.0
+https://github.com/pereirawe/codex-flow/releases/tag/v1.8.0
 ```
 
 ### `alert` — non-blocking warning
@@ -150,7 +150,7 @@ Example:
 
 Example:
 ```
-🔹 [opencode-flow]
+🔹 [codex-flow]
 ⏳ Deep scan in progress (step 2/3 — analyzing Go files)
 ```
 
@@ -160,7 +160,7 @@ The script respects the category emoji being part of the `--title`, and the
 project header + body as the message:
 
 ```bash
-SCRIPT="$HOME/.config/opencode/scripts/telegram-notify.sh"
+SCRIPT="$HOME/.codex/flow/scripts/telegram-notify.sh"
 
 # done
 "$SCRIPT" --title "✅ Pipeline completed" "🔹 [my-project]\n\nMR: https://github.com/..."
@@ -181,14 +181,14 @@ printf "🔹 [my-project]\n\n✅ Feature implemented\nBranch: issue-42-login\nMR
 
 ## Chat ID per project (multi-repo setup)
 
-When working across multiple projects, use the `.opencode/telegram.env` file
+When working across multiple projects, use the `.codex/telegram.env` file
 specific to each project. The script loads project credentials before global:
 
 ```
 <project>/
-├── .opencode/
+├── .codex/
 │   └── telegram.env    ← loaded first (project-specific)
 ```
 
 If all projects should notify the same chat, keep only the global file at
-`~/.config/opencode/.opencode/telegram.env`.
+`~/.codex/flow/.codex/telegram.env`.

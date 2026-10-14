@@ -1,4 +1,4 @@
-## /ocf:commit
+## $flow-commit
 
 ---
 description: Create an atomic semantic commit with issue trailers
@@ -64,7 +64,7 @@ Status: resolved
 ### Usage
 
 ```
-/ocf:commit
+$flow-commit
 ```
 
 The assistant will:

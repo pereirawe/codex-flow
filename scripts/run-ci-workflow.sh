@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # run-ci-workflow.sh — CI-native engine for the `@aibot:develop` trigger
-# (issue #40). Executed inside the opencode-flow Docker image by the GitHub
+# (issue #40). Executed inside the codex-flow Docker image by the GitHub
 # Actions workflow (.github/workflows/aibot-develop.yml); also runnable locally
 # to simulate the CI behavior (same gates, same messages).
 #
@@ -12,10 +12,10 @@ set -euo pipefail
 #   3. allowlist    — repo must be in AIBOT_ALLOWLIST or aibot-repos.json (BR 2)
 #   4. tracker gate — issue must be tracked locally with Remote: #id (BR 3/AC 5)
 #   5. status gate  — in-progress → already-in-progress; resolved → already-resolved (BR 5/AC 6)
-#   6. develop      — `opencode run --command "ocf:develop-full" <id> --auto`
+#   6. develop      — `opencode run --command "\$develop-full" <id> --auto`
 #                     HEADLESS (BR 4/BR 13 — SPIKE passed: no --attach needed).
-#                     `ocf:develop-full` is used so the auto-merge semantics of
-#                     `@aibot:develop` are preserved (issue #211: `ocf:develop`
+#                     `\$develop-full` is used so the auto-merge semantics of
+#                     `@aibot:develop` are preserved (issue #211: `\$develop`
 #                     now stops at MR creation with a manual merge).
 #   7. result       — in-publish + PR → success w/ MR link; else cannot-develop (BR 5/6/7)
 #
@@ -44,9 +44,9 @@ source "$SCRIPT_DIR/remote.sh"
 CONFIG_ROOT="${AIBOT_CONFIG_DIR:-$CONFIG_DIR}"
 AIBOT_REPOS_FILE="${AIBOT_REPOS_FILE:-$CONFIG_ROOT/aibot-repos.json}"
 AIBOT_TOKEN="${AIBOT_TOKEN:-@aibot:develop}"
-AIBOT_MODEL="${AIBOT_MODEL:-opencode-go/deepseek-v4-flash}"
+AIBOT_MODEL="${AIBOT_MODEL:-}"
 AIBOT_AUTHORS="${AIBOT_AUTHORS:-}"
-OPENCODE_BIN="${OPENCODE_BIN:-opencode}"
+CODEX_BIN="${CODEX_BIN:-codex}"
 WORKSPACE="/workspace"
 ISSUE=""
 AUTHOR=""
@@ -68,6 +68,9 @@ done
 
 [[ -n "$ISSUE" ]] || fail "--issue is required"
 BODY="${BODY:-${COMMENT_BODY:-}}"
+if [[ -n "${COMMENT_BODY_FILE:-}" ]]; then
+  BODY="$(cat "$COMMENT_BODY_FILE")"
+fi
 
 # ---------------------------------------------------------------------------
 # helpers
@@ -119,11 +122,11 @@ repo_in_allowlist() {
   return 1
 }
 
-# resolve_tracker — prefer workspace .opencode tracker with real entries,
+# resolve_tracker — prefer workspace .codex tracker with real entries,
 # falling back to workspace root tracker (CWD quirk, issue 39 note 1).
 has_entries() { grep -qE '^### [0-9]+\.' "$1" 2>/dev/null; }
 resolve_tracker() {
-  local local_tracker="$WORKSPACE/.opencode/known_issues.md"
+  local local_tracker="$WORKSPACE/.codex/known_issues.md"
   local root_tracker="$WORKSPACE/known_issues.md"
   if [[ -f "$local_tracker" ]] && has_entries "$local_tracker"; then
     printf '%s\n' "$local_tracker"; return 0
@@ -219,18 +222,12 @@ post_message() {
 }
 
 # run_develop <local-id> — headless full pipeline (BR 4/BR 13) via
-# `ocf:develop-full` (issue #211 — the full variant auto-merges, which the CI
+# `\$develop-full` (issue #211 — the full variant auto-merges, which the CI
 # `@aibot:develop` trigger depends on).
 # NO `--` separator before the args (issue 39 R-B1: breaks on opencode 1.18.7).
 run_develop() {
   local local_id="$1"
-  log "disparando headless: $OPENCODE_BIN run --auto --dir $WORKSPACE --model $AIBOT_MODEL --command ocf:develop-full $local_id"
-  if [[ "$DRY_RUN" == "1" ]]; then
-    log "[dry-run] opencode run --auto --dir $WORKSPACE --model $AIBOT_MODEL --command \"ocf:develop-full\" $local_id"
-    return 0
-  fi
-  "$OPENCODE_BIN" run --auto --dir "$WORKSPACE" --model "$AIBOT_MODEL" \
-    --command "ocf:develop-full" "$local_id" < /dev/null
+  CODEX_RUN_DRY_RUN="$DRY_RUN" "$SCRIPT_DIR/codex-run.sh" "$WORKSPACE" develop-full "$local_id"
 }
 
 # ---------------------------------------------------------------------------
@@ -240,6 +237,12 @@ run_develop() {
 PROVIDER="$(detect_provider "$WORKSPACE")"
 REPO="$(parse_remote "$WORKSPACE" | cut -d' ' -f2)"
 log "provider=$PROVIDER repo=$REPO issue=#$ISSUE author=$AUTHOR"
+
+# Explicit human author allowlist for unattended external triggers.
+if [[ -z "${AIBOT_TRIGGER_AUTHORS:-}" ]] || ! printf '%s\n' "$AIBOT_TRIGGER_AUTHORS" | tr ',' '\n' | grep -qxF "$AUTHOR"; then
+  log "author not authorized in AIBOT_TRIGGER_AUTHORS — ignored"
+  exit 0
+fi
 
 # 1. author gate (BR 15 / AC 12)
 if is_aibot_author "$AUTHOR"; then
@@ -288,7 +291,7 @@ esac
 
 # 6. develop headless (BR 4/BR 13)
 if ! run_develop "$LOCAL_ID"; then
-  log "ocf:develop-full #$LOCAL_ID failed — posting cannot-develop (no MR)"
+  log "\$develop-full #$LOCAL_ID failed — posting cannot-develop (no MR)"
   post_message "$ISSUE" "cannot-develop"
   exit 0
 fi

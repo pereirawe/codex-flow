@@ -2,7 +2,7 @@
 # test-runner.sh — single test entrypoint for development agents.
 #
 # Detects the project's test runner, bootstraps the environment, computes a
-# change fingerprint, and caches results in .opencode/test-cache/ so identical
+# change fingerprint, and caches results in .codex/test-cache/ so identical
 # code is never re-tested across the pipeline (developer → senior review → QA
 # → committer).
 #
@@ -28,18 +28,18 @@ SCRIPT_SRC="${BASH_SOURCE[0]:-$0}"
 SCRIPT_DIR="$(cd "${SCRIPT_SRC%/*}" && pwd)"
 PROJECT_ROOT="$(pwd -P)"
 
-CACHE_DIR=".opencode/test-cache"
-# `.opencode/cache` (issue #209, cross-dep with #210): the per-project git
+CACHE_DIR=".codex/test-cache"
+# `.codex/cache` (issue #209, cross-dep with #210): the per-project git
 # credential cache must NEVER enter fingerprints — touching it (e.g. --set
 # during a pipeline run) must not invalidate the test-result cache.
-EXCLUDE_RE='(^|/)(node_modules|\.venv|venv|vendor|dist|build|target|\.pytest_cache|__pycache__|\.next|coverage|\.opencode/test-cache|\.opencode/cache|\.git)(/|$)'
+EXCLUDE_RE='(^|/)(node_modules|\.venv|venv|vendor|dist|build|target|\.pytest_cache|__pycache__|\.next|coverage|\.codex/test-cache|\.codex/cache|\.git)(/|$)'
 
 # --- versioned test environment (issue #210) ---
 # The runtime versions are advisory: they are detected and compared against the
-# ranges declared in .opencode/env-manifest.md, emitting non-blocking warnings
+# ranges declared in .codex/env-manifest.md, emitting non-blocking warnings
 # only (exit codes 0/1/2/3 are never changed by the environment checks).
 TEST_RUNNER_VERSION="1.0.0"
-ENV_MANIFEST_FILE=".opencode/env-manifest.md"
+ENV_MANIFEST_FILE=".codex/env-manifest.md"
 ENV_NODE_VERSION=""    # detected `node --version`, normalized (e.g. v22.3.1); empty when absent
 ENV_PYTHON_VERSION=""  # detected `python3 --version`, normalized (e.g. 3.12.0); empty when absent
 MANIFEST_NODE_RANGE=""     # e.g. ">=20 <23"
@@ -245,7 +245,7 @@ changed_paths() {
 is_fingerprint_excluded() {
   local f="$1"
   [[ "$f" =~ $EXCLUDE_RE ]] && return 0
-  [[ "$f" == ".nvmrc" || "$f" == ".node-version" || "$f" == ".opencode/env-manifest.md" ]] && return 0
+  [[ "$f" == ".nvmrc" || "$f" == ".node-version" || "$f" == ".codex/env-manifest.md" ]] && return 0
   return 1
 }
 
@@ -373,7 +373,7 @@ detect_versions() {
 }
 
 # load_manifest — parses ONLY the STRICT machine-parseable section of
-# .opencode/env-manifest.md (issue #210 F4): lines after the
+# .codex/env-manifest.md (issue #210 F4): lines after the
 # `## Strict (machine-parseable)` heading count, and the section ends at the
 # next `##` heading. Prose lines that look like keys (before or after the
 # strict section) are ignored. Inline `#` comments on range lines are stripped

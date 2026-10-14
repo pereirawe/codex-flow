@@ -3,7 +3,7 @@
 # Usage: ocf-telegram.sh <command...>
 #
 # Example:
-#   ocf-telegram.sh opencode run --command "ocf:develop-full 42" --auto
+#   ocf-telegram.sh opencode run --command "\$develop-full 42" --auto
 
 set -euo pipefail
 
@@ -13,7 +13,7 @@ if [[ $# -eq 0 ]]; then
     exit 1
 fi
 
-NOTIFY_SCRIPT="$HOME/.config/opencode/scripts/telegram-notify.sh"
+NOTIFY_SCRIPT="$HOME/.codex/flow/scripts/telegram-notify.sh"
 START_TIME=$(date +%s)
 CMD="$*"
 
@@ -28,7 +28,7 @@ echo "---"
 # Run the command capturing output
 OUTPUT_FILE=$(mktemp)
 set +e
-eval "$CMD" > "$OUTPUT_FILE" 2>&1
+"$@" > "$OUTPUT_FILE" 2>&1
 EXIT_CODE=$?
 set -e
 

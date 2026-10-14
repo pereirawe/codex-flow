@@ -5,7 +5,7 @@ source "$(dirname "$0")/config.sh"
 # Usage: review-preflight.sh <issue-id> <profile>
 #
 # Scoped context injection for parallel senior reviewers. Produces a
-# profile-filtered notes file (.opencode/preflight/review-<id>-<profile>.md)
+# profile-filtered notes file (.codex/preflight/review-<id>-<profile>.md)
 # so each reviewer can skip broad re-exploration and focus on the files that
 # match its domain — shortening the review phase (see develop-full "parallel
 # senior review" step).
@@ -167,7 +167,7 @@ if [[ -x "$SCRIPTS_DIR/test-runner.sh" ]]; then
   fi
 fi
 
-OUT_DIR=".opencode/preflight"
+OUT_DIR=".codex/preflight"
 mkdir -p "$OUT_DIR"
 OUT="$OUT_DIR/review-$ID-$PROFILE.md"
 

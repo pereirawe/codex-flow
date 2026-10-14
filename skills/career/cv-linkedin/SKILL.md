@@ -1,7 +1,31 @@
 ---
-name: cv-linkedin
-description: Generate an objective-driven LinkedIn profile action report from the candidate's hub.json — confirmed profile objective (issue #222 profile_objective), 2–3 LITERAL headline variants (≤220 chars) naming the target role/services, a structured Sobre/About draft (≤2600 chars) opening with a hook and listing ✔ achievement bullets, per-role Experiência bullets with real metrics ready to paste into the role description, an add/promote/remove Skills review (against the real LinkedIn list from the issue-225 linkedin-sync output or a user-pasted list) and prioritized next steps (banner, featured, sections). Outputs linkedin-optimization.md in the user's communication language. NEVER scrapes or modifies LinkedIn — the user copies/pastes suggestions manually; nothing is fabricated; NO [INFERIDO]/"inferido" in the shareable file. Use when you need to optimize a LinkedIn profile for a target role or improve recruiter discoverability (command ocf:cv-linkedin; "otimização do perfil LinkedIn", "otimizar linkedin", "melhorar linkedin" also trigger this skill). Career sector.
+name: cf-cv-linkedin
+description: Generate an objective-driven LinkedIn profile action report from the
+  candidate's hub.json — confirmed profile objective (issue
 ---
+
+## Codex runtime contract
+
+This workflow was migrated to Codex. Read `~/.codex/flow/docs/runtime.md`
+before its first use. Resolve scripts from `~/.codex/flow/scripts/` and run
+them with CWD set to the intended project. Read the project's root AGENTS.md,
+then `.codex/AGENTS.md` and relevant local context. Project definitions take
+precedence over global definitions with the same legacy identifier.
+
+Legacy `Task(role)` means a Codex subagent using the role in the agent catalog;
+if that role cannot be selected natively, read its instructions and include
+them in the subagent task. Never run OpenCode. Legacy read/glob/grep/skill
+names mean the equivalent available Codex file/search/skill tools. Read a
+referenced skill by resolving its legacy name in `catalog/skills.json`.
+Shell snippets using OpenCode's !`...` notation are examples, not executable
+directives: run the corresponding reviewed command with native shell tools.
+
+Inherit Codex permissions and model settings. Old permission YAML is source
+metadata, not an enforcement mechanism. Stop on failed gates; never claim
+unperformed tests/reviews passed. Only send external notifications/comments
+when the user explicitly invokes a workflow that includes them or separately
+authorizes them. Mere migration, file reading, or implicit skill selection
+does not authorize sending. Do not hide approval rejections from the user.
 
 # CV LinkedIn — objective-driven LinkedIn profile action report
 
@@ -17,7 +41,7 @@ the suggestions manually.
 
 ## Prerequisite
 
-The candidate must have a built hub (`ocf:cv-hub` / `cv-hub` skill):
+The candidate must have a built hub (`$flow-cv-hub` / `cv-hub` skill):
 a valid `~/career/<candidate-name>/hub.json`, validated with
 `python3 $SCRIPTS_DIR/cv/validate.py` (exit 0 required).
 
@@ -60,8 +84,8 @@ Resolution order (per `standards/cv-analysis.md` §1):
 
 1. Explicit user instruction (when given).
 2. The session/input language.
-3. `.opencode/locale` in the project directory.
-4. `~/.config/opencode/locale` (global fallback).
+3. `.codex/locale` in the project directory.
+4. `~/.codex/flow/locale` (global fallback).
 5. English.
 
 The report language is the USER's communication language — NOT the job

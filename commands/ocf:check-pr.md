@@ -1,4 +1,4 @@
-## /ocf:check-pr [id]
+## $flow-check-pr [id]
 
 ---
 description: Check PR merge status for in-publish issues and auto-archive
@@ -26,6 +26,6 @@ Check if the Pull Request for an issue has been merged and auto-archive if so.
 ### Usage
 
 ```
-/ocf:check-pr          # scan all in-publish issues
-/ocf:check-pr 3        # check specific issue
+$flow-check-pr          # scan all in-publish issues
+$flow-check-pr 3        # check specific issue
 ```

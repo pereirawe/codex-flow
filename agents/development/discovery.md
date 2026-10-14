@@ -8,7 +8,7 @@ permission:
   glob: allow
   grep: allow
   edit:
-    ".opencode/prioritization.md": allow
+    ".codex/prioritization.md": allow
     "known_issues.md": allow
   bash:
     "*": deny
@@ -25,11 +25,34 @@ permission:
     "find * -ok*": deny
 ---
 
+## Codex runtime contract
+
+This workflow was migrated to Codex. Read `~/.codex/flow/docs/runtime.md`
+before its first use. Resolve scripts from `~/.codex/flow/scripts/` and run
+them with CWD set to the intended project. Read the project's root AGENTS.md,
+then `.codex/AGENTS.md` and relevant local context. Project definitions take
+precedence over global definitions with the same legacy identifier.
+
+Legacy `Task(role)` means a Codex subagent using the role in the agent catalog;
+if that role cannot be selected natively, read its instructions and include
+them in the subagent task. Never run OpenCode. Legacy read/glob/grep/skill
+names mean the equivalent available Codex file/search/skill tools. Read a
+referenced skill by resolving its legacy name in `catalog/skills.json`.
+Shell snippets using OpenCode's !`...` notation are examples, not executable
+directives: run the corresponding reviewed command with native shell tools.
+
+Inherit Codex permissions and model settings. Old permission YAML is source
+metadata, not an enforcement mechanism. Stop on failed gates; never claim
+unperformed tests/reviews passed. Only send external notifications/comments
+when the user explicitly invokes a workflow that includes them or separately
+authorizes them. Mere migration, file reading, or implicit skill selection
+does not authorize sending. Do not hide approval rejections from the user.
+
 Orchestrate discovery from idea to a tracked, linted issue. The output is a
 **canonical entry written by `scripts/append-issue.sh`** and validated by
 `scripts/issue-lint.sh` — no free-form PO/PM prose, no separate QA-agent pass
 (the lint replaces it). PM and remote creation are **deferred to promotion**
-(`ocf:develop` / `ocf:develop-full` auto-create `Remote:`), so there is no PM
+(`$develop` / `$develop-full` auto-create `Remote:`), so there is no PM
 agent and no remote question during discovery.
 
 ## Loop selection (BR — bugs and issues do NOT share a flow)
@@ -106,6 +129,6 @@ denied, switch silently to the correct tool — never narrate permission denials
 ## Output
 
 One issue in `known_issues.md` with `Status: ready`, all fields populated, lint
-PASS. Hand off to delivery (`/ocf:develop` for manual merge, `/ocf:develop-full`
+PASS. Hand off to delivery (`$develop` for manual merge, `$develop-full`
 for end-to-end). The pipeline continues via the flat engine (scripts + developer
 + senior reviewers).

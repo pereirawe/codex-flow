@@ -1,4 +1,4 @@
-## /ocf:develop-full [id...]
+## $develop-full [id...]
 
 ---
 description: End-to-end lifecycle for one or more issues — promote, develop, parallel review, QA gate, MR, auto-merge, close+archive. Agents are used only for judgment (developer + senior reviewers); everything mechanical is a script.
@@ -23,10 +23,10 @@ single Telegram notification is sent after the LAST issue.
 ### Arguments
 
 ```
-/ocf:develop-full 4
-/ocf:develop-full 4 5 6
-/ocf:develop-full 4,5,6
-/ocf:develop-full #4 #5 #6
+$develop-full 4
+$develop-full 4 5 6
+$develop-full 4,5,6
+$develop-full #4 #5 #6
 ```
 
 ### Auto-Promotion Flow (silent)
@@ -45,7 +45,7 @@ Missing data handled gracefully: `Base branch:` → git default; `Reviewers:` �
 
 ### Full Task Flow (per issue)
 
-1. **Resolve `known_issues.md`** (project `.opencode/` first, global fallback).
+1. **Resolve `known_issues.md`** (project `.codex/` first, global fallback).
 2. **Fill gaps**: detect `Base branch:` from git if empty, default `Reviewers:`
    to `1 (backend)`, auto-create `Remote:` if needed — no user prompts.
 3. **Promote**: run the flow above (`create_issue.sh` + `promote.sh`).
@@ -59,7 +59,7 @@ Missing data handled gracefully: `Base branch:` → git default; `Reviewers:` �
 7. **Review preflight (per profile)**: read `- Reviewers:` (`<n> (profiles)`).
    For EACH profile, run `scripts/review-preflight.sh <id> <profile>` — a fast
    sequential loop of N calls that writes
-   `.opencode/preflight/review-<id>-<profile>.md` (scoped, profile-filtered
+   `.codex/preflight/review-<id>-<profile>.md` (scoped, profile-filtered
    context for the reviewer). Only then dispatch the reviewers (next step).
 8. **Parallel senior review**: read `- Reviewers:` (`<n> (profiles)`). Launch
    **one `Task(development/senior-reviewers/<profile>)` per profile in a SINGLE

@@ -1,4 +1,4 @@
-## /ocf:develop [id...]
+## $develop [id...]
 
 ---
 description: Run the lifecycle up to MR creation for one or more issues — promote, develop, parallel review, QA gate, MR — then STOP (no auto-merge, no archive). Manual merge follows.
@@ -9,7 +9,7 @@ creation**, automatically. No confirmation, no pausing. The command **stops
 after the MR is created**: it does NOT merge, does NOT close/archive. The MR is
 left OPEN for a human review/merge.
 
-**Design:** same flattened engine as `/ocf:develop-full` — the pipeline runs
+**Design:** same flattened engine as `$develop-full` — the pipeline runs
 directly via scripts, with no orchestrator agent. `scripts/detect-lang.sh` picks
 the dev agent; agents appear only for judgment (developer + parallel senior
 reviewers). Mechanical steps (promote, preflight, committer gate, create-pr) are
@@ -21,9 +21,9 @@ deduplicated, processed sequentially. One Telegram notification after the LAST.
 ### Arguments
 
 ```
-/ocf:develop 4
-/ocf:develop 4 5 6
-/ocf:develop #4 #5 #6
+$develop 4
+$develop 4 5 6
+$develop #4 #5 #6
 ```
 
 ### Auto-Promotion Flow (silent)
@@ -50,7 +50,7 @@ auto-created via `create_issue.sh` if missing.
 7. **Review preflight (per profile)**: read `- Reviewers:` (`<n> (profiles)`).
    For EACH profile, run `scripts/review-preflight.sh <id> <profile>` — a fast
    sequential loop of N calls that writes
-   `.opencode/preflight/review-<id>-<profile>.md` (scoped, profile-filtered
+   `.codex/preflight/review-<id>-<profile>.md` (scoped, profile-filtered
    context for the reviewer). Only then dispatch the reviewers (next step).
 8. **Parallel senior review**: one `Task(development/senior-reviewers/<profile>)`
    per profile, in a single message. All approve; else fix+re-review loop.
@@ -62,7 +62,7 @@ auto-created via `create_issue.sh` if missing.
 12. **Return to base**: `git checkout <base>` + `git pull` (base has no change).
 13. **Repeat** for the next issue.
 
-Closing/archiving after manual merge: `/ocf:check-pr <id>` (or Close Requester).
+Closing/archiving after manual merge: `$flow-check-pr <id>` (or Close Requester).
 
 ### Telegram & Failure
 

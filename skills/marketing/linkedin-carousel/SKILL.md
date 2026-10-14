@@ -1,7 +1,38 @@
 ---
-name: linkedin-carousel
-description: Generate a LinkedIn carousel deck (1:1, 1080×1080) as PDF from a researched topic — agent-driven phases (preflight assets/schema → web research with saved sources → editorial roteiro → per-slide canonical spec → image-model background art [optional] + deterministic Chrome typography/logo overlay → deck.pdf). Runs INSIDE the target project (docs/assets/person.json + logo); identity never invented; prompts-only fallback without EACHLABS_API_KEY; nothing is published (manual upload). Use when the user asks to create a LinkedIn carousel, generate a slide deck PDF from a topic, or "carrossel LinkedIn", "deck linkedin", "carrossel para o linkedin" also trigger this skill. Marketing sector.
+name: cf-linkedin-carousel
+description: Generate a LinkedIn carousel deck (1:1, 1080×1080) as PDF from a researched
+  topic — agent-driven phases (preflight assets/schema → web research with saved sources
+  → editorial roteiro → per-slide canonical spec → image-model background art [optional]
+  + deterministic Chrome typography/logo overlay → deck.pdf). Runs INSIDE the target
+  project (docs/assets/person.json + logo); identity never invented; prompts-only
+  fallback without EACHLABS_API_KEY; nothing is published (manual upload). Use when
+  the user asks to create a LinkedIn carousel, generate a slide deck PDF from a topic,
+  or "carrossel LinkedIn", "deck linkedin", "carrossel para o linkedin" also trigger
+  this skill. Marketing sector.
 ---
+
+## Codex runtime contract
+
+This workflow was migrated to Codex. Read `~/.codex/flow/docs/runtime.md`
+before its first use. Resolve scripts from `~/.codex/flow/scripts/` and run
+them with CWD set to the intended project. Read the project's root AGENTS.md,
+then `.codex/AGENTS.md` and relevant local context. Project definitions take
+precedence over global definitions with the same legacy identifier.
+
+Legacy `Task(role)` means a Codex subagent using the role in the agent catalog;
+if that role cannot be selected natively, read its instructions and include
+them in the subagent task. Never run OpenCode. Legacy read/glob/grep/skill
+names mean the equivalent available Codex file/search/skill tools. Read a
+referenced skill by resolving its legacy name in `catalog/skills.json`.
+Shell snippets using OpenCode's !`...` notation are examples, not executable
+directives: run the corresponding reviewed command with native shell tools.
+
+Inherit Codex permissions and model settings. Old permission YAML is source
+metadata, not an enforcement mechanism. Stop on failed gates; never claim
+unperformed tests/reviews passed. Only send external notifications/comments
+when the user explicitly invokes a workflow that includes them or separately
+authorizes them. Mere migration, file reading, or implicit skill selection
+does not authorize sending. Do not hide approval rejections from the user.
 
 # LinkedIn Carousel — deck 1080×1080 → PDF (pesquisa + spec + arte + composição determinística)
 
@@ -63,7 +94,7 @@ Executar **antes de gastar tokens em pesquisa** (token saver + BR 1):
    CTA**, com **3 ≤ N ≤ 20**, default **7** (BR 4).
 2. Revisar o roteiro **com o usuário** antes de escrever a spec (ajuste de N
    acontece aqui — não há flag CLI na v1).
-3. Ajustar a **direção** opcional do usuário (`/ocf:linkedin-carousel <tema>
+3. Ajustar a **direção** opcional do usuário (`$flow-linkedin-carousel <tema>
    [<direção>]`) como restrição visual (paleta/tom), nunca contradizendo o
    padrão canônico (BR 5).
 
@@ -120,7 +151,7 @@ Schema canônico:
 ```
 
 Regras da spec (BR 3/4/10):
-- `locale` = idioma do usuário resolvido (conversa → `.opencode/locale` do
+- `locale` = idioma do usuário resolvido (conversa → `.codex/locale` do
   projeto alvo → locale global). Prompts de design SEMPRE em EN (BR 2).
 - Identidade (nome/handle/headline/CTA) **exclusivamente do `person.json`
   validado** — campo ausente → omitido e sinalizado, nunca preenchido.

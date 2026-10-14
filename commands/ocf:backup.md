@@ -1,4 +1,4 @@
-## /ocf:backup
+## $flow-backup
 
 ---
 description: Create intelligent timestamped backups excluding junk dirs
@@ -13,7 +13,7 @@ the new backup).
 ### Usage
 
 ```
-/ocf:backup <source_dir> [backup_name] [--zip]
+$flow-backup <source_dir> [backup_name] [--zip]
 ```
 
 | Argument | Description |
@@ -25,9 +25,9 @@ the new backup).
 ### Examples
 
 ```
-/ocf:backup /home/user/dev
-/ocf:backup /home/user/dev my_backup
-/ocf:backup /home/user/dev my_backup --zip
+$flow-backup /home/user/dev
+$flow-backup /home/user/dev my_backup
+$flow-backup /home/user/dev my_backup --zip
 ```
 
 ### What is excluded

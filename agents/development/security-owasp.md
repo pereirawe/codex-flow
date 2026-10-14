@@ -6,10 +6,34 @@ permission:
   bash: allow
   edit:
     "*": "deny"
-    ".opencode/reviews/**": "allow"
+    ".codex/reviews/**": "allow"
 ---
+
+## Codex runtime contract
+
+This workflow was migrated to Codex. Read `~/.codex/flow/docs/runtime.md`
+before its first use. Resolve scripts from `~/.codex/flow/scripts/` and run
+them with CWD set to the intended project. Read the project's root AGENTS.md,
+then `.codex/AGENTS.md` and relevant local context. Project definitions take
+precedence over global definitions with the same legacy identifier.
+
+Legacy `Task(role)` means a Codex subagent using the role in the agent catalog;
+if that role cannot be selected natively, read its instructions and include
+them in the subagent task. Never run OpenCode. Legacy read/glob/grep/skill
+names mean the equivalent available Codex file/search/skill tools. Read a
+referenced skill by resolving its legacy name in `catalog/skills.json`.
+Shell snippets using OpenCode's !`...` notation are examples, not executable
+directives: run the corresponding reviewed command with native shell tools.
+
+Inherit Codex permissions and model settings. Old permission YAML is source
+metadata, not an enforcement mechanism. Stop on failed gates; never claim
+unperformed tests/reviews passed. Only send external notifications/comments
+when the user explicitly invokes a workflow that includes them or separately
+authorizes them. Mere migration, file reading, or implicit skill selection
+does not authorize sending. Do not hide approval rejections from the user.
+
 First load the locale-loader skill to resolve the project locale
-(`.opencode/locale` project → global → English default) and load
+(`.codex/locale` project → global → English default) and load
 locale-appropriate standards (code-review.md, issues.md). Produce reports and
 recommendations in that locale, keeping technical terms (CWE IDs, ASVS levels,
 framework names) in English.
@@ -59,7 +83,7 @@ Before posting or commenting ANYTHING to a remote MR/issue, you MUST publish
 your audit/review report to a local file:
 
 ```
-.opencode/reviews/security-<target>-<timestamp>.md
+.codex/reviews/security-<target>-<timestamp>.md
 ```
 
 where `<target>` is a slug of the reviewed target (e.g. `issue-49`, branch
@@ -70,7 +94,7 @@ is the source of truth; remote comments reference it.
 
 You NEVER modify code — you only report. Corrections are implemented by the
 developer in the normal pipeline flow. Your edit permission is restricted to
-`.opencode/reviews/**`; any edit outside that directory is denied.
+`.codex/reviews/**`; any edit outside that directory is denied.
 
 ## Skill routing
 
@@ -102,7 +126,7 @@ are resolved. Medium/low/nit are recommendations.
 
 Review the target (diff, component, or architecture), apply the relevant
 skills, and produce the report at
-`.opencode/reviews/security-<target>-<timestamp>.md` FIRST — then post or
+`.codex/reviews/security-<target>-<timestamp>.md` FIRST — then post or
 comment findings. If critical/high vulnerabilities exist, refuse approval with
 evidence and remediation. Otherwise approve with any recommendations. Respond
 in the project locale (via locale-loader), keeping technical terms in English.

@@ -37,4 +37,4 @@ sector directory. Cross-cutting capabilities go under `shared/`.
 ## Locale
 
 Localized versions are available in `pt/` (Português) and `es/` (Español).
-Each project selects its language via `.opencode/locale`. See `locale.md` for details.
+Each project selects its language via `.codex/locale`. See `locale.md` for details.

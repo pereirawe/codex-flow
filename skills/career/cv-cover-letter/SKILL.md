@@ -1,7 +1,37 @@
 ---
-name: cv-cover-letter
-description: Generate a tailored cover letter for a specific job from the candidate's hub.json and a job description. Analyzes the job (multi-portal, including LinkedIn, Indeed, Gupy, company sites — pasted text, local files, official LinkedIn export, or URL), extracts requirements/keywords, reuses or builds the gap analysis vs the hub, drafts the letter in the job's language (never fabricating — only rephrasing and highlighting real hub achievements) and generates the letter HTML + PDF. Use when you need to create a custom cover letter for an application (command ocf:cv-cover-letter; "carta de apresentação" also triggers this skill). Career sector.
+name: cf-cv-cover-letter
+description: Generate a tailored cover letter for a specific job from the candidate's
+  hub.json and a job description. Analyzes the job (multi-portal, including LinkedIn,
+  Indeed, Gupy, company sites — pasted text, local files, official LinkedIn export,
+  or URL), extracts requirements/keywords, reuses or builds the gap analysis vs the
+  hub, drafts the letter in the job's language (never fabricating — only rephrasing
+  and highlighting real hub achievements) and generates the letter HTML + PDF. Use
+  when you need to create a custom cover letter for an application (command $flow-cv-cover-letter;
+  "carta de apresentação" also triggers this skill). Career sector.
 ---
+
+## Codex runtime contract
+
+This workflow was migrated to Codex. Read `~/.codex/flow/docs/runtime.md`
+before its first use. Resolve scripts from `~/.codex/flow/scripts/` and run
+them with CWD set to the intended project. Read the project's root AGENTS.md,
+then `.codex/AGENTS.md` and relevant local context. Project definitions take
+precedence over global definitions with the same legacy identifier.
+
+Legacy `Task(role)` means a Codex subagent using the role in the agent catalog;
+if that role cannot be selected natively, read its instructions and include
+them in the subagent task. Never run OpenCode. Legacy read/glob/grep/skill
+names mean the equivalent available Codex file/search/skill tools. Read a
+referenced skill by resolving its legacy name in `catalog/skills.json`.
+Shell snippets using OpenCode's !`...` notation are examples, not executable
+directives: run the corresponding reviewed command with native shell tools.
+
+Inherit Codex permissions and model settings. Old permission YAML is source
+metadata, not an enforcement mechanism. Stop on failed gates; never claim
+unperformed tests/reviews passed. Only send external notifications/comments
+when the user explicitly invokes a workflow that includes them or separately
+authorizes them. Mere migration, file reading, or implicit skill selection
+does not authorize sending. Do not hide approval rejections from the user.
 
 # CV Cover Letter — job-tailored cover letter
 
@@ -13,7 +43,7 @@ fabricated.
 
 ## Prerequisite
 
-The candidate must have a built hub (`ocf:cv-hub` / `cv-hub` skill):
+The candidate must have a built hub (`$flow-cv-hub` / `cv-hub` skill):
 a valid `~/career/<candidate-name>/hub.json`.
 
 ## Job input

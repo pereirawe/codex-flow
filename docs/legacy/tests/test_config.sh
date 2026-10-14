@@ -1,0 +1,65 @@
+#!/usr/bin/env bash
+# test_config.sh — validates the opencode.json `instructions` array (issues #205/#206/#207).
+#
+# Issue #205: the `~/.codex/flow/agents/*/*.md` glob is removed from
+# `instructions` (agents in ~/.codex/flow/agents/ are auto-registered as
+# subagents — the glob was pure context duplication), while the small
+# `agents/*/devs/REGISTRY.md` glob is kept.
+#
+# Issue #206: `known_issues.md` and `prioritization.md` are removed from
+# `instructions` — they are loaded on demand via awk by agents/commands, never
+# injected into every session.
+#
+# Issue #207: the `standards/*.md`, `standards/pt/*.md` and `standards/es/*.md`
+# globs are removed — standards load on demand via the locale-loader skill.
+
+HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$HERE/lib.sh"
+t_begin "test_config"
+
+CONFIG="$HERE/../../opencode.json"
+
+if ! command -v jq >/dev/null 2>&1; then
+  t_fail "jq is required for test_config"
+  t_finish
+  exit 1
+fi
+
+instructions() {
+  jq -r '.instructions[]' "$CONFIG" 2>/dev/null
+}
+
+# --- Issue #205: agents glob removed, REGISTRY.md kept ---
+if instructions | grep -qF "~/.codex/flow/agents/*/devs/REGISTRY.md"; then
+  t_ok "instructions keeps agents/*/devs/REGISTRY.md"
+else
+  t_fail "instructions missing agents/*/devs/REGISTRY.md"
+fi
+
+if instructions | grep -qF "~/.codex/flow/agents/*/*.md"; then
+  t_fail "instructions contains forbidden agents/*/*.md glob"
+else
+  t_ok "instructions has no agents/*/*.md glob"
+fi
+
+# --- Issue #206: known_issues.md and prioritization.md not injected ---
+if instructions | grep -qF "~/.codex/flow/known_issues.md"; then
+  t_fail "instructions injects known_issues.md glob"
+else
+  t_ok "instructions has no known_issues.md glob"
+fi
+
+if instructions | grep -qF "~/.codex/flow/prioritization.md"; then
+  t_fail "instructions injects prioritization.md glob"
+else
+  t_ok "instructions has no prioritization.md glob"
+fi
+
+# --- Issue #207: standards globs not injected (loaded via locale-loader) ---
+if instructions | grep -qE "~/.codex/flow/standards(/pt|/es)?/.*\.md"; then
+  t_fail "instructions injects standards globs"
+else
+  t_ok "instructions has no standards globs"
+fi
+
+t_finish

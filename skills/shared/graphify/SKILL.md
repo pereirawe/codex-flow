@@ -1,8 +1,32 @@
 ---
-name: graphify
-description: Generate Mermaid.js diagrams from code structure, architecture, agent pipeline, and tracked issues
-compatibility: opencode
+compatibility: Codex with local shell tools
+name: cf-graphify
+description: Generate Mermaid.js diagrams from code structure, architecture, agent
+  pipeline, and tracked issues
 ---
+
+## Codex runtime contract
+
+This workflow was migrated to Codex. Read `~/.codex/flow/docs/runtime.md`
+before its first use. Resolve scripts from `~/.codex/flow/scripts/` and run
+them with CWD set to the intended project. Read the project's root AGENTS.md,
+then `.codex/AGENTS.md` and relevant local context. Project definitions take
+precedence over global definitions with the same legacy identifier.
+
+Legacy `Task(role)` means a Codex subagent using the role in the agent catalog;
+if that role cannot be selected natively, read its instructions and include
+them in the subagent task. Never run OpenCode. Legacy read/glob/grep/skill
+names mean the equivalent available Codex file/search/skill tools. Read a
+referenced skill by resolving its legacy name in `catalog/skills.json`.
+Shell snippets using OpenCode's !`...` notation are examples, not executable
+directives: run the corresponding reviewed command with native shell tools.
+
+Inherit Codex permissions and model settings. Old permission YAML is source
+metadata, not an enforcement mechanism. Stop on failed gates; never claim
+unperformed tests/reviews passed. Only send external notifications/comments
+when the user explicitly invokes a workflow that includes them or separately
+authorizes them. Mere migration, file reading, or implicit skill selection
+does not authorize sending. Do not hide approval rejections from the user.
 
 ## What I do
 
@@ -26,7 +50,7 @@ compatibility: opencode
 
 - Always output valid Mermaid syntax
 - Prefer concise, readable diagrams over exhaustive ones
-- Write diagrams to `<name>.mmd` files in the project root or `.opencode/` directory
+- Write diagrams to `<name>.mmd` files in the project root or `.codex/` directory
 - When referencing files, use paths relative to the diagram file location
 - Prefer `flowchart` over `graph` in Mermaid v10+ (they're equivalent but `flowchart` is recommended)
 - Include a `%%` comment header with the source and generation date

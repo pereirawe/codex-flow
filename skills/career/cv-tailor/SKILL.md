@@ -1,7 +1,35 @@
 ---
-name: cv-tailor
-description: Generate a resume tailored to a specific job from the candidate's hub.json. Analyzes the job (multi-portal, including LinkedIn, Indeed, Gupy, company sites — pasted text or official export files), extracts requirements/keywords, performs gap analysis vs the hub, adapts content (never fabricating) and generates the resume HTML + PDF in the job's language. Use when you need to create a custom resume for an application (command ocf:cv-tailor). Career sector.
+name: cf-cv-tailor
+description: Generate a resume tailored to a specific job from the candidate's hub.json.
+  Analyzes the job (multi-portal, including LinkedIn, Indeed, Gupy, company sites
+  — pasted text or official export files), extracts requirements/keywords, performs
+  gap analysis vs the hub, adapts content (never fabricating) and generates the resume
+  HTML + PDF in the job's language. Use when you need to create a custom resume for
+  an application (command $flow-cv-tailor). Career sector.
 ---
+
+## Codex runtime contract
+
+This workflow was migrated to Codex. Read `~/.codex/flow/docs/runtime.md`
+before its first use. Resolve scripts from `~/.codex/flow/scripts/` and run
+them with CWD set to the intended project. Read the project's root AGENTS.md,
+then `.codex/AGENTS.md` and relevant local context. Project definitions take
+precedence over global definitions with the same legacy identifier.
+
+Legacy `Task(role)` means a Codex subagent using the role in the agent catalog;
+if that role cannot be selected natively, read its instructions and include
+them in the subagent task. Never run OpenCode. Legacy read/glob/grep/skill
+names mean the equivalent available Codex file/search/skill tools. Read a
+referenced skill by resolving its legacy name in `catalog/skills.json`.
+Shell snippets using OpenCode's !`...` notation are examples, not executable
+directives: run the corresponding reviewed command with native shell tools.
+
+Inherit Codex permissions and model settings. Old permission YAML is source
+metadata, not an enforcement mechanism. Stop on failed gates; never claim
+unperformed tests/reviews passed. Only send external notifications/comments
+when the user explicitly invokes a workflow that includes them or separately
+authorizes them. Mere migration, file reading, or implicit skill selection
+does not authorize sending. Do not hide approval rejections from the user.
 
 # CV Tailor — job-tailored resume
 
@@ -11,7 +39,7 @@ maximizing ATS/keyword match, using only data that already exists in
 
 ## Prerequisite
 
-The candidate must have a built hub (`ocf:cv-hub` / `cv-hub` skill):
+The candidate must have a built hub (`$flow-cv-hub` / `cv-hub` skill):
 a valid `~/career/<candidate-name>/hub.json`.
 
 ## Job input

@@ -1,7 +1,7 @@
 # Design Pipeline — Output Conventions and Session Protocol
 
-Standard for the design pipeline orchestrated by `/ocf:build-ui` (greenfield)
-and `/ocf:audit-ui` (audit/refactor for existing codebases). It defines where
+Standard for the design pipeline orchestrated by `$flow-build-ui` (greenfield)
+and `$flow-audit-ui` (audit/refactor for existing codebases). It defines where
 pipeline outputs live, how sessions are managed, and how stages chain their
 JSON contracts.
 
@@ -10,14 +10,14 @@ JSON contracts.
 Every run creates a **session id** and a dedicated output directory:
 
 ```
-.opencode/design-outputs/<session-id>/
+.codex/design-outputs/<session-id>/
 ```
 
 - The session id is a UTC timestamp in the format `YYYY-MM-DDTHH-MM-SS`
   (e.g. `2026-08-17T14-30-00`) — hyphens replace colons so the value is safe
   for use in file and directory names.
 - The output directory is created at command start if missing.
-- Shorthand: hereafter `<dir>` = `.opencode/design-outputs/<session-id>/`.
+- Shorthand: hereafter `<dir>` = `.codex/design-outputs/<session-id>/`.
 
 ## Output files
 
@@ -41,7 +41,7 @@ The five canonical output files:
 - `refactor_plan.json` — Group A/B/C issue triage, per-stack token strategy,
   component decisions, phased plan with rollback, dependency map, token
   mapping. Consumes `audit_report.json` + `design_spec.json`. During refactor
-  flows (`/ocf:audit-ui` optional pass 3) `ui-implementer` ALSO consumes
+  flows (`$flow-audit-ui` optional pass 3) `ui-implementer` ALSO consumes
   `refactor_plan.json`, alongside `design_spec.json` and
   `component_tree.json`.
 - `audit_report.json` — detected stack, 1–5 scores per dimension, `file:line`
@@ -73,19 +73,19 @@ success, offline) are the same end-to-end.
 ## Session protocol
 
 1. **Create** — at command start, create the session id and output directory
-   (`.opencode/design-outputs/<session-id>/`).
+   (`.codex/design-outputs/<session-id>/`).
 2. **Resume** — re-running the command with the same session id skips stages
    whose output files already exist and continues from the first missing
    stage. Pass 3 is considered complete when the implementer's auxiliary
    hand-off `<dir>/handoff.json` exists (see "Implementer hand-off
    (`handoff.json`)").
 3. **Share** — `build-ui` and `audit-ui` share the session id convention, so a
-   prior `/ocf:build-ui` `design_spec.json` can feed `/ocf:audit-ui`'s planner
+   prior `$flow-build-ui` `design_spec.json` can feed `$flow-audit-ui`'s planner
    (and vice versa when chaining into the build pipeline).
 
 ## Pipeline stages
 
-### Greenfield (4 passes — `/ocf:build-ui`)
+### Greenfield (4 passes — `$flow-build-ui`)
 
 ```
 brief → art-director → design_spec.json → ui-architect → component_tree.json
@@ -98,7 +98,7 @@ back to `ui-implementer` (max 3 rounds) before delivery. If still
 Telegram notification, and delivers with the remaining findings listed in the
 summary.
 
-### Audit/refactor (`/ocf:audit-ui`)
+### Audit/refactor (`$flow-audit-ui`)
 
 ```
 codebase → ui-auditor → audit_report.json → ui-refactor-planner → refactor_plan.json
@@ -129,4 +129,4 @@ stage. Stages do not retry silently.
 ## Related
 
 - Agents: `agents/design/README.md` (pipeline flow and per-agent contracts)
-- Commands: `commands/ocf:build-ui.md`, `commands/ocf:audit-ui.md`
+- Commands: `commands$flow-build-ui.md`, `commands$flow-audit-ui.md`

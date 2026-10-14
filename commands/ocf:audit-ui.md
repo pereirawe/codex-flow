@@ -1,4 +1,4 @@
-## /ocf:audit-ui
+## $flow-audit-ui
 
 ---
 description: Orchestrate the audit/refactor pipeline for existing codebases (ui-auditor → ui-refactor-planner, optionally → build pipeline)
@@ -6,13 +6,13 @@ description: Orchestrate the audit/refactor pipeline for existing codebases (ui-
 
 Audit an **existing** codebase and plan its UI refactor through two passes
 that consume and produce structured JSON, with an optional third pass that
-chains into the greenfield build pipeline (`/ocf:build-ui`) to implement the
+chains into the greenfield build pipeline (`$flow-build-ui`) to implement the
 refactor.
 
 ### Usage
 
 ```
-/ocf:audit-ui [project-path] [session-id]
+$flow-audit-ui [project-path] [session-id]
 ```
 
 | Argument | Description |
@@ -23,9 +23,9 @@ refactor.
 ### Examples
 
 ```
-/ocf:audit-ui
-/ocf:audit-ui /home/user/dev/my-app
-/ocf:audit-ui /home/user/dev/my-app 2026-08-17T14-30-00
+$flow-audit-ui
+$flow-audit-ui /home/user/dev/my-app
+$flow-audit-ui /home/user/dev/my-app 2026-08-17T14-30-00
 ```
 
 ### Pipeline passes
@@ -36,7 +36,7 @@ refactor.
 | 2 | `design/ui-refactor-planner` | `<dir>/audit_report.json` (+ design spec) | `<dir>/refactor_plan.json` |
 | 3 (optional) | `design/ui-architect` → `design/ui-implementer` → `design/ui-critic` | `design/ui-architect`: `<dir>/design_spec.json` (when available) + `<dir>/refactor_plan.json` → `<dir>/component_tree.json`; `design/ui-implementer`: `<dir>/design_spec.json` + `<dir>/component_tree.json` + `<dir>/refactor_plan.json` + project root → production code; `design/ui-critic`: code + `<dir>/design_spec.json` + `<dir>/component_tree.json` → `<dir>/quality_report.json` | Production code + `<dir>/quality_report.json` |
 
-`<dir>` = `.opencode/design-outputs/<session-id>/`.
+`<dir>` = `.codex/design-outputs/<session-id>/`.
 
 1. **Pass 1 — `design/ui-auditor`**: detects the stack via bash (`REACT_VITE`,
    `NEXTJS_APP`, `VUE_VITE`, `PHP_BLADE`, `PHP_HTML`, `HTML_VANILLA`, etc.),
@@ -44,14 +44,14 @@ refactor.
    preserved patterns. Never writes or edits code.
 2. **Pass 2 — `design/ui-refactor-planner`**: consumes
    `<dir>/audit_report.json` and, when available, the design spec
-   (`.opencode/design-outputs/<session-id>/design_spec.json` from a prior
-   `/ocf:build-ui` run) — produces `<dir>/refactor_plan.json`: a phased plan
+   (`.codex/design-outputs/<session-id>/design_spec.json` from a prior
+   `$flow-build-ui` run) — produces `<dir>/refactor_plan.json`: a phased plan
    (Group A blockers, Group B inline, Group C opportunities). Never plans a
    big bang and never deletes before replacing.
 3. **Optional Pass 3**: if the user also wants the refactored UI implemented,
    the command continues into the build pipeline, reusing the same session id
    and output files: `design/ui-architect` receives
-   `<dir>/design_spec.json` (when available from a prior `/ocf:build-ui` run)
+   `<dir>/design_spec.json` (when available from a prior `$flow-build-ui` run)
    AND `<dir>/refactor_plan.json`, producing `<dir>/component_tree.json`;
    `design/ui-implementer` receives `<dir>/design_spec.json`,
    `<dir>/component_tree.json` AND `<dir>/refactor_plan.json` plus the project
@@ -66,7 +66,7 @@ refactor.
 ### Session and output conventions
 
 A session id (UTC timestamp `YYYY-MM-DDTHH-MM-SS`) and an output directory
-`.opencode/design-outputs/<session-id>/` are created at command start. All
+`.codex/design-outputs/<session-id>/` are created at command start. All
 stage outputs land in that directory. On resumption the existing session id
 and its output directory are REUSED as-is — a new session id/directory is
 created only on the first run, never on a resume run. See

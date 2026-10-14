@@ -14,7 +14,7 @@
 # and re-running a sync for an unchanged status is a no-op.
 #
 # Configuration (see config.sh jira_config_load):
-#   .opencode/jira.json  or env vars  + JIRA_API_TOKEN (env only, never logged)
+#   .codex/jira.json  or env vars  + JIRA_API_TOKEN (env only, never logged)
 #
 # Usage:
 #   sync-jira.sh config                 — print resolved config (no secrets)

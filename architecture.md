@@ -1,7 +1,7 @@
 ## OpenCode Configuration Architecture
 
 ```
-~/.config/opencode/         Global config (auto-loaded by OpenCode)
+~/.codex/flow/         Global config (auto-loaded by OpenCode)
 ├── opencode.json           Global settings
 ├── AGENTS.md               Entrypoint instructions
 ├── workflow.md             Pipeline rules
@@ -17,10 +17,10 @@
 ├── locale                  Active locale (e.g., "pt", "es", "en")
 ├── conventions.md          Coding conventions (template)
 ├── decisions.md            Architecture decision records
-└── .opencode/              ══► Project bootstrap template
+└── .codex/              ══► Project bootstrap template
 
 .project-root/              Target project (manually bootstrapped)
-└── .opencode/              Project-level overrides
+└── .codex/              Project-level overrides
     ├── opencode.json       Project-specific config
     ├── AGENTS.md           Project instructions
     ├── workflow.md         Project workflow rules
@@ -34,18 +34,18 @@
 | Layer | Location | Load Order |
 |-------|----------|------------|
 | Remote | `.well-known/opencode` | 1st (base) |
-| Global | `~/.config/opencode/` | 2nd (overrides remote) |
-| Project | `.opencode/` or `opencode.json` | 3rd (overrides global) |
+| Global | `~/.codex/flow/` | 2nd (overrides remote) |
+| Project | `.codex/` or `opencode.json` | 3rd (overrides global) |
 
 ### Key Design Decisions
 
 - **Project-agnostic**: No language/framework assumptions in agents or standards
-- **Reusable**: `.opencode/` template can be copied into any project
+- **Reusable**: `.codex/` template can be copied into any project
 - **Layered config**: Global provides defaults; project overrides specifics
 - **Self-contained agents**: Each agent has its own frontmatter and permissions
 - **Multi-locale standards**: Standards documents are translated into `pt` and `es`, selected via `locale` file
-- **Locale resolution**: Project `.opencode/locale` overrides global `~/.config/opencode/locale`; falls back to English if not configured
+- **Locale resolution**: Project `.codex/locale` overrides global `~/.codex/flow/locale`; falls back to English if not configured
 - **Discovery-to-issue flow**: CTO → PO → Tech Lead → PM → QA pipeline refines raw ideas into typed, tracked issues with acceptance criteria and tests
 - **Two-phase QA**: QA reviews stories for testability early (pre-dev), and verifies quality post-senior-review (pre-MR)
-- **Prioritization proposals**: PO registers proposals in `.opencode/prioritization.md` (project-level) or `~/.config/opencode/prioritization.md` (global fallback) before promoting to `known_issues.md`
+- **Prioritization proposals**: PO registers proposals in `.codex/prioritization.md` (project-level) or `~/.codex/flow/prioritization.md` (global fallback) before promoting to `known_issues.md`
 - **Agent discovery protocol**: Each agent asks context-based questions (CTO: architecture, PO: value, TL: feasibility, QA: test scenarios) to progressively refine proposals

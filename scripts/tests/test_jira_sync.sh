@@ -124,7 +124,7 @@ ln -sf "$MOCK_DATE/date" "$MOCK_NET/date"
 # make_fixture <dir> <status> <remote> <jira> [pr]
 make_fixture() {
   local d="$1" status="$2" remote="$3" jira="$4" pr="${5:--}"
-  mkdir -p "$d/.opencode"
+  mkdir -p "$d/.codex"
   git -C "$d" init -q -b main 2>/dev/null || { git -C "$d" init -q && git -C "$d" checkout -q -b main; }
   git -C "$d" remote add origin "git@github.com:owner/repo.git"
   git -C "$d" -c user.email=t@t -c user.name=t commit -q --allow-empty -m init
@@ -137,16 +137,16 @@ make_fixture() {
     printf -- '- Jira: %s\n' "$jira"
     printf -- '- PR: %s\n' "$pr"
     printf -- '- Description: test description\n- Business rules:\n  1. rule one\n- Acceptance criteria:\n  1. criterion\n- Tests:\n  1. scenario -> outcome\n- Suggested fix: test fix\n'
-  } > "$d/.opencode/known_issues.md"
+  } > "$d/.codex/known_issues.md"
 }
 
 # write_jira_json <dir> [statusmap-json]
 write_jira_json() {
   local d="$1" map="${2:-}"
   if [[ -n "$map" ]]; then
-    printf '{"baseUrl":"https://acme.atlassian.net","email":"dev@acme.com","projectKey":"DEV","statusMap":%s}\n' "$map" > "$d/.opencode/jira.json"
+    printf '{"baseUrl":"https://acme.atlassian.net","email":"dev@acme.com","projectKey":"DEV","statusMap":%s}\n' "$map" > "$d/.codex/jira.json"
   else
-    printf '{"baseUrl":"https://acme.atlassian.net","email":"dev@acme.com","projectKey":"DEV"}\n' > "$d/.opencode/jira.json"
+    printf '{"baseUrl":"https://acme.atlassian.net","email":"dev@acme.com","projectKey":"DEV"}\n' > "$d/.codex/jira.json"
   fi
 }
 jira_env() {
@@ -207,9 +207,9 @@ write_jira_json "$fix"
 envs="$(jira_env) CURL_LOG=$TMP/t03.log"; export CURL_LOG="$TMP/t03.log"; : > "$CURL_LOG"
 rc=$(run "$fix" "$CREATE" "$envs" 1)
 assert_eq "0" "$rc" "t03: create_issue exit 0"
-assert_eq "#42" "$(field "$fix/.opencode/known_issues.md" Remote)" "t03: Remote = #42 (gh)"
-assert_eq "DEV-123" "$(field "$fix/.opencode/known_issues.md" Jira)" "t03: Jira = DEV-123 (card created)"
-assert_eq "ready" "$(field "$fix/.opencode/known_issues.md" Status)" "t03: status stays ready"
+assert_eq "#42" "$(field "$fix/.codex/known_issues.md" Remote)" "t03: Remote = #42 (gh)"
+assert_eq "DEV-123" "$(field "$fix/.codex/known_issues.md" Jira)" "t03: Jira = DEV-123 (card created)"
+assert_eq "ready" "$(field "$fix/.codex/known_issues.md" Status)" "t03: status stays ready"
 assert_eq "1" "$(jira_calls "$CURL_LOG")" "t03: exactly one Jira API call (issue create)"
 assert_contains "$CURL_LOG" "POST https://acme.atlassian.net/rest/api/3/issue" "t03: POST to issue endpoint"
 assert_contains "$CURL_LOG" "https://acme.atlassian.net" "t03: curl hit acme (jira.json baseUrl)"
@@ -223,10 +223,10 @@ envs="$(jira_env) CURL_LOG=$TMP/t04.log"; export CURL_LOG="$TMP/t04.log"; : > "$
 run "$fix" "$CREATE" "$envs" 1 >/dev/null
 rc=$(run "$fix" "$CREATE" "$envs" 1)
 assert_eq "1" "$rc" "t04: second create_issue aborts (Remote already set)"
-assert_eq "1" "$(cnt "$fix/.opencode/known_issues.md" 'Jira: DEV-123')" "t04: single Jira field"
+assert_eq "1" "$(cnt "$fix/.codex/known_issues.md" 'Jira: DEV-123')" "t04: single Jira field"
 assert_eq "1" "$(grep -c 'rest/api/3/issue ' "$CURL_LOG")" "t04: exactly one card-creation POST"
 # ensure-card directly on an entry that already has a card → no-op
-rc=$(run "$fix" "$SYNC" "$envs" ensure-card "$fix/.opencode/known_issues.md" 1)
+rc=$(run "$fix" "$SYNC" "$envs" ensure-card "$fix/.codex/known_issues.md" 1)
 assert_eq "0" "$rc" "t04: ensure-card idempotent exit 0"
 assert_contains "$RUN_OUT" "already exists" "t04: ensure-card no-op warning"
 assert_eq "1" "$(grep -c 'rest/api/3/issue ' "$CURL_LOG")" "t04: no second card POST after ensure-card"
@@ -237,10 +237,10 @@ assert_eq "1" "$(grep -c 'rest/api/3/issue ' "$CURL_LOG")" "t04: no second card 
 fix="$TMP/t05"; make_fixture "$fix" ready "#42" "-"
 write_jira_json "$fix"
 envs="$(jira_env) CURL_LOG=$TMP/t05.log"; export CURL_LOG="$TMP/t05.log"; : > "$CURL_LOG"
-rc=$(run "$fix" "$SYNC" "$envs" ensure-card "$fix/.opencode/known_issues.md" 1)
+rc=$(run "$fix" "$SYNC" "$envs" ensure-card "$fix/.codex/known_issues.md" 1)
 assert_eq "0" "$rc" "t05: ensure-card exit 0"
-assert_eq "DEV-123" "$(field "$fix/.opencode/known_issues.md" Jira)" "t05: Jira field populated"
-assert_eq "1" "$(cnt "$fix/.opencode/known_issues.md" 'Jira: DEV-123')" "t05: single Jira line (no duplicate)"
+assert_eq "DEV-123" "$(field "$fix/.codex/known_issues.md" Jira)" "t05: Jira field populated"
+assert_eq "1" "$(cnt "$fix/.codex/known_issues.md" 'Jira: DEV-123')" "t05: single Jira line (no duplicate)"
 
 # ===========================================================================
 # t06 — promote ready→in-progress transitions the card to "In Progress"
@@ -249,7 +249,7 @@ fix="$TMP/t06"; make_fixture "$fix" ready "#42" "DEV-123"
 envs="$(jira_env) CURL_LOG=$TMP/t06.log JIRA_CARD_STATUS=To%20Do"; export CURL_LOG="$TMP/t06.log"; : > "$CURL_LOG"
 rc=$(run "$fix" "$PROMOTE" "$envs" 1)
 assert_eq "0" "$rc" "t06: promote exit 0"
-assert_eq "in-progress" "$(field "$fix/.opencode/known_issues.md" Status)" "t06: status advanced locally"
+assert_eq "in-progress" "$(field "$fix/.codex/known_issues.md" Status)" "t06: status advanced locally"
 assert_contains "$CURL_LOG" "POST https://acme.atlassian.net/rest/api/3/issue/DEV-123/transitions" "t06: transition POST issued"
 assert_contains "$CURL_LOG" '-d {"transition":{"id":"11"}}' "t06: transition id 11 = In Progress"
 assert_contains "$RUN_OUT" "transitioned to 'In Progress'" "t06: transition logged"
@@ -261,7 +261,7 @@ fix="$TMP/t07"; make_fixture "$fix" backlog "-" "DEV-123"
 envs="$(jira_env) CURL_LOG=$TMP/t07.log JIRA_CARD_STATUS=Backlog"; export CURL_LOG="$TMP/t07.log"; : > "$CURL_LOG"
 rc=$(run "$fix" "$PROMOTE" "$envs" 1)
 assert_eq "0" "$rc" "t07: promote mode 1 exit 0"
-assert_eq "ready" "$(field "$fix/.opencode/known_issues.md" Status)" "t07: status = ready"
+assert_eq "ready" "$(field "$fix/.codex/known_issues.md" Status)" "t07: status = ready"
 assert_contains "$CURL_LOG" '-d {"transition":{"id":"41"}}' "t07: transition id 41 = To Do"
 assert_contains "$RUN_OUT" "transitioned to 'To Do'" "t07: mode 1 transition logged"
 
@@ -273,8 +273,8 @@ envs="$(jira_env) CURL_LOG=$TMP/t08.log"; export CURL_LOG="$TMP/t08.log"; : > "$
 rc=$(run "$fix" "$CLOSE" "$envs" 1)
 assert_eq "0" "$rc" "t08: close exit 0"
 assert_contains "$CURL_LOG" '-d {"transition":{"id":"21"}}' "t08: transition id 21 = Done"
-assert_contains "$fix/.opencode/resolved_issues.md" "- Resolved:" "t08: local archive written"
-assert_not_contains "$fix/.opencode/known_issues.md" "### 1." "t08: entry archived"
+assert_contains "$fix/.codex/resolved_issues.md" "- Resolved:" "t08: local archive written"
+assert_not_contains "$fix/.codex/known_issues.md" "### 1." "t08: entry archived"
 
 # ===========================================================================
 # t08b — custom statusMap (resolved → "Closed", id 31) honored
@@ -293,7 +293,7 @@ fix="$TMP/t09"; make_fixture "$fix" ready "#42" "DEV-123"
 envs="$(jira_env) CURL_LOG=$TMP/t09.log JIRA_NET_FAIL=1"; export CURL_LOG="$TMP/t09.log"; : > "$CURL_LOG"
 rc=$(run "$fix" "$PROMOTE" "$envs" 1)
 assert_eq "0" "$rc" "t09: promote exit 0 despite Jira network failure (AC 7)"
-assert_eq "in-progress" "$(field "$fix/.opencode/known_issues.md" Status)" "t09: local status advanced (non-blocking)"
+assert_eq "in-progress" "$(field "$fix/.codex/known_issues.md" Status)" "t09: local status advanced (non-blocking)"
 assert_contains "$RUN_OUT" "Warning: status sync failed" "t09: warning logged"
 assert_contains "$RUN_OUT" "non-blocking" "t09: warning labeled non-blocking"
 
@@ -305,13 +305,13 @@ envs="CURL_LOG=$TMP/t10a.log"; export CURL_LOG="$TMP/t10a.log"; : > "$CURL_LOG"
 rc=$(run "$fix" "$CREATE" "$envs" 1)
 assert_eq "0" "$rc" "t10: create_issue exit 0 (no Jira config)"
 assert_eq "0" "$(jira_calls "$CURL_LOG")" "t10: create_issue → zero Jira calls"
-assert_eq "#42" "$(field "$fix/.opencode/known_issues.md" Remote)" "t10: remote still created (regression-free)"
+assert_eq "#42" "$(field "$fix/.codex/known_issues.md" Remote)" "t10: remote still created (regression-free)"
 
 fix="$TMP/t10b"; make_fixture "$fix" ready "#42" "DEV-123"
 envs="CURL_LOG=$TMP/t10b.log"; export CURL_LOG="$TMP/t10b.log"; : > "$CURL_LOG"
 rc=$(run "$fix" "$PROMOTE" "$envs" 1)
 assert_eq "0" "$rc" "t10: promote exit 0 (no Jira config)"
-assert_eq "in-progress" "$(field "$fix/.opencode/known_issues.md" Status)" "t10: promote advanced locally"
+assert_eq "in-progress" "$(field "$fix/.codex/known_issues.md" Status)" "t10: promote advanced locally"
 assert_eq "0" "$(jira_calls "$CURL_LOG")" "t10: promote → zero Jira calls"
 
 fix="$TMP/t10c"; make_fixture "$fix" resolved "#42" "DEV-123"
@@ -330,22 +330,22 @@ run "$fix" "$CREATE" "$envs" 1 >/dev/null
 assert_not_contains "$RUN_OUT" "$JIRA_TOKEN" "t11: token absent from create_issue output"
 assert_not_contains "$CURL_LOG" "$JIRA_TOKEN" "t11: token absent from curl log"
 assert_not_contains "$CURL_LOG" "Authorization" "t11: curl log has no Authorization header"
-assert_not_contains "$fix/.opencode/known_issues.md" "$JIRA_TOKEN" "t11: token absent from tracker"
-assert_not_contains "$fix/.opencode/jira.json" "$JIRA_TOKEN" "t11: token absent from jira.json"
-assert_not_contains "$fix/.opencode/known_issues.md" "dev@acme.com" "t11: email not persisted in tracker"
+assert_not_contains "$fix/.codex/known_issues.md" "$JIRA_TOKEN" "t11: token absent from tracker"
+assert_not_contains "$fix/.codex/jira.json" "$JIRA_TOKEN" "t11: token absent from jira.json"
+assert_not_contains "$fix/.codex/known_issues.md" "dev@acme.com" "t11: email not persisted in tracker"
 
 # ===========================================================================
 # t12 — sync reconciles every issue with a card in one run (AC 5)
 # ===========================================================================
-fix="$TMP/t12"; mkdir -p "$fix/.opencode"
+fix="$TMP/t12"; mkdir -p "$fix/.codex"
 git -C "$fix" init -q -b main 2>/dev/null || { git -C "$fix" init -q; git -C "$fix" checkout -q -b main; }
 {
   printf '### 1. First\n- Status: in-progress\n- Type: feat\n- Severity: high\n- Report: t\n- Base branch: main\n- Reviewers: 1 (runtime)\n- Remote: #11\n- Jira: DEV-101\n- PR: -\n- Description: a\n\n'
   printf '### 2. Second\n- Status: in-publish\n- Type: feat\n- Severity: high\n- Report: t\n- Base branch: main\n- Reviewers: 1 (runtime)\n- Remote: #12\n- Jira: DEV-102\n- PR: #7\n- Description: b\n\n'
   printf '### 3. No card\n- Status: ready\n- Type: feat\n- Severity: high\n- Report: t\n- Base branch: main\n- Reviewers: 1 (runtime)\n- Remote: #13\n- Jira: -\n- PR: -\n- Description: c\n'
-} > "$fix/.opencode/known_issues.md"
+} > "$fix/.codex/known_issues.md"
 envs="$(jira_env) CURL_LOG=$TMP/t12.log"; export CURL_LOG="$TMP/t12.log"; : > "$CURL_LOG"
-rc=$(run "$fix" "$SYNC" "$envs" sync "$fix/.opencode/known_issues.md")
+rc=$(run "$fix" "$SYNC" "$envs" sync "$fix/.codex/known_issues.md")
 assert_eq "0" "$rc" "t12: sync exit 0"
 assert_eq "2" "$(grep -c 'POST https://acme.atlassian.net/rest/api/3/issue/DEV-1[01][0-9]/transitions' "$CURL_LOG")" "t12: two cards transitioned"
 assert_contains "$CURL_LOG" "-d {\"transition\":{\"id\":\"11\"}}" "t12: DEV-101 → In Progress"
@@ -359,7 +359,7 @@ fix="$TMP/t13"; make_fixture "$fix" ready "#42" "DEV-123"
 envs="$(jira_env) CURL_LOG=$TMP/t13.log JIRA_TRANSITIONS_MODE=limited"; export CURL_LOG="$TMP/t13.log"; : > "$CURL_LOG"
 rc=$(run "$fix" "$PROMOTE" "$envs" 1)
 assert_eq "0" "$rc" "t13: promote exit 0 (non-blocking)"
-assert_eq "in-progress" "$(field "$fix/.opencode/known_issues.md" Status)" "t13: local status still advanced"
+assert_eq "in-progress" "$(field "$fix/.codex/known_issues.md" Status)" "t13: local status still advanced"
 assert_contains "$RUN_OUT" "not allowed by the Jira workflow" "t13: workflow warning logged"
 assert_eq "0" "$(grep -c 'POST .*transitions' "$CURL_LOG")" "t13: no transition POST attempted"
 
@@ -368,7 +368,7 @@ assert_eq "0" "$(grep -c 'POST .*transitions' "$CURL_LOG")" "t13: no transition 
 # ===========================================================================
 fix="$TMP/t14"; make_fixture "$fix" ready "#42" "DEV-123"
 envs="$(jira_env) CURL_LOG=$TMP/t14.log JIRA_CARD_STATUS=To%20Do"; export CURL_LOG="$TMP/t14.log"; : > "$CURL_LOG"
-rc=$(run "$fix" "$SYNC" "$envs" transition "$fix/.opencode/known_issues.md" 1)
+rc=$(run "$fix" "$SYNC" "$envs" transition "$fix/.codex/known_issues.md" 1)
 assert_eq "0" "$rc" "t14: transition exit 0"
 assert_contains "$RUN_OUT" "already in 'To Do'" "t14: no-op message"
 assert_eq "0" "$(grep -c 'POST .*transitions' "$CURL_LOG")" "t14: no transition POST (already in target)"
@@ -381,8 +381,8 @@ write_jira_json "$fix"
 envs="$(jira_env) GH_FAIL=1 CURL_LOG=$TMP/t15.log"; export CURL_LOG="$TMP/t15.log"; : > "$CURL_LOG"
 rc=$(run "$fix" "$CREATE" "$envs" 1)
 assert_eq "0" "$rc" "t15: create_issue exit 0 despite gh failure"
-assert_contains "$fix/.opencode/known_issues.md" "error:mock create failed" "t15: Remote: error:... recorded"
-assert_eq "DEV-123" "$(field "$fix/.opencode/known_issues.md" Jira)" "t15: card still created (BR 4 independent of git provider)"
+assert_contains "$fix/.codex/known_issues.md" "error:mock create failed" "t15: Remote: error:... recorded"
+assert_eq "DEV-123" "$(field "$fix/.codex/known_issues.md" Jira)" "t15: card still created (BR 4 independent of git provider)"
 
 # ===========================================================================
 # t16 — standards parity: issues.md (en/pt/es) + known_issues Format block
@@ -434,7 +434,7 @@ assert_contains "$CURL_LOG" "--max-time" "t19: max-time passed to curl"
 # ===========================================================================
 fix="$TMP/t20"; make_fixture "$fix" in-progress "#42" "DEV-123"
 envs="$(jira_env) CURL_LOG=$TMP/t20.log"; export CURL_LOG="$TMP/t20.log"; : > "$CURL_LOG"
-rc=$(run "$fix" "$SYNC" "$envs" add-comment "$fix/.opencode/known_issues.md" 1 "reviewed and approved")
+rc=$(run "$fix" "$SYNC" "$envs" add-comment "$fix/.codex/known_issues.md" 1 "reviewed and approved")
 assert_eq "0" "$rc" "t20: add-comment exit 0"
 assert_contains "$CURL_LOG" "POST https://acme.atlassian.net/rest/api/3/issue/DEV-123/comment" "t20: comment POST issued"
 assert_contains "$RUN_OUT" "comment added to card DEV-123" "t20: comment result logged"
@@ -444,7 +444,7 @@ assert_contains "$RUN_OUT" "comment added to card DEV-123" "t20: comment result 
 # ===========================================================================
 fix="$TMP/t21"; make_fixture "$fix" in-progress "#42" "-"
 envs="$(jira_env) CURL_LOG=$TMP/t21.log"; export CURL_LOG="$TMP/t21.log"; : > "$CURL_LOG"
-rc=$(run "$fix" "$SYNC" "$envs" add-comment "$fix/.opencode/known_issues.md" 1 "hello")
+rc=$(run "$fix" "$SYNC" "$envs" add-comment "$fix/.codex/known_issues.md" 1 "hello")
 assert_eq "0" "$rc" "t21: add-comment without card exit 0"
 assert_contains "$RUN_OUT" "no card" "t21: skip message"
 assert_eq "0" "$(jira_calls "$CURL_LOG")" "t21: zero Jira API calls"
@@ -454,7 +454,7 @@ assert_eq "0" "$(jira_calls "$CURL_LOG")" "t21: zero Jira API calls"
 # ===========================================================================
 fix="$TMP/t22"; make_fixture "$fix" in-progress "#42" "DEV-123"
 envs="$(jira_env) CURL_LOG=$TMP/t22.log JIRA_HTTP_CODE=404"; export CURL_LOG="$TMP/t22.log"; : > "$CURL_LOG"
-rc=$(run "$fix" "$SYNC" "$envs" add-comment "$fix/.opencode/known_issues.md" 1 "hello")
+rc=$(run "$fix" "$SYNC" "$envs" add-comment "$fix/.codex/known_issues.md" 1 "hello")
 assert_eq "1" "$rc" "t22: add-comment fails on HTTP error (caller decides non-blocking)"
 assert_contains "$RUN_OUT" "HTTP 404" "t22: HTTP error warning logged"
 
@@ -465,7 +465,7 @@ fix="$TMP/t23"; make_fixture "$fix" ready "#42" "DEV-123"
 envs="$(jira_env) CURL_LOG=$TMP/t23.log JIRA_HTTP_CODE=404"; export CURL_LOG="$TMP/t23.log"; : > "$CURL_LOG"
 rc=$(run "$fix" "$PROMOTE" "$envs" 1)
 assert_eq "0" "$rc" "t23: promote exit 0 despite Jira HTTP 404"
-assert_eq "in-progress" "$(field "$fix/.opencode/known_issues.md" Status)" "t23: local status advanced"
+assert_eq "in-progress" "$(field "$fix/.codex/known_issues.md" Status)" "t23: local status advanced"
 assert_contains "$RUN_OUT" "Warning: status sync failed" "t23: warning logged"
 
 # ===========================================================================
@@ -476,18 +476,18 @@ envs="$(jira_env) CURL_LOG=$TMP/t24.log"; export CURL_LOG="$TMP/t24.log"; : > "$
 rc=$(run "$fix" "$CLOSE" "$envs" 1)
 assert_eq "0" "$rc" "t24: close in-publish exit 0"
 assert_contains "$CURL_LOG" '-d {"transition":{"id":"21"}}' "t24: in-publish close → card to Done (id 21)"
-assert_contains "$fix/.opencode/resolved_issues.md" "- Resolved:" "t24: local archive written"
+assert_contains "$fix/.codex/resolved_issues.md" "- Resolved:" "t24: local archive written"
 
 # ===========================================================================
 # t25 — sync with a failing transition exits non-zero (CI observability)
 # ===========================================================================
-fix="$TMP/t25"; mkdir -p "$fix/.opencode"
+fix="$TMP/t25"; mkdir -p "$fix/.codex"
 git -C "$fix" init -q -b main 2>/dev/null || { git -C "$fix" init -q; git -C "$fix" checkout -q -b main; }
 {
   printf '### 1. Only\n- Status: ready\n- Type: feat\n- Severity: high\n- Report: t\n- Base branch: main\n- Reviewers: 1 (runtime)\n- Remote: #11\n- Jira: DEV-101\n- PR: -\n- Description: a\n'
-} > "$fix/.opencode/known_issues.md"
+} > "$fix/.codex/known_issues.md"
 envs="$(jira_env) CURL_LOG=$TMP/t25.log JIRA_HTTP_CODE=500"; export CURL_LOG="$TMP/t25.log"; : > "$CURL_LOG"
-rc=$(run "$fix" "$SYNC" "$envs" sync "$fix/.opencode/known_issues.md")
+rc=$(run "$fix" "$SYNC" "$envs" sync "$fix/.codex/known_issues.md")
 assert_eq "1" "$rc" "t25: sync exits non-zero when every transition fails"
 assert_contains "$RUN_OUT" "0 synced, 0 without card, 1 failed" "t25: failure counted"
 assert_contains "$RUN_OUT" "WARNING: sync failed for issue 1" "t25: per-issue failure surfaced"

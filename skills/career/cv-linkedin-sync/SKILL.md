@@ -1,7 +1,39 @@
 ---
-name: cv-linkedin-sync
-description: Offline LinkedIn ↔ hub.json sync diff — parses the OFFICIAL LinkedIn "Download My Data" export (a local directory of CSVs; never scraped, never a URL) and diffs it against hub.json (headline, positions/experience, skills, education, languages, certifications), producing linkedin-sync.md (report in the user's language) + linkedin-sync.json (machine-readable, consumed by cv-linkedin and cv-optimize). Use when the user wants to compare the real LinkedIn profile with the hub, refresh an outdated hub from the official export, or decide which skills to add/promote/remove on LinkedIn ("sync do LinkedIn", "comparar LinkedIn com hub", "diff linkedin", "export oficial do LinkedIn", "Download My Data", "atualizar hub pelo linkedin" also trigger this skill). Career sector. Powered by scripts/cv/linkedin-sync.py.
+name: cf-cv-linkedin-sync
+description: Offline LinkedIn ↔ hub.json sync diff — parses the OFFICIAL LinkedIn
+  "Download My Data" export (a local directory of CSVs; never scraped, never a URL)
+  and diffs it against hub.json (headline, positions/experience, skills, education,
+  languages, certifications), producing linkedin-sync.md (report in the user's language)
+  + linkedin-sync.json (machine-readable, consumed by cv-linkedin and cv-optimize).
+  Use when the user wants to compare the real LinkedIn profile with the hub, refresh
+  an outdated hub from the official export, or decide which skills to add/promote/remove
+  on LinkedIn ("sync do LinkedIn", "comparar LinkedIn com hub", "diff linkedin", "export
+  oficial do LinkedIn", "Download My Data", "atualizar hub pelo linkedin" also trigger
+  this skill). Career sector. Powered by scripts/cv/linkedin-sync.py.
 ---
+
+## Codex runtime contract
+
+This workflow was migrated to Codex. Read `~/.codex/flow/docs/runtime.md`
+before its first use. Resolve scripts from `~/.codex/flow/scripts/` and run
+them with CWD set to the intended project. Read the project's root AGENTS.md,
+then `.codex/AGENTS.md` and relevant local context. Project definitions take
+precedence over global definitions with the same legacy identifier.
+
+Legacy `Task(role)` means a Codex subagent using the role in the agent catalog;
+if that role cannot be selected natively, read its instructions and include
+them in the subagent task. Never run OpenCode. Legacy read/glob/grep/skill
+names mean the equivalent available Codex file/search/skill tools. Read a
+referenced skill by resolving its legacy name in `catalog/skills.json`.
+Shell snippets using OpenCode's !`...` notation are examples, not executable
+directives: run the corresponding reviewed command with native shell tools.
+
+Inherit Codex permissions and model settings. Old permission YAML is source
+metadata, not an enforcement mechanism. Stop on failed gates; never claim
+unperformed tests/reviews passed. Only send external notifications/comments
+when the user explicitly invokes a workflow that includes them or separately
+authorizes them. Mere migration, file reading, or implicit skill selection
+does not authorize sending. Do not hide approval rejections from the user.
 
 # CV LinkedIn Sync — offline LinkedIn ↔ hub.json diff
 

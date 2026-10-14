@@ -154,10 +154,10 @@ if $CHECK_GLOBAL; then
 fi
 
 if $CHECK_PROJECT; then
-  if [[ -f ".opencode/known_issues.md" ]]; then
-    check_file "$(pwd -P)/.opencode/known_issues.md" "Project Issues ($(basename "$(pwd -P)"))"
+  if [[ -f ".codex/known_issues.md" ]]; then
+    check_file "$(pwd -P)/.codex/known_issues.md" "Project Issues ($(basename "$(pwd -P)"))"
   else
-    echo "[skip] No project .opencode/known_issues.md found in CWD"
+    echo "[skip] No project .codex/known_issues.md found in CWD"
   fi
 fi
 

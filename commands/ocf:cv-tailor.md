@@ -1,11 +1,11 @@
-## /ocf:cv-tailor <candidate-directory> <job>
+## $flow-cv-tailor <candidate-directory> <job>
 
 ---
 description: Generate a job-tailored resume PDF from the candidate hub — analyze the job, gap analysis vs hub.json, adapt content (never fabricate), HTML -> PDF in the job's language
 ---
 
 Generates a version of the candidate's resume optimized for a specific job,
-from the candidate's `hub.json` (built with `/ocf:cv-hub`). It analyzes the
+from the candidate's `hub.json` (built with `$flow-cv-hub`). It analyzes the
 job, performs the gap analysis vs the hub, adapts the content **without
 fabricating anything** and produces the resume in PDF (HTML → PDF via Chrome
 headless, LibreOffice fallback) in the job's language.
@@ -13,12 +13,12 @@ headless, LibreOffice fallback) in the job's language.
 ### Prerequisite
 
 The candidate needs a valid hub at `~/career/<candidate-name>/hub.json`.
-If it does not exist, run `/ocf:cv-hub` first.
+If it does not exist, run `$flow-cv-hub` first.
 
 ### Usage
 
 ```
-/ocf:cv-tailor ~/career/maria-silva "job URL or text"
+$flow-cv-tailor ~/career/maria-silva "job URL or text"
 ```
 
 The job can be provided as:

@@ -1,0 +1,227 @@
+[
+  {
+    "legacy_name": "init",
+    "name": "flow-init",
+    "path": "command-skills/flow-init/SKILL.md",
+    "description": "Initialize Codex project config with repo context and locale",
+    "aliases": [
+      "ocf:init"
+    ]
+  },
+  {
+    "legacy_name": "ocf:plan-feature",
+    "name": "flow-plan-feature",
+    "path": "command-skills/flow-plan-feature/SKILL.md",
+    "description": "Feature planning with risk awareness"
+  },
+  {
+    "legacy_name": "ocf:promote",
+    "name": "flow-promote",
+    "path": "command-skills/flow-promote/SKILL.md",
+    "description": "Promote an issue \u2014 backlog\u2192ready or ready\u2192in-progress with branch"
+  },
+  {
+    "legacy_name": "ocf:review-branch",
+    "name": "flow-review-branch",
+    "path": "command-skills/flow-review-branch/SKILL.md",
+    "description": "Full PR/MR-style code review"
+  },
+  {
+    "legacy_name": "ocf:develop",
+    "name": "develop",
+    "path": "command-skills/develop/SKILL.md",
+    "description": "Run the full task lifecycle up to MR creation for one or more issues: promote, develop, review, QA, MR \u2014 then wait for a manual merge (no auto-merge, no archive)"
+  },
+  {
+    "legacy_name": "ocf:scan-issues",
+    "name": "flow-scan-issues",
+    "path": "command-skills/flow-scan-issues/SKILL.md",
+    "description": "Deep codebase analysis and issue detection"
+  },
+  {
+    "legacy_name": "ocf:commit",
+    "name": "flow-commit",
+    "path": "command-skills/flow-commit/SKILL.md",
+    "description": "Atomic semantic commit with standards/commits.md"
+  },
+  {
+    "legacy_name": "ocf:sync-issues",
+    "name": "flow-sync-issues",
+    "path": "command-skills/flow-sync-issues/SKILL.md",
+    "description": "Sync known_issues with remote issue tracker"
+  },
+  {
+    "legacy_name": "ocf:sync-jira",
+    "name": "flow-sync-jira",
+    "path": "command-skills/flow-sync-jira/SKILL.md",
+    "description": "Reconcile known_issues status with Jira Cloud cards"
+  },
+  {
+    "legacy_name": "ocf:archive-issue",
+    "name": "flow-archive-issue",
+    "path": "command-skills/flow-archive-issue/SKILL.md",
+    "description": "Archive resolved issue to compact format"
+  },
+  {
+    "legacy_name": "ocf:maintain",
+    "name": "flow-maintain",
+    "path": "command-skills/flow-maintain/SKILL.md",
+    "description": "Maintain known_issues.md and prioritization.md"
+  },
+  {
+    "legacy_name": "ocf:close-issue",
+    "name": "flow-close-issue",
+    "path": "command-skills/flow-close-issue/SKILL.md",
+    "description": "Close remote issue and archive after PR merge"
+  },
+  {
+    "legacy_name": "ocf:check-pr",
+    "name": "flow-check-pr",
+    "path": "command-skills/flow-check-pr/SKILL.md",
+    "description": "Check PR merge status for issues and auto-archive merged ones"
+  },
+  {
+    "legacy_name": "ocf:review-external",
+    "name": "flow-review-external",
+    "path": "command-skills/flow-review-external/SKILL.md",
+    "description": "Review external branches/MRs with structured report generation"
+  },
+  {
+    "legacy_name": "ocf:bump-version",
+    "name": "flow-bump-version",
+    "path": "command-skills/flow-bump-version/SKILL.md",
+    "description": "Calculate and apply version bump, update changelog, commit, tag, and publish to main"
+  },
+  {
+    "legacy_name": "ocf:backup",
+    "name": "flow-backup",
+    "path": "command-skills/flow-backup/SKILL.md",
+    "description": "Create intelligent timestamped backup excluding junk"
+  },
+  {
+    "legacy_name": "ocf:discovery",
+    "name": "discovery",
+    "path": "command-skills/discovery/SKILL.md",
+    "description": "Refine an idea or existing issue into a canonical, linted local issue. Use for discovery before delivery."
+  },
+  {
+    "legacy_name": "ocf:aibot-notify",
+    "name": "flow-aibot-notify",
+    "path": "command-skills/flow-aibot-notify/SKILL.md",
+    "description": "Post standardized aibot message to a remote issue"
+  },
+  {
+    "legacy_name": "ocf:import-skill",
+    "name": "flow-import-skill",
+    "path": "command-skills/flow-import-skill/SKILL.md",
+    "description": "Import external skills as git clones via skill-vendor.sh"
+  },
+  {
+    "legacy_name": "ocf:telegram-notify",
+    "name": "flow-telegram-notify",
+    "path": "command-skills/flow-telegram-notify/SKILL.md",
+    "description": "Send a manual Telegram notification"
+  },
+  {
+    "legacy_name": "ocf:cv-banner",
+    "name": "flow-cv-banner",
+    "path": "command-skills/flow-cv-banner/SKILL.md",
+    "description": "Generate a LinkedIn profile banner (4:1) from the candidate hub \u2014 art-director direction + each::sense image generation with phone/email/socials and a short phrase, respecting the profile-photo safe zone; outputs under ~/career/<candidate>/linkedin/banner/ (never fabricates, never publishes)"
+  },
+  {
+    "legacy_name": "ocf:linkedin-carousel",
+    "name": "flow-linkedin-carousel",
+    "path": "command-skills/flow-linkedin-carousel/SKILL.md",
+    "description": "Generate a LinkedIn carousel deck (1080x1080 slides -> deck.pdf) from a researched topic, running inside the target project: preflight docs/assets/person.json + logo, web research with saved sources, canonical deck.json spec (EN design prompt + user-language text per slide), each::sense art + deterministic Chrome typography/logo when EACHLABS_API_KEY is set, prompts-only fallback otherwise; outputs under docs/carousel/<slug>/; never fabricates identity/content; nothing is published"
+  },
+  {
+    "legacy_name": "ocf:cv-hub",
+    "name": "flow-cv-hub",
+    "path": "command-skills/flow-cv-hub/SKILL.md",
+    "description": "Build candidate resume hub (hub.json + README.md) from CV PDF + LinkedIn export"
+  },
+  {
+    "legacy_name": "ocf:cv-hub-update",
+    "name": "flow-cv-hub-update",
+    "path": "command-skills/flow-cv-hub-update/SKILL.md",
+    "description": "Update an existing candidate hub incrementally (add/update entries without recreating hub.json)"
+  },
+  {
+    "legacy_name": "ocf:cv-tailor",
+    "name": "flow-cv-tailor",
+    "path": "command-skills/flow-cv-tailor/SKILL.md",
+    "description": "Generate job-tailored resume PDF from candidate hub"
+  },
+  {
+    "legacy_name": "ocf:cv-optimize",
+    "name": "flow-cv-optimize",
+    "path": "command-skills/flow-cv-optimize/SKILL.md",
+    "description": "Analyze candidate profile and generate improvement plan (profile-analysis.md + PDF)"
+  },
+  {
+    "legacy_name": "ocf:cv-cover-letter",
+    "name": "flow-cv-cover-letter",
+    "path": "command-skills/flow-cv-cover-letter/SKILL.md",
+    "description": "Generate job-tailored cover letter PDF from candidate hub"
+  },
+  {
+    "legacy_name": "ocf:cv-linkedin",
+    "name": "flow-cv-linkedin",
+    "path": "command-skills/flow-cv-linkedin/SKILL.md",
+    "description": "Generate an objective-driven LinkedIn action report from the candidate hub - literal headline, structured Sobre with metric bullets, per-role experience bullets, and skills add/promote/remove (via cv-linkedin-sync export or pasted list); outputs linkedin-optimization.md in the user language (never scrapes, never fabricates)"
+  },
+  {
+    "legacy_name": "ocf:cv-interview-prep",
+    "name": "flow-cv-interview-prep",
+    "path": "command-skills/flow-cv-interview-prep/SKILL.md",
+    "description": "Generate a structured interview preparation kit from candidate hub"
+  },
+  {
+    "legacy_name": "ocf:cv-ats-score",
+    "name": "flow-cv-ats-score",
+    "path": "command-skills/flow-cv-ats-score/SKILL.md",
+    "description": "Score a generated resume's ATS compatibility (keyword match, sections, format)"
+  },
+  {
+    "legacy_name": "ocf:develop-full",
+    "name": "develop-full",
+    "path": "command-skills/develop-full/SKILL.md",
+    "description": "Run the full task lifecycle end-to-end for one or more issues: promote, develop, review, QA, MR, auto-merge, return-to-base, close + archive"
+  },
+  {
+    "legacy_name": "ocf:build-ui",
+    "name": "flow-build-ui",
+    "path": "command-skills/flow-build-ui/SKILL.md",
+    "description": "Orchestrate the 4-pass greenfield design pipeline (art-director \u2192 ui-architect \u2192 ui-implementer \u2192 ui-critic) with deterministic output files"
+  },
+  {
+    "legacy_name": "ocf:audit-ui",
+    "name": "flow-audit-ui",
+    "path": "command-skills/flow-audit-ui/SKILL.md",
+    "description": "Orchestrate the audit/refactor pipeline for existing codebases (ui-auditor \u2192 ui-refactor-planner, optionally \u2192 build pipeline)"
+  },
+  {
+    "legacy_name": "ocf:tech-spec",
+    "name": "flow-tech-spec",
+    "path": "command-skills/flow-tech-spec/SKILL.md",
+    "description": "ocf:tech-spec"
+  },
+  {
+    "legacy_name": "ocf:proposal",
+    "name": "flow-proposal",
+    "path": "command-skills/flow-proposal/SKILL.md",
+    "description": "ocf:proposal"
+  },
+  {
+    "legacy_name": "history",
+    "name": "flow-history",
+    "path": "command-skills/flow-history/SKILL.md",
+    "description": "Search private historical conversations"
+  },
+  {
+    "legacy_name": "web-service-commands",
+    "name": "flow-runtime",
+    "path": "command-skills/flow-runtime/SKILL.md",
+    "description": "Codex runtime and automation"
+  }
+]

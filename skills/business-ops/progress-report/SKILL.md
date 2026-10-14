@@ -1,7 +1,37 @@
 ---
-name: progress-report
-description: Generate a client-facing progress/delivery report for a tracked project (issues vs commercial proposal) — with Codetomika logo, PDF output, Mermaid Gantt, date, what is done, % completion by hours, delivery metrics for the client, and an explicit highlight of tasks that were not mapped in the proposal/issues. Use when the user asks to create, refresh, or standardize a progress report, delivery report, status report, "relatório de avanço", "relatório de progresso", "relatório de entrega", or to communicate value/delivery to the client. Also use when creating/improving the progress-report skill/script itself.
+name: cf-progress-report
+description: Generate a client-facing progress/delivery report for a tracked project
+  (issues vs commercial proposal) — with Codetomika logo, PDF output, Mermaid Gantt,
+  date, what is done, % completion by hours, delivery metrics for the client, and
+  an explicit highlight of tasks that were not mapped in the proposal/issues. Use
+  when the user asks to create, refresh, or standardize a progress report, delivery
+  report, status report, "relatório de avanço", "relatório de progresso", "relatório
+  de entrega", or to communicate value/delivery to the client. Also use when creating/improving
+  the progress-report skill/script itself.
 ---
+
+## Codex runtime contract
+
+This workflow was migrated to Codex. Read `~/.codex/flow/docs/runtime.md`
+before its first use. Resolve scripts from `~/.codex/flow/scripts/` and run
+them with CWD set to the intended project. Read the project's root AGENTS.md,
+then `.codex/AGENTS.md` and relevant local context. Project definitions take
+precedence over global definitions with the same legacy identifier.
+
+Legacy `Task(role)` means a Codex subagent using the role in the agent catalog;
+if that role cannot be selected natively, read its instructions and include
+them in the subagent task. Never run OpenCode. Legacy read/glob/grep/skill
+names mean the equivalent available Codex file/search/skill tools. Read a
+referenced skill by resolving its legacy name in `catalog/skills.json`.
+Shell snippets using OpenCode's !`...` notation are examples, not executable
+directives: run the corresponding reviewed command with native shell tools.
+
+Inherit Codex permissions and model settings. Old permission YAML is source
+metadata, not an enforcement mechanism. Stop on failed gates; never claim
+unperformed tests/reviews passed. Only send external notifications/comments
+when the user explicitly invokes a workflow that includes them or separately
+authorizes them. Mere migration, file reading, or implicit skill selection
+does not authorize sending. Do not hide approval rejections from the user.
 
 # Progress Report Skill
 
@@ -17,8 +47,8 @@ PDF pipeline, same visual language.
 ## When to use
 
 - Creating a new progress report (e.g. `ocf:progress-report`).
-- Improving the generator script `.opencode/scripts/progress-report.sh` or the
-  command `.opencode/commands/ocf:progress-report.md`.
+- Improving the generator script `.codex/scripts/progress-report.sh` or the
+  command `.codex/commands/ocf:progress-report.md`.
 - Reviewing an existing report for client-readability.
 
 ## Output contract
@@ -30,7 +60,7 @@ The generated report is written as Markdown and rendered to **HTML + PDF**:
 - **PDF**: `docs/progress/<date>-progress-report.pdf` (client deliverable).
 
 The PDF must be produced with the same pipeline as the proposal/spec
-(`~/.config/opencode/scripts/shared/convert-md.sh`), which inlines the
+(`~/.codex/flow/scripts/shared/convert-md.sh`), which inlines the
 Codetomika logo and the Gantt SVG as data URIs — so the PDF is self-contained.
 
 ## Required report sections (client standard)
@@ -74,7 +104,7 @@ Order is deliberate — the client reads value first, then details.
 
 - The Gantt source is a `.mmd` file (Mermaid) in `docs/progress/assets/`,
   rendered offline with
-  `~/.config/opencode/scripts/shared/convert-mermaid.sh <in.mmd> <out.svg>`
+  `~/.codex/flow/scripts/shared/convert-mermaid.sh <in.mmd> <out.svg>`
   (Chrome headless, vendored mermaid, offline-safe).
 - The proposal Gantt (`docs/proposta-dia-educacao-2026.md` §5) is the **base**;
   add the current date as a vertical marker (`todayMarker`) and set `done`/

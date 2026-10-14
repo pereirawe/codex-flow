@@ -1,11 +1,11 @@
 # Test Environment Standard (test-env)
 
 Versioned, verified test environment for the pipeline: `.nvmrc`, `.node-version`
-and `.opencode/env-manifest.md` pin and validate the Node/Python/test-runner
+and `.codex/env-manifest.md` pin and validate the Node/Python/test-runner
 versions used to run the suite. Applies to every project that uses
-`scripts/test-runner.sh` and to `scripts/init.sh` bootstrapping.
+`scripts/test-runner.sh` and to `scripts$flow-init.sh` bootstrapping.
 
-## Manifest format (`.opencode/env-manifest.md`)
+## Manifest format (`.codex/env-manifest.md`)
 
 The manifest is a **project instance, committed** file. It MUST contain a strict
 machine-parseable section in addition to free prose with the bootstrap
@@ -83,6 +83,6 @@ the suite.
 
 ## Fingerprint
 
-`.nvmrc`, `.node-version` and `.opencode/env-manifest.md` are **excluded from
+`.nvmrc`, `.node-version` and `.codex/env-manifest.md` are **excluded from
 the fingerprint**: changing environment metadata never invalidates the result
 cache — only code/test changes do.

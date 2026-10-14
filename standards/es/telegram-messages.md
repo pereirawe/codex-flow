@@ -46,10 +46,10 @@ proyecto de origen y sigue una plantilla específica por categoría.
 
 Ejemplo:
 ```
-🔹 [opencode-flow]
+🔹 [codex-flow]
 ✅ Pipeline completado — issue #42
 
-MR: https://github.com/pereirawe/opencode-flow/pull/34
+MR: https://github.com/pereirawe/codex-flow/pull/34
 ```
 
 ### `fail` — tarea falló con error
@@ -86,7 +86,7 @@ pytest core/tests/test_auth.py - 2 assertion errors
 
 Ejemplo:
 ```
-🔹 [opencode-flow]
+🔹 [codex-flow]
 💬 Seleccionar cantidad de revisores para issue #28
 
 ¿Cuántos Senior Reviewers deben revisar esta rama?
@@ -126,10 +126,10 @@ Issue #15 (feat) no tiene campo `Business rules:`.
 
 Ejemplo:
 ```
-🔹 [opencode-flow]
+🔹 [codex-flow]
 🏁 Versión 1.8.0 publicada
 
-https://github.com/pereirawe/opencode-flow/releases/tag/v1.8.0
+https://github.com/pereirawe/codex-flow/releases/tag/v1.8.0
 ```
 
 ### `alert` — aviso no bloqueante
@@ -154,7 +154,7 @@ Ejemplo:
 
 Ejemplo:
 ```
-🔹 [opencode-flow]
+🔹 [codex-flow]
 ⏳ Escaneo profundo en curso (paso 2/3 — analizando archivos Go)
 ```
 
@@ -164,7 +164,7 @@ El script respeta el emoji de categoría como parte del `--title`, y el
 encabezado del proyecto + cuerpo como mensaje:
 
 ```bash
-SCRIPT="$HOME/.config/opencode/scripts/telegram-notify.sh"
+SCRIPT="$HOME/.codex/flow/scripts/telegram-notify.sh"
 
 # done
 "$SCRIPT" --title "✅ Pipeline completado" "🔹 [mi-proyecto]\n\nMR: https://github.com/..."
@@ -185,15 +185,15 @@ printf "🔹 [mi-proyecto]\n\n✅ Feature implementada\nRama: issue-42-login\nMR
 
 ## Chat ID por proyecto (configuración multi-repo)
 
-Al trabajar con múltiples proyectos, usar el archivo `.opencode/telegram.env`
+Al trabajar con múltiples proyectos, usar el archivo `.codex/telegram.env`
 específico de cada proyecto. El script carga las credenciales del proyecto
 antes que las globales:
 
 ```
 <proyecto>/
-├── .opencode/
+├── .codex/
 │   └── telegram.env    ← cargado primero (específico del proyecto)
 ```
 
 Si todos los proyectos deben notificar al mismo chat, mantener solo el archivo
-global en `~/.config/opencode/.opencode/telegram.env`.
+global en `~/.codex/flow/.codex/telegram.env`.

@@ -7,17 +7,17 @@
 #   2. --get with absent + unreadable (chmod 000) cache and closed stdin →
 #      fail-silent, no prompt, no secrets, no hang; --status still diagnoses.
 #   3. Concurrent --set (2 parallel) → intact store, one entry; symlink in
-#      .opencode/cache → no write outside the project.
+#      .codex/cache → no write outside the project.
 #   4. Empty GITLAB_TOKEN → treated as absent; --erase → --get fail-silent,
 #      --status shows not set.
 #   5. Redaction gate: grep for tokens + identity email in --status/--get/
 #      errors → assert_not_contains (0 matches); cross-serving: --get never
 #      emits identity fields, --identity never emits the token.
-#   6. Config assertions: opencode.json read/edit-deny on .opencode/cache/**
+#   6. Config assertions: opencode.json read/edit-deny on .codex/cache/**
 #      (findLast) + agent files with granular bash permissions.
 #   7. --init wires credential.helper (absolute path) + interactive never;
 #      repeated --set does not duplicate, --force overwrites; EXCLUDE_RE keeps
-#      .opencode/cache out of fingerprints (touching the cache does not
+#      .codex/cache out of fingerprints (touching the cache does not
 #      invalidate the test-runner fingerprint).
 
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -30,10 +30,10 @@ CONFIG="$HERE/../../opencode.json"
 TMP="$(mktemp -d)"
 trap 'rm -rf "$TMP"' EXIT
 
-# make_project <dir> — fresh git repo with an empty .opencode dir (no cache)
+# make_project <dir> — fresh git repo with an empty .codex dir (no cache)
 make_project() {
   local d="$1"
-  mkdir -p "$d/.opencode"
+  mkdir -p "$d/.codex"
   git -C "$d" init -q
   git -C "$d" -c user.name=t -c user.email=t@t commit -qm init --allow-empty
 }
@@ -53,9 +53,9 @@ for um in 000 022; do
     bash "$SCRIPT" --get
   ) > "$TMP/out-$um.txt" 2> "$TMP/err-$um.txt"
 
-  assert_eq "700" "$(stat -c %a "$d/.opencode/cache/git")" "umask $um: cache dir is 0700"
-  assert_eq "600" "$(stat -c %a "$d/.opencode/cache/git/credentials")" "umask $um: credentials file is 0600"
-  assert_eq "600" "$(stat -c %a "$d/.opencode/cache/git/identity")" "umask $um: identity file is 0600"
+  assert_eq "700" "$(stat -c %a "$d/.codex/cache/git")" "umask $um: cache dir is 0700"
+  assert_eq "600" "$(stat -c %a "$d/.codex/cache/git/credentials")" "umask $um: credentials file is 0600"
+  assert_eq "600" "$(stat -c %a "$d/.codex/cache/git/identity")" "umask $um: identity file is 0600"
   assert_not_contains "$TMP/out-$um.txt" "glpat-perm-$um" "umask $um: no token in stdout"
   assert_not_contains "$TMP/out-$um.txt" "user-$um@example.com" "umask $um: no identity email in stdout"
   assert_contains "$TMP/out-$um.txt" "<set>" "umask $um: --status masks identity email as <set>"
@@ -74,13 +74,13 @@ assert_eq "0" "$rc_absent" "--get with no cache exits 0 (no prompt)"
 
 d="$TMP/unreadable"
 make_project "$d"
-mkdir -p "$d/.opencode/cache/git"
-printf 'https://oauth2:glpat-unread@gitlab.com\n' > "$d/.opencode/cache/git/credentials"
+mkdir -p "$d/.codex/cache/git"
+printf 'https://oauth2:glpat-unread@gitlab.com\n' > "$d/.codex/cache/git/credentials"
 if [[ $EUID -eq 0 ]]; then
   t_ok "unreadable-cache assertions skipped (running as root: -r is always true)"
 else
-  chmod 600 "$d/.opencode/cache/git/credentials"
-  chmod 000 "$d/.opencode/cache/git/credentials"
+  chmod 600 "$d/.codex/cache/git/credentials"
+  chmod 000 "$d/.codex/cache/git/credentials"
   out_unread="$(cd "$d" && bash "$SCRIPT" --get </dev/null 2>&1)"
   assert_eq "" "$out_unread" "--get with unreadable cache is fail-silent (empty output)"
   rc_unread="$(cd "$d" && bash "$SCRIPT" --get </dev/null >/dev/null 2>&1; echo $?)"
@@ -101,25 +101,25 @@ make_project "$d"
   GITLAB_TOKEN="glpat-cc2" bash "$SCRIPT" --set &
   wait
 )
-assert_eq "1" "$(wc -l < "$d/.opencode/cache/git/credentials" 2>/dev/null || echo 0)" \
+assert_eq "1" "$(wc -l < "$d/.codex/cache/git/credentials" 2>/dev/null || echo 0)" \
   "concurrent --set leaves exactly one entry"
-assert_eq "600" "$(stat -c %a "$d/.opencode/cache/git/credentials")" \
+assert_eq "600" "$(stat -c %a "$d/.codex/cache/git/credentials")" \
   "concurrent --set keeps 0600 perms"
-assert_eq "1" "$(grep -cE '^https://oauth2:[^@]+@gitlab\.com$' "$d/.opencode/cache/git/credentials" 2>/dev/null || true)" \
+assert_eq "1" "$(grep -cE '^https://oauth2:[^@]+@gitlab\.com$' "$d/.codex/cache/git/credentials" 2>/dev/null || true)" \
   "concurrent --set store is a valid git credential line"
 
-# Symlink refusal at EVERY guard level: .opencode/cache/git (cache dir),
-# .opencode/cache (cache root) and .opencode (project dir) — --set must
+# Symlink refusal at EVERY guard level: .codex/cache/git (cache dir),
+# .codex/cache (cache root) and .codex (project dir) — --set must
 # fail-silent at each level and the victim must stay untouched.
 symlink_refusal() {
   local name="$1" link_path="$2"
   local d="$TMP/symlink-$name" victim="$TMP/victim-$name"
-  mkdir -p "$d/.opencode" "$victim"
+  mkdir -p "$d/.codex" "$victim"
   git -C "$d" init -q
   git -C "$d" -c user.name=t -c user.email=t@t commit -qm init --allow-empty
   rm -rf "$d/$link_path" 2>/dev/null || true
   # The parent of the link path must exist for ln -s to succeed — for the
-  # `dir` level (.opencode/cache/git) the grandparent .opencode/cache does not
+  # `dir` level (.codex/cache/git) the grandparent .codex/cache does not
   # exist yet, so without this the symlink is never created (ln fails
   # silently) and the deepest guard is never exercised, making the "remains a
   # symlink" / "victim empty" assertions vacuous (runtime B1 / QA MEDIUM-1).
@@ -150,9 +150,9 @@ symlink_refusal() {
   assert_eq "1" "$([[ -f "$victim/.erase-guard-marker" ]] && echo 1 || echo 0)" \
     "symlink($name): --erase does not delete inside the $link_path target"
 }
-symlink_refusal "dir" ".opencode/cache/git"
-symlink_refusal "root" ".opencode/cache"
-symlink_refusal "proj" ".opencode"
+symlink_refusal "dir" ".codex/cache/git"
+symlink_refusal "root" ".codex/cache"
+symlink_refusal "proj" ".codex"
 
 # ===========================================================================
 # Scenario 4 — empty env var treated as absent; --erase fail-silent
@@ -163,7 +163,7 @@ make_project "$d"
   cd "$d" || exit 1
   GITLAB_TOKEN="" bash "$SCRIPT" --set
 )
-assert_eq "0" "$([[ -f "$d/.opencode/cache/git/credentials" ]] && echo 1 || echo 0)" \
+assert_eq "0" "$([[ -f "$d/.codex/cache/git/credentials" ]] && echo 1 || echo 0)" \
   "empty GITLAB_TOKEN creates no credentials entry"
 
 (
@@ -172,9 +172,9 @@ assert_eq "0" "$([[ -f "$d/.opencode/cache/git/credentials" ]] && echo 1 || echo
   bash "$SCRIPT" --identity --set --name "Erase User" --email "erase@example.com"
   bash "$SCRIPT" --erase
 )
-assert_eq "0" "$([[ -f "$d/.opencode/cache/git/credentials" ]] && echo 1 || echo 0)" \
+assert_eq "0" "$([[ -f "$d/.codex/cache/git/credentials" ]] && echo 1 || echo 0)" \
   "--erase removes the credentials file"
-assert_eq "0" "$([[ -f "$d/.opencode/cache/git/identity" ]] && echo 1 || echo 0)" \
+assert_eq "0" "$([[ -f "$d/.codex/cache/git/identity" ]] && echo 1 || echo 0)" \
   "--erase removes the identity file"
 out_after_erase="$(cd "$d" && bash "$SCRIPT" --get </dev/null 2>&1)"
 assert_eq "" "$out_after_erase" "--get after --erase is fail-silent"
@@ -239,27 +239,27 @@ redact_case "https://user:****@host.com" "$(redact_secret "https://user:tok@en@h
 if ! command -v jq >/dev/null 2>&1; then
   t_fail "jq is required for the config assertions in test_git_cred_cache"
 else
-  # The deny uses a RELATIVE pattern (.opencode/cache/**): opencode evaluates
+  # The deny uses a RELATIVE pattern (.codex/cache/**): opencode evaluates
   # read/edit permissions against WORKSPACE-RELATIVE paths (e.g.
-  # `.opencode/cache/git/credentials`), so an absolute pattern like
-  # `~/.config/opencode/.opencode/cache/**` can never match — an unmatched
+  # `.codex/cache/git/credentials`), so an absolute pattern like
+  # `~/.codex/flow/.codex/cache/**` can never match — an unmatched
   # rule means `ask`, i.e. auto-allowed under --auto (security F1). The deny
   # must be relative AND the LAST rule of each permission object (findLast —
   # the last matching rule wins under --auto).
   last_edit="$(jq -r '.permission.edit | to_entries[-1] | .key' "$CONFIG")"
-  assert_eq ".opencode/cache/**" "$last_edit" \
+  assert_eq ".codex/cache/**" "$last_edit" \
     "opencode.json: cache deny is the LAST edit rule (findLast wins)"
-  deny_edit="$(jq -r '.permission.edit[".opencode/cache/**"]' "$CONFIG")"
-  assert_eq "deny" "$deny_edit" "opencode.json: edit deny on .opencode/cache/**"
+  deny_edit="$(jq -r '.permission.edit[".codex/cache/**"]' "$CONFIG")"
+  assert_eq "deny" "$deny_edit" "opencode.json: edit deny on .codex/cache/**"
   last_read="$(jq -r '.permission.read | to_entries[-1] | .key' "$CONFIG")"
-  assert_eq ".opencode/cache/**" "$last_read" \
+  assert_eq ".codex/cache/**" "$last_read" \
     "opencode.json: cache deny is the LAST read rule (findLast wins)"
-  deny_read="$(jq -r '.permission.read[".opencode/cache/**"]' "$CONFIG")"
-  assert_eq "deny" "$deny_read" "opencode.json: read deny on .opencode/cache/**"
+  deny_read="$(jq -r '.permission.read[".codex/cache/**"]' "$CONFIG")"
+  assert_eq "deny" "$deny_read" "opencode.json: read deny on .codex/cache/**"
 fi
 
-assert_contains "$HERE/../../.opencode/.gitignore" "cache/" \
-  ".opencode/.gitignore ignores the per-project cache (BR 1)"
+assert_contains "$HERE/../../.codex/.gitignore" "cache/" \
+  ".codex/.gitignore ignores the per-project cache (BR 1)"
 
 DEV="$HERE/../../agents/development/developer.md"
 for pat in '"*": deny' '"git *": allow' '"*scripts/git-cred-cache.sh *": allow' \
@@ -335,7 +335,7 @@ for AG in developer committer publish-requester; do
   # security F1). Tolerant of quoted vs unquoted `deny` values: developer.md
   # writes `deny`, committer/publish-requester write `"deny"` (runtime B3 /
   # QA MEDIUM-2).
-  ln_cache_deny="$(grep -nE '^[[:space:]]*"\.opencode/cache/\*\*"[[:space:]]*:[[:space:]]*"?deny"?[[:space:]]*$' "$F" | head -1 | cut -d: -f1)"
+  ln_cache_deny="$(grep -nE '^[[:space:]]*"\.codex/cache/\*\*"[[:space:]]*:[[:space:]]*"?deny"?[[:space:]]*$' "$F" | head -1 | cut -d: -f1)"
   ln_edit_key="$(grep -nF '  edit:' "$F" | head -1 | cut -d: -f1)"
   ln_next="$(awk -v k="$ln_edit_key" 'NR > k && (/^  [a-z]+:/ || /^---/) { print NR; exit }' "$F")"
   if [[ -n "$ln_cache_deny" && -n "$ln_edit_key" && -n "$ln_next" ]] \
@@ -353,7 +353,7 @@ d="$TMP/init-proj"
 make_project "$d"
 ( cd "$d" && bash "$SCRIPT" --init )
 helper="$(git -C "$d" config --local --get credential.helper)"
-assert_eq "store --file=$d/.opencode/cache/git/credentials" "$helper" \
+assert_eq "store --file=$d/.codex/cache/git/credentials" "$helper" \
   "--init wires credential.helper to the ABSOLUTE cache store path"
 assert_eq "never" "$(git -C "$d" config --local --get credential.interactive)" \
   "--init sets credential.interactive never"
@@ -368,38 +368,38 @@ assert_eq "" "$(git -C "$d" config --local --get user.email || true)" \
   GITLAB_TOKEN="glpat-idem" bash "$SCRIPT" --set
   GITLAB_TOKEN="glpat-idem" bash "$SCRIPT" --set
 )
-assert_eq "1" "$(wc -l < "$d/.opencode/cache/git/credentials")" \
+assert_eq "1" "$(wc -l < "$d/.codex/cache/git/credentials")" \
   "repeated --set does not duplicate entries"
 ( cd "$d" && GITLAB_TOKEN="glpat-other" bash "$SCRIPT" --set )
-assert_eq "1" "$(wc -l < "$d/.opencode/cache/git/credentials")" \
+assert_eq "1" "$(wc -l < "$d/.codex/cache/git/credentials")" \
   "--set without --force keeps one entry"
-assert_contains "$d/.opencode/cache/git/credentials" "glpat-idem" \
+assert_contains "$d/.codex/cache/git/credentials" "glpat-idem" \
   "existing valid entry preserved without --force"
 ( cd "$d" && GITLAB_TOKEN="glpat-other" bash "$SCRIPT" --set --force )
-assert_eq "1" "$(wc -l < "$d/.opencode/cache/git/credentials")" \
+assert_eq "1" "$(wc -l < "$d/.codex/cache/git/credentials")" \
   "--force overwrites, store keeps one entry"
-assert_contains "$d/.opencode/cache/git/credentials" "glpat-other" \
+assert_contains "$d/.codex/cache/git/credentials" "glpat-other" \
   "--force stores the new token"
-assert_not_contains "$d/.opencode/cache/git/credentials" "glpat-idem" \
+assert_not_contains "$d/.codex/cache/git/credentials" "glpat-idem" \
   "--force removes the stale token"
 
 # EXCLUDE_RE: static + behavioral fingerprint stability
-if grep -q '\.opencode/cache' "$TEST_RUNNER"; then
-  t_ok "test-runner: EXCLUDE_RE covers .opencode/cache"
+if grep -q '\.codex/cache' "$TEST_RUNNER"; then
+  t_ok "test-runner: EXCLUDE_RE covers .codex/cache"
 else
-  t_fail "test-runner: EXCLUDE_RE missing .opencode/cache"
+  t_fail "test-runner: EXCLUDE_RE missing .codex/cache"
 fi
 d="$TMP/fp-proj"
 make_project "$d"
 (
   cd "$d" || exit 1
   fp1="$(bash "$TEST_RUNNER" --status 2>/dev/null | awk '/fingerprint:/{print $2}')"
-  mkdir -p .opencode/cache/git
-  printf 'https://oauth2:glpat-fp@gitlab.com\n' > .opencode/cache/git/credentials
+  mkdir -p .codex/cache/git
+  printf 'https://oauth2:glpat-fp@gitlab.com\n' > .codex/cache/git/credentials
   fp2="$(bash "$TEST_RUNNER" --status 2>/dev/null | awk '/fingerprint:/{print $2}')"
   printf '%s\n%s\n' "$fp1" "$fp2"
 ) > "$TMP/fp.txt"
 assert_eq "$(sed -n 1p "$TMP/fp.txt")" "$(sed -n 2p "$TMP/fp.txt")" \
-  "EXCLUDE_RE: creating .opencode/cache does not change the test-runner fingerprint"
+  "EXCLUDE_RE: creating .codex/cache does not change the test-runner fingerprint"
 
 t_finish

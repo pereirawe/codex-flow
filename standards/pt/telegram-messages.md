@@ -46,10 +46,10 @@ origem e segue uma template específica por categoria.
 
 Exemplo:
 ```
-🔹 [opencode-flow]
+🔹 [codex-flow]
 ✅ Pipeline concluído — issue #42
 
-MR: https://github.com/pereirawe/opencode-flow/pull/34
+MR: https://github.com/pereirawe/codex-flow/pull/34
 ```
 
 ### `fail` — tarefa falhou com erro
@@ -86,7 +86,7 @@ pytest core/tests/test_auth.py - 2 assertion errors
 
 Exemplo:
 ```
-🔹 [opencode-flow]
+🔹 [codex-flow]
 💬 Selecionar quantidade de revisores para issue #28
 
 Quantos Senior Reviewers devem revisar esta branch?
@@ -126,10 +126,10 @@ Issue #15 (feat) não tem campo `Business rules:`.
 
 Exemplo:
 ```
-🔹 [opencode-flow]
+🔹 [codex-flow]
 🏁 Versão 1.8.0 publicada
 
-https://github.com/pereirawe/opencode-flow/releases/tag/v1.8.0
+https://github.com/pereirawe/codex-flow/releases/tag/v1.8.0
 ```
 
 ### `alert` — aviso não-bloqueante
@@ -154,7 +154,7 @@ Exemplo:
 
 Exemplo:
 ```
-🔹 [opencode-flow]
+🔹 [codex-flow]
 ⏳ Scan profundo em andamento (passo 2/3 — analisando arquivos Go)
 ```
 
@@ -164,7 +164,7 @@ O script respeita o emoji de categoria como parte do `--title`, e o cabeçalho
 do projeto + corpo como mensagem:
 
 ```bash
-SCRIPT="$HOME/.config/opencode/scripts/telegram-notify.sh"
+SCRIPT="$HOME/.codex/flow/scripts/telegram-notify.sh"
 
 # done
 "$SCRIPT" --title "✅ Pipeline concluído" "🔹 [meu-projeto]\n\nMR: https://github.com/..."
@@ -185,15 +185,15 @@ printf "🔹 [meu-projeto]\n\n✅ Feature implementada\nBranch: issue-42-login\n
 
 ## Chat ID por projeto (configuração multi-repo)
 
-Ao trabalhar com múltiplos projetos, usar o arquivo `.opencode/telegram.env`
+Ao trabalhar com múltiplos projetos, usar o arquivo `.codex/telegram.env`
 específico de cada projeto. O script carrega as credenciais do projeto antes
 das globais:
 
 ```
 <projeto>/
-├── .opencode/
+├── .codex/
 │   └── telegram.env    ← carregado primeiro (específico do projeto)
 ```
 
 Se todos os projetos devem notificar o mesmo chat, manter apenas o arquivo
-global em `~/.config/opencode/.opencode/telegram.env`.
+global em `~/.codex/flow/.codex/telegram.env`.

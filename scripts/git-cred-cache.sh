@@ -2,24 +2,24 @@
 # git-cred-cache.sh — per-project git credential cache (issue #209).
 #
 # Single access point for the per-project git credential cache living in
-# <project>/.opencode/cache/git/ (gitignored via .opencode/.gitignore). It lets
+# <project>/.codex/cache/git/ (gitignored via .codex/.gitignore). It lets
 # pipeline agents authenticate and commit under `--auto` without interactive
 # prompts and without ever exposing secrets in outputs, logs, or fingerprints.
 #
 # Layout (SPLIT — never cross-served, BR 2):
-#   .opencode/cache/git/credentials   git credential store format:
+#   .codex/cache/git/credentials   git credential store format:
 #                                     https://<user>:<token>@<host>
-#   .opencode/cache/git/identity      name=<name> / email=<email>
+#   .codex/cache/git/identity      name=<name> / email=<email>
 #
 # Security model (BR 3, BR 8):
 #   - Cache dir 0700 and files 0600 applied on EVERY write (umask-independent).
 #   - All reads/writes go through THIS script; opencode.json denies read/edit
-#     of .opencode/cache/** for agents (access via script only).
+#     of .codex/cache/** for agents (access via script only).
 #   - Fail-silent: missing/unreadable cache → no prompts (stdin is never read),
 #     no secrets in error messages; --status is the diagnostic path.
 #   - Symlink-safe: the project root is the git top-level worktree (resolved
 #     through `pwd -P`, falling back to CWD outside a repo) and writes are
-#     refused when .opencode/cache/cache-dir is a symlink.
+#     refused when .codex/cache/cache-dir is a symlink.
 #   - Atomic writes (tmp + mv) and flock for concurrent safety.
 #
 # Subcommands (run from the project root):
@@ -51,7 +51,7 @@ if git rev-parse --show-toplevel >/dev/null 2>&1; then
 else
   PROJECT_ROOT="$(pwd -P)"
 fi
-CACHE_ROOT="$PROJECT_ROOT/.opencode/cache"
+CACHE_ROOT="$PROJECT_ROOT/.codex/cache"
 CACHE_DIR="$CACHE_ROOT/git"
 CREDENTIALS_FILE="$CACHE_DIR/credentials"
 IDENTITY_FILE="$CACHE_DIR/identity"
@@ -72,7 +72,7 @@ Usage: git-cred-cache.sh <subcommand> [options]
 
 Credentials are imported from GITLAB_TOKEN / GH_TOKEN / GITHUB_TOKEN env vars
 (empty is treated as absent). Run from the project root; the cache lives in
-.opencode/cache/git/ (gitignored). See scripts/README.md (issue #209).
+.codex/cache/git/ (gitignored). See scripts/README.md (issue #209).
 EOF
 }
 
@@ -81,7 +81,7 @@ EOF
 # ensure_cache_dir — create the cache dir with 0700. Refuses (fail-silent) when
 # any path component is a symlink: writes must never escape the project.
 ensure_cache_dir() {
-  if [[ -L "$PROJECT_ROOT/.opencode" || -L "$CACHE_ROOT" || -L "$CACHE_DIR" ]]; then
+  if [[ -L "$PROJECT_ROOT/.codex" || -L "$CACHE_ROOT" || -L "$CACHE_DIR" ]]; then
     return 1
   fi
   mkdir -p "$CACHE_DIR" 2>/dev/null || return 1
@@ -91,13 +91,13 @@ ensure_cache_dir() {
 }
 
 # cache_is_symlinked — true when any cache path component is a symlink
-# (security F3, residual): `.opencode`, `.opencode/cache` or `.opencode/cache/
+# (security F3, residual): `.codex`, `.codex/cache` or `.codex/cache/
 # git`. `-f`/`-r`/`-d` FOLLOW a symlinked dir component, so the leaf `-L`
 # guards on the files are not enough — reads (cmd_get/cmd_identity/cmd_status)
 # and deletes (cmd_erase) must treat a symlinked component as "cache absent"
 # and never resolve through it outside the project.
 cache_is_symlinked() {
-  [[ -L "$PROJECT_ROOT/.opencode" || -L "$CACHE_ROOT" || -L "$CACHE_DIR" ]]
+  [[ -L "$PROJECT_ROOT/.codex" || -L "$CACHE_ROOT" || -L "$CACHE_DIR" ]]
 }
 
 # cache_lock / cache_unlock — exclusive flock on the cache dir. No-op when

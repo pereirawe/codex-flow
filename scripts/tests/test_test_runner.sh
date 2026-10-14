@@ -69,9 +69,9 @@ reset_mock
 assert_eq "0" "$(cat "$TMP/run1.rc")" "--run exits 0 when the suite passes"
 assert_eq "1" "$(invocations)" "--run invoked the runner exactly once"
 branch="$(git -C "$repo" rev-parse --abbrev-ref HEAD)"
-assert_eq "1" "$([[ -f "$repo/.opencode/test-cache/$branch-go.result" ]] && echo 1 || echo 0)" "cache .result created"
-assert_contains "$repo/.opencode/test-cache/$branch-go.result" "exit_code=0" "cache records exit_code"
-assert_contains "$repo/.opencode/test-cache/$branch-go.result" "fingerprint=" "cache records fingerprint"
+assert_eq "1" "$([[ -f "$repo/.codex/test-cache/$branch-go.result" ]] && echo 1 || echo 0)" "cache .result created"
+assert_contains "$repo/.codex/test-cache/$branch-go.result" "exit_code=0" "cache records exit_code"
+assert_contains "$repo/.codex/test-cache/$branch-go.result" "fingerprint=" "cache records fingerprint"
 
 # --- 3. re-run with the same fingerprint → does NOT re-execute (uses cache) ---
 reset_mock
@@ -98,7 +98,7 @@ assert_eq "1" "$(invocations)" "minimal change re-executes the runner"
 
 # --- 5. --check after a valid run → exit 0 + report path ---
 out=$(cd "$repo" && PATH="$MOCK_BIN:$PATH" bash "$SCRIPT" --check 2>&1 || true)
-assert_contains <(printf '%s' "$out") ".opencode/test-cache/$branch-go.result" "--check prints the report path"
+assert_contains <(printf '%s' "$out") ".codex/test-cache/$branch-go.result" "--check prints the report path"
 rc=$(cd "$repo" && PATH="$MOCK_BIN:$PATH" bash "$SCRIPT" --check >/dev/null 2>&1; echo $?)
 assert_eq "0" "$rc" "--check with a valid cache exits 0"
 
@@ -108,7 +108,7 @@ echo "1" > "$MOCK_EXIT_FILE"
 printf 'package main\n\nvar x = 2\n' > "$repo/main.go"
 rc=$(cd "$repo" && PATH="$MOCK_BIN:$PATH" bash "$SCRIPT" --run >/dev/null 2>&1; echo $?)
 assert_eq "1" "$rc" "--run propagates the runner failure exit code"
-assert_contains "$repo/.opencode/test-cache/$branch-go.result" "exit_code=1" "cache records the failure exit_code"
+assert_contains "$repo/.codex/test-cache/$branch-go.result" "exit_code=1" "cache records the failure exit_code"
 
 # --- 7. --status without git → diagnoses without breaking ---
 nogit="$TMP/nogit"
@@ -160,13 +160,13 @@ reset_mock
 echo "0" > "$MOCK_EXIT_FILE"
 printf 'package main\n\nvar x = 11\n' > "$repo/main.go"
 ( cd "$repo" && PATH="$MOCK_BIN:$PATH" bash "$SCRIPT" --run >/dev/null 2>&1 )
-fp_full="$(awk -F= '/^fingerprint=/{print $2}' "$repo/.opencode/test-cache/$branch-go.result")"
+fp_full="$(awk -F= '/^fingerprint=/{print $2}' "$repo/.codex/test-cache/$branch-go.result")"
 # filtered run — must actually execute and NOT overwrite the cache
 reset_mock
 rc=$(cd "$repo" && PATH="$MOCK_BIN:$PATH" bash "$SCRIPT" --run -- -run TestFoo >/dev/null 2>&1; echo $?)
 assert_eq "0" "$rc" "--run with a filter exits 0"
 assert_eq "1" "$(invocations)" "filtered run executes the runner (does not use cache)"
-fp_after="$(awk -F= '/^fingerprint=/{print $2}' "$repo/.opencode/test-cache/$branch-go.result")"
+fp_after="$(awk -F= '/^fingerprint=/{print $2}' "$repo/.codex/test-cache/$branch-go.result")"
 assert_eq "$fp_full" "$fp_after" "filtered run does NOT overwrite the shared cache (B1)"
 rc=$(cd "$repo" && PATH="$MOCK_BIN:$PATH" bash "$SCRIPT" --check >/dev/null 2>&1; echo $?)
 assert_eq "0" "$rc" "--check stays valid after a filtered run"
@@ -175,12 +175,12 @@ assert_eq "0" "$rc" "--check stays valid after a filtered run"
 reset_mock
 printf 'package main\n\nvar x = 3\n' > "$repo/extra.go"
 ( cd "$repo" && PATH="$MOCK_BIN:$PATH" bash "$SCRIPT" --run >/dev/null 2>&1 )
-fp_before="$(awk -F= '/^fingerprint=/{print $2}' "$repo/.opencode/test-cache/$branch-go.result")"
+fp_before="$(awk -F= '/^fingerprint=/{print $2}' "$repo/.codex/test-cache/$branch-go.result")"
 rm "$repo/extra.go"
 reset_mock
 ( cd "$repo" && PATH="$MOCK_BIN:$PATH" bash "$SCRIPT" --run >/dev/null 2>&1 )
 assert_eq "1" "$(invocations)" "file deletion re-executes the runner (B2)"
-fp_after="$(awk -F= '/^fingerprint=/{print $2}' "$repo/.opencode/test-cache/$branch-go.result")"
+fp_after="$(awk -F= '/^fingerprint=/{print $2}' "$repo/.codex/test-cache/$branch-go.result")"
 if [[ "$fp_before" != "$fp_after" ]]; then
   t_ok "deletion changes the fingerprint (B2)"
 else
@@ -200,13 +200,13 @@ reset_mock
 echo "0" > "$MOCK_EXIT_FILE"
 printf 'package main\n\nvar x = 5\n' > "$repo/main.go"
 ( cd "$repo" && PATH="$MOCK_BIN:$PATH" bash "$SCRIPT" --run >/dev/null 2>&1 )
-fp_space="$(awk -F= '/^fingerprint=/{print $2}' "$repo/.opencode/test-cache/$branch-go.result")"
+fp_space="$(awk -F= '/^fingerprint=/{print $2}' "$repo/.codex/test-cache/$branch-go.result")"
 mkdir -p "$repo/dir with space"
 printf 'package main\n\nvar y = 1\n' > "$repo/dir with space/extra_test.go"
 reset_mock
 ( cd "$repo" && PATH="$MOCK_BIN:$PATH" bash "$SCRIPT" --run >/dev/null 2>&1 )
 assert_eq "1" "$(invocations)" "file with spaces re-executes the runner (B3)"
-fp_after="$(awk -F= '/^fingerprint=/{print $2}' "$repo/.opencode/test-cache/$branch-go.result")"
+fp_after="$(awk -F= '/^fingerprint=/{print $2}' "$repo/.codex/test-cache/$branch-go.result")"
 if [[ "$fp_space" != "$fp_after" ]]; then
   t_ok "file with spaces changes the fingerprint (B3)"
 else
@@ -238,7 +238,7 @@ done <<< "${PATH//:/$'\n'}"
 nvmproj="$TMP/nvmproj"
 mkdir -p "$nvmproj"
 printf '{"scripts":{"test":"echo hi"}}\n' > "$nvmproj/package.json"
-NVM_CACHE="$nvmproj/.opencode/test-cache/nogit-npm.result"
+NVM_CACHE="$nvmproj/.codex/test-cache/nogit-npm.result"
 
 printf '22\n' > "$nvmproj/.nvmrc"
 reset_mock
@@ -267,14 +267,14 @@ reset_mock
 echo "0" > "$MOCK_EXIT_FILE"
 printf 'package main\n\nvar x = 6\n' > "$repo/main.go"
 ( cd "$repo" && PATH="$MOCK_BIN:$PATH" bash "$SCRIPT" --run >/dev/null 2>&1 )
-full_log="$repo/.opencode/test-cache/$branch-go.log"
+full_log="$repo/.codex/test-cache/$branch-go.log"
 if [[ -f "$full_log" ]]; then
   t_ok "suite log exists before the filtered run"
 else
   t_fail "suite log does not exist before the filtered run"
 fi
 ( cd "$repo" && PATH="$MOCK_BIN:$PATH" bash "$SCRIPT" --run -- -run TestFoo >/dev/null 2>&1 )
-if [[ -f "$repo/.opencode/test-cache/$branch-go-filtered.log" ]]; then
+if [[ -f "$repo/.codex/test-cache/$branch-go-filtered.log" ]]; then
   t_ok "filtered run creates a separate log (-filtered.log)"
 else
   t_fail "filtered run did NOT create a separate log"

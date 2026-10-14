@@ -1,4 +1,4 @@
-## /ocf:sync-issues
+## $flow-sync-issues
 
 ---
 description: Synchronize known_issues status with remote issue tracker
@@ -21,7 +21,7 @@ The working directory (`$PWD`) determines the target project.
 
 ### Flow
 
-1. Scan `$PWD/.opencode/known_issues.md`
+1. Scan `$PWD/.codex/known_issues.md`
 2. For each issue with `Remote: #<id>`, check remote state
 3. For each issue with `Status: open` and no `Remote:`, create remote issue
 4. Apply updates

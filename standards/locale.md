@@ -7,15 +7,15 @@ Locale is stored as a **plain text file**, not in `opencode.json`, to avoid
 
 | Scope  | Path                       | Default content |
 |--------|----------------------------|-----------------|
-| Global | `~/.config/opencode/locale`  | `pt`            |
-| Project| `.opencode/locale`           | `en`            |
+| Global | `~/.codex/flow/locale`  | `pt`            |
+| Project| `.codex/locale`           | `en`            |
 
 Project locale overrides global locale.
 
 ## Resolution order
 
-1. `.opencode/locale` in the project directory
-2. `~/.config/opencode/locale` (global fallback)
+1. `.codex/locale` in the project directory
+2. `~/.codex/flow/locale` (global fallback)
 3. If neither exists, defaults to `en` (English)
 
 ## Supported values
@@ -29,9 +29,9 @@ When a localized file does not exist, the English version in `standards/` is use
 
 ## Setup for new projects
 
-The `/ocf:init` command asks the user which locale to use and writes it to
-`.opencode/locale`. Alternatively, create or edit the file manually:
+The `$flow-$flow-init` command asks the user which locale to use and writes it to
+`.codex/locale`. Alternatively, create or edit the file manually:
 
 ```bash
-echo "pt" > .opencode/locale
+echo "pt" > .codex/locale
 ```

@@ -160,7 +160,10 @@ convert_screenshot() {
     echo "error: Google Chrome not found (needed for the HTML->JPEG screenshot)" >&2
     return 1
   fi
+  local profile chrome_rc=0
+  profile="$(mktemp -d)"
   "$chrome" \
+    --user-data-dir="$profile" \
     --headless=new \
     --disable-gpu \
     --no-sandbox \
@@ -169,7 +172,9 @@ convert_screenshot() {
     --force-device-scale-factor=1 \
     --window-size="${w},${h}" \
     --screenshot="$png" \
-    "$(convert_file_url "$html")" >/dev/null 2>&1
+    "$(convert_file_url "$html")" >/dev/null 2>&1 || chrome_rc=$?
+  rm -rf "$profile"
+  [[ "$chrome_rc" -eq 0 ]] || return 1
   if [[ ! -s "$png" ]]; then
     echo "error: Chrome produced an empty screenshot" >&2
     return 1

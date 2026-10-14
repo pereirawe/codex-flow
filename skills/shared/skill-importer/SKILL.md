@@ -1,63 +1,35 @@
 ---
-name: skill-importer
-description: Import external skills (GitHub/GitLab) into opencode as git clones. Clones the repo into ~/.config/opencode/vendor/ and registers each discovered skill in opencode.json — never copies SKILL.md files into skills/. Use when importing skills from a repository URL, owner/repo shorthand, or when asked to install a third-party skill.
-compatibility: opencode
+name: cf-skill-importer
+description: Import and update third-party skills as separate Git clones, with discoverable Codex links.
 ---
 
-## What I do
+## Codex runtime contract
 
-Import an external skill (or a repo containing several skills) into opencode
-using the **vendor clone strategy** — the upstream repo is cloned in-place and
-loaded via `skills.paths`, so it can be updated with `git pull` and never
-diverges from upstream.
+This workflow was migrated to Codex. Read `~/.codex/flow/docs/runtime.md`
+before its first use. Resolve scripts from `~/.codex/flow/scripts/` and run
+them with CWD set to the intended project. Read the project's root AGENTS.md,
+then `.codex/AGENTS.md` and relevant local context. Project definitions take
+precedence over global definitions with the same legacy identifier.
 
-## Why clone instead of copy
+Legacy `Task(role)` means a Codex subagent using the role in the agent catalog;
+if that role cannot be selected natively, read its instructions and include
+them in the subagent task. Never run OpenCode. Legacy read/glob/grep/skill
+names mean the equivalent available Codex file/search/skill tools. Read a
+referenced skill by resolving its legacy name in `catalog/skills.json`.
+Shell snippets using OpenCode's !`...` notation are examples, not executable
+directives: run the corresponding reviewed command with native shell tools.
 
-- Upstream content stays in its own git repo — update with `git pull`, no re-import.
-- No divergence: the skill is always the upstream version, never a stale copy.
-- Skills are loaded recursively via `skills.paths` (`**/SKILL.md` scan).
-- Third-party content stays out of the config repo (vendor/ is gitignored).
+Inherit Codex permissions and model settings. Old permission YAML is source
+metadata, not an enforcement mechanism. Stop on failed gates; never claim
+unperformed tests/reviews passed. Only send external notifications/comments
+when the user explicitly invokes a workflow that includes them or separately
+authorizes them. Mere migration, file reading, or implicit skill selection
+does not authorize sending. Do not hide approval rejections from the user.
 
-## Workflow
-
-1. **Ask the user** for the source: a git URL (`https://github.com/owner/repo`)
-   or `owner/repo` shorthand. If they mention multiple repos, repeat per repo.
-2. **Determine sparse paths** (optional): if the repo contains many skills and
-   the user only wants specific ones, ask which folders (relative to the repo
-   root) contain the desired skills, e.g. `skills/taste-skill
-   skills/redesign-skill`.
-3. **Run** `scripts/skill-vendor.sh add <url> [--sparse <paths...>]` to:
-   - Clone the repo into `~/.config/opencode/vendor/<name>`
-   - Discover every `SKILL.md` with a frontmatter `name` inside the clone
-   - Register each discovered skill as `"<name>": "allow"` in
-     `opencode.json` under `permission.skill` (atomic write)
-4. **Report** the installed path, the discovered skill names, and tell the
-   user to start a new session (or restart the opencode web service) for the
-   skills to appear in `available_skills`.
-
-## Helper script
-
-```bash
-# full clone (single-skill repos)
-scripts/skill-vendor.sh add meodai/skill.color-expert
-
-# sparse clone (multi-skill repos — only desired folders checked out)
-scripts/skill-vendor.sh add Leonxlnx/taste-skill --sparse skills/taste-skill skills/redesign-skill skills/minimalist-skill
-
-# refresh a vendored repo
-scripts/skill-vendor.sh update taste-skill
-
-# list vendored repos and their skills
-scripts/skill-vendor.sh list
-
-# remove a vendored repo (and unregister its skills)
-scripts/skill-vendor.sh remove taste-skill
-```
-
-## Rules
-
-- NEVER copy SKILL.md files into `skills/` — use the vendor clone strategy.
-- Never modify vendored content in place; upstream changes arrive via `git pull`.
-- Register skills via `skill-vendor.sh add` (which handles `permission.skill`).
-- Keep `vendor/` out of the config repo (already in `.gitignore`).
-- After any change, remind the user to restart opencode for skills to load.
+Run `~/.codex/flow/scripts/skill-vendor.sh add <url> [--sparse <paths...>]`.
+Keep upstream clones in vendor/, never edit upstream files or publish them in
+the configuration repo. Use update/list/remove subcommands to maintain them.
+Registration generates namespaced adapters in .local/vendor-skills/ and links
+them into ~/.agents/skills/. These adapters read the upstream skill on demand.
+Do not write OpenCode configuration or permission rules. Network access must
+be available for clone/update. Preserve the user's selected sparse paths.

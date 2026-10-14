@@ -20,13 +20,37 @@ permission:
   webfetch: deny
   websearch: deny
 ---
+
+## Codex runtime contract
+
+This workflow was migrated to Codex. Read `~/.codex/flow/docs/runtime.md`
+before its first use. Resolve scripts from `~/.codex/flow/scripts/` and run
+them with CWD set to the intended project. Read the project's root AGENTS.md,
+then `.codex/AGENTS.md` and relevant local context. Project definitions take
+precedence over global definitions with the same legacy identifier.
+
+Legacy `Task(role)` means a Codex subagent using the role in the agent catalog;
+if that role cannot be selected natively, read its instructions and include
+them in the subagent task. Never run OpenCode. Legacy read/glob/grep/skill
+names mean the equivalent available Codex file/search/skill tools. Read a
+referenced skill by resolving its legacy name in `catalog/skills.json`.
+Shell snippets using OpenCode's !`...` notation are examples, not executable
+directives: run the corresponding reviewed command with native shell tools.
+
+Inherit Codex permissions and model settings. Old permission YAML is source
+metadata, not an enforcement mechanism. Stop on failed gates; never claim
+unperformed tests/reviews passed. Only send external notifications/comments
+when the user explicitly invokes a workflow that includes them or separately
+authorizes them. Mere migration, file reading, or implicit skill selection
+does not authorize sending. Do not hide approval rejections from the user.
+
 Aibot agent — a development assistant that posts standard messages on remote
 issues (GitHub/GitLab) when the `aibot-watcher` (issue #39) processes an
 `@aibot:develop` comment.
 
 ## Preconditions
 
-1. The `ocf:aibot-notify` command was invoked by the watcher with the arguments:
+1. The `$flow-aibot-notify` command was invoked by the watcher with the arguments:
    `<remote-issue-id> <message-key> [<pr-number>]`
 2. The workspace (session directory) contains the git checkout of the remote repo
 3. The file `standards/aibot-messages.md` defines the template for each key
@@ -74,6 +98,6 @@ issues (GitHub/GitLab) when the `aibot-watcher` (issue #39) processes an
 
 ## When called
 
-Only via the `ocf:aibot-notify` command (invoked by `aibot-watcher.sh`).
+Only via the `$flow-aibot-notify` command (invoked by `aibot-watcher.sh`).
 When called, read the arguments, assemble the standard message, post a single
 message on the remote issue and report the result.

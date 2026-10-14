@@ -10,7 +10,7 @@ permission:
     "~/.config/opencode/scripts/aibot-watcher.sh": deny
     "~/.config/opencode/state/**": deny
     "~/.ssh/**": deny
-    ".opencode/cache/**": deny
+    ".codex/cache/**": deny
   bash:
     "*": deny
     "git *": allow
@@ -33,6 +33,30 @@ permission:
     "git clean -f*": deny
     "git branch -D *": deny
 ---
+
+## Codex runtime contract
+
+This workflow was migrated to Codex. Read `~/.codex/flow/docs/runtime.md`
+before its first use. Resolve scripts from `~/.codex/flow/scripts/` and run
+them with CWD set to the intended project. Read the project's root AGENTS.md,
+then `.codex/AGENTS.md` and relevant local context. Project definitions take
+precedence over global definitions with the same legacy identifier.
+
+Legacy `Task(role)` means a Codex subagent using the role in the agent catalog;
+if that role cannot be selected natively, read its instructions and include
+them in the subagent task. Never run OpenCode. Legacy read/glob/grep/skill
+names mean the equivalent available Codex file/search/skill tools. Read a
+referenced skill by resolving its legacy name in `catalog/skills.json`.
+Shell snippets using OpenCode's !`...` notation are examples, not executable
+directives: run the corresponding reviewed command with native shell tools.
+
+Inherit Codex permissions and model settings. Old permission YAML is source
+metadata, not an enforcement mechanism. Stop on failed gates; never claim
+unperformed tests/reviews passed. Only send external notifications/comments
+when the user explicitly invokes a workflow that includes them or separately
+authorizes them. Mere migration, file reading, or implicit skill selection
+does not authorize sending. Do not hide approval rejections from the user.
+
 Implement features according to specifications.
 
 ## Tool discipline (bash-restricted)
@@ -53,7 +77,7 @@ Responsibilities:
   session (user chat, env vars such as `GITLAB_TOKEN`/`GH_TOKEN`, or repo
   config), write them via `scripts/git-cred-cache.sh --set` without re-asking —
   the write is idempotent and `--force` overwrites; empty env vars are treated
-  as absent. Never read `.opencode/cache/**` directly (access is script-only).
+  as absent. Never read `.codex/cache/**` directly (access is script-only).
 - After senior review, implement all corrections before publish
 - Verify the feature branch is based on the correct base branch before starting;
   if needed, rebase on the base branch
@@ -83,8 +107,8 @@ Do not ask questions — just implement, update status, and continue.
 ### Preflight warm-up (token saver)
 
 Before exploring the codebase, check for a prebuilt inventory at
-`.opencode/preflight/issue-<id>.md` (produced by `scripts/preflight.sh`, e.g.
-by `/ocf:develop-full` while the previous issue closed). If it exists, consume
+`.codex/preflight/issue-<id>.md` (produced by `scripts/preflight.sh`, e.g.
+by `$develop-full` while the previous issue closed). If it exists, consume
 its file inventory and candidate test list directly and skip the re-exploration
 pass — start implementing from the listed entry point. If it does not exist, do
 a normal, scoped exploration.

@@ -113,10 +113,10 @@ transitions, one-way repo→Jira comments) via `scripts/sync-jira.sh` — a
 deterministic, headless, CI-testable REST v3 client. It is **the** sync
 path for the pipeline: hooks in `create_issue.sh` (card creation),
 `promote.sh` (status transitions) and `close_issue.sh` (resolved→Done), plus
-the `ocf:sync-jira` command for full reconciliation. Sync is non-blocking and
+the `$flow-sync-jira` command for full reconciliation. Sync is non-blocking and
 the local `Status:` always wins.
 
-Configuration: `.opencode/jira.json` (`baseUrl`, `email`, `projectKey`,
+Configuration: `.codex/jira.json` (`baseUrl`, `email`, `projectKey`,
 optional `statusMap`/`authMode`) or env vars `JIRA_BASE_URL`,
 `JIRA_PROJECT_KEY`, `JIRA_EMAIL`; the API token comes **exclusively** from the
 `JIRA_API_TOKEN` environment variable — never committed, never logged.
@@ -124,7 +124,7 @@ optional `statusMap`/`authMode`) or env vars `JIRA_BASE_URL`,
 email+token in cleartext over `http://`). `jira.json` is an operator-owned,
 trusted file — it controls which host the sync talks to and must never come
 from untrusted input. `JIRA_CONFIG_FILE` overrides the config file path
-(default `.opencode/jira.json`).
+(default `.codex/jira.json`).
 
 ```json
 {

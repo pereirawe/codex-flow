@@ -14,7 +14,7 @@
 
 - ADR 2026-08-05: External skills via vendor clone + `skills.paths`, no copy.
   External/third-party skills are kept as git clones in
-  `~/.config/opencode/vendor/` (one clone per upstream repo, gitignored) and
+  `~/.codex/flow/vendor/` (one clone per upstream repo, gitignored) and
   loaded in-place via `"skills": { "paths": [...] }` in `opencode.json`. They
   are NEVER copied into `skills/`. Updates are plain `git pull` via
   `scripts/skill-vendor.sh update` — never a re-import. Repos with multiple
@@ -23,19 +23,19 @@
   copy-based installs (npx skills add / import_claude_skill.sh) diverge from
   upstream and require manual re-import to update; in-place clones eliminate
   divergence and maintenance. Enforced via AGENTS.md (loaded every session),
-  conventions.md, the `skill-importer` skill, the `ocf:import-skill` command,
+  conventions.md, the `skill-importer` skill, the `$flow-import-skill` command,
   and `scripts/skill-vendor.sh`. Native/curated skills continue to live in
   `skills/<sector>/`. Tracked as issue #43.
 
 - ADR 2026-08-21: Per-project git credential cache — plaintext 0600 = git's
   standard store model; no encryption at rest (declared limit, issue #209).
-  Credentials and commit identity live in `<project>/.opencode/cache/git/`
+  Credentials and commit identity live in `<project>/.codex/cache/git/`
   (`credentials` in git credential-store format, `identity` as `name=`/`email=`),
-  gitignored via `.opencode/.gitignore` (`cache/`), with the cache directory
+  gitignored via `.codex/.gitignore` (`cache/`), with the cache directory
   `0700` and files `0600` applied on every write regardless of umask. Access is
   ONLY through `scripts/git-cred-cache.sh` (single entrypoint with `--init` /
   `--set` / `--get` / `--erase` / `--identity` / `--status`); opencode.json
-  denies read/edit of `.opencode/cache/**` (findLast rule) so agents under
+  denies read/edit of `.codex/cache/**` (findLast rule) so agents under
   `--auto` cannot touch the files directly. Secrets are redacted centrally via
   `redact_secret()` in `scripts/config.sh` and are excluded from test-runner
   fingerprints (`EXCLUDE_RE`). Rationale: plaintext-at-0600 matches git's own

@@ -26,8 +26,32 @@ permission:
     "git branch -D *": deny
   edit:
     "*": "allow"
-    ".opencode/cache/**": "deny"
+    ".codex/cache/**": "deny"
 ---
+
+## Codex runtime contract
+
+This workflow was migrated to Codex. Read `~/.codex/flow/docs/runtime.md`
+before its first use. Resolve scripts from `~/.codex/flow/scripts/` and run
+them with CWD set to the intended project. Read the project's root AGENTS.md,
+then `.codex/AGENTS.md` and relevant local context. Project definitions take
+precedence over global definitions with the same legacy identifier.
+
+Legacy `Task(role)` means a Codex subagent using the role in the agent catalog;
+if that role cannot be selected natively, read its instructions and include
+them in the subagent task. Never run OpenCode. Legacy read/glob/grep/skill
+names mean the equivalent available Codex file/search/skill tools. Read a
+referenced skill by resolving its legacy name in `catalog/skills.json`.
+Shell snippets using OpenCode's !`...` notation are examples, not executable
+directives: run the corresponding reviewed command with native shell tools.
+
+Inherit Codex permissions and model settings. Old permission YAML is source
+metadata, not an enforcement mechanism. Stop on failed gates; never claim
+unperformed tests/reviews passed. Only send external notifications/comments
+when the user explicitly invokes a workflow that includes them or separately
+authorizes them. Mere migration, file reading, or implicit skill selection
+does not authorize sending. Do not hide approval rejections from the user.
+
 Verify that the pipeline gates are satisfied before MR creation.
 
 ## Tool discipline (bash-restricted)
@@ -45,7 +69,7 @@ Responsibilities:
 - For issues whose `- Reviewers:` includes the `security` profile, verify the
   security review gate: the `security` senior review must be approved, with no
   unresolved critical/high vulnerabilities. Confirm the security reviewer's
-  report exists (`.opencode/reviews/security-*.md`) and does not refuse
+  report exists (`.codex/reviews/security-*.md`) and does not refuse
   approval with unresolved critical/high findings. If the security review is
   missing, not approved, or carries unresolved critical/high findings, the
   issue MUST NOT be set to `in-publish` — document the gate failure in
@@ -77,7 +101,7 @@ Gates:
 4. Tests passing ✅
 5. QA gate passed ✅
 6. **Routing standard referenced** — for frontend feat issues involving new screens/routes, verify `standards/routing.md` is referenced in `Business rules:`. Report missing reference but do not block.
-7. **Security review gate** — for issues with the `security` reviewer profile: security review approved, no unresolved critical/high vulnerabilities (report at `.opencode/reviews/security-*.md`). If not satisfied, this gate FAILS: do NOT set `in-publish`; document the blocker in `known_issues.md` and route through the review loop (refusal → QA → developer fixes → re-review).
+7. **Security review gate** — for issues with the `security` reviewer profile: security review approved, no unresolved critical/high vulnerabilities (report at `.codex/reviews/security-*.md`). If not satisfied, this gate FAILS: do NOT set `in-publish`; document the blocker in `known_issues.md` and route through the review loop (refusal → QA → developer fixes → re-review).
 
 Rules:
 - Do not make code changes unless explicitly asked

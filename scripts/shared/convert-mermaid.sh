@@ -153,6 +153,7 @@ python3 -c 'import html,sys; sys.stdout.write(html.escape(sys.stdin.read(), quot
 # --- render offline: Chrome dump-dom with virtual time so the async render
 # --- settles; only the local harness + vendored asset are ever executed.
 if ! "$CHROME" \
+  --user-data-dir="$TMP/chrome-profile" \
   --headless=new \
   --disable-gpu \
   --no-sandbox \

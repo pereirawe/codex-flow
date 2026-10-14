@@ -1,11 +1,45 @@
 ---
-name: cv-ats-score
-description: Score the ATS compatibility of a generated resume — extracts the resume text from the generated PDF (pdftotext, best-effort), loads the job keywords from the cv-tailor gap analysis, computes keyword density, detects ATS red flags (tables, images as text, multi-column layouts, missing standard sections), and produces a 0-100 score (keyword_match 40%, section_completeness 30%, format_compliance 30%) with actionable recommendations. Outputs ats-score.md in the job's slug directory, in the user's communication language. NEVER fabricates counts or scores — every metric is computed from the actual resume text and job requirements. Use when you need to score a tailored resume against a job's ATS keywords, measure ATS compatibility, check resume format compliance, or get actionable recommendations to improve a resume's ATS match (command ocf:cv-ats-score; "pontuação ATS", "score ATS", "nota do currículo", "compatibilidade ATS", "avaliar currículo" also trigger this skill). Career sector.
+name: cf-cv-ats-score
+description: Score the ATS compatibility of a generated resume — extracts the resume
+  text from the generated PDF (pdftotext, best-effort), loads the job keywords from
+  the cv-tailor gap analysis, computes keyword density, detects ATS red flags (tables,
+  images as text, multi-column layouts, missing standard sections), and produces a
+  0-100 score (keyword_match 40%, section_completeness 30%, format_compliance 30%)
+  with actionable recommendations. Outputs ats-score.md in the job's slug directory,
+  in the user's communication language. NEVER fabricates counts or scores — every
+  metric is computed from the actual resume text and job requirements. Use when you
+  need to score a tailored resume against a job's ATS keywords, measure ATS compatibility,
+  check resume format compliance, or get actionable recommendations to improve a resume's
+  ATS match (command $flow-cv-ats-score; "pontuação ATS", "score ATS", "nota do currículo",
+  "compatibilidade ATS", "avaliar currículo" also trigger this skill). Career sector.
 ---
+
+## Codex runtime contract
+
+This workflow was migrated to Codex. Read `~/.codex/flow/docs/runtime.md`
+before its first use. Resolve scripts from `~/.codex/flow/scripts/` and run
+them with CWD set to the intended project. Read the project's root AGENTS.md,
+then `.codex/AGENTS.md` and relevant local context. Project definitions take
+precedence over global definitions with the same legacy identifier.
+
+Legacy `Task(role)` means a Codex subagent using the role in the agent catalog;
+if that role cannot be selected natively, read its instructions and include
+them in the subagent task. Never run OpenCode. Legacy read/glob/grep/skill
+names mean the equivalent available Codex file/search/skill tools. Read a
+referenced skill by resolving its legacy name in `catalog/skills.json`.
+Shell snippets using OpenCode's !`...` notation are examples, not executable
+directives: run the corresponding reviewed command with native shell tools.
+
+Inherit Codex permissions and model settings. Old permission YAML is source
+metadata, not an enforcement mechanism. Stop on failed gates; never claim
+unperformed tests/reviews passed. Only send external notifications/comments
+when the user explicitly invokes a workflow that includes them or separately
+authorizes them. Mere migration, file reading, or implicit skill selection
+does not authorize sending. Do not hide approval rejections from the user.
 
 # CV ATS Score — ATS compatibility scoring of a generated resume
 
-Scores how well a generated resume (from `ocf:cv-tailor`) matches a job's ATS
+Scores how well a generated resume (from `$flow-cv-tailor`) matches a job's ATS
 keywords and format. Closes the generate → measure → optimize loop: the
 candidate gets a measurable 0-100 score, a keyword density map, ATS red flag
 detection, and actionable recommendations to improve the match before sending
@@ -17,7 +51,7 @@ count, flag and score must be reproducible from the sources.
 
 ## Prerequisite
 
-The candidate must have a resume generated for the job slug by `ocf:cv-tailor`
+The candidate must have a resume generated for the job slug by `$flow-cv-tailor`
 (`cv-tailor` skill), producing:
 
 ```
@@ -30,7 +64,7 @@ The candidate must have a resume generated for the job slug by `ocf:cv-tailor`
 
 The candidate hub (`~/career/<candidate-name>/hub.json`) must exist and pass
 `python3 $SCRIPTS_DIR/cv/validate.py` (exit 0). If the resume artifacts are
-missing, tell the user to run `ocf:cv-tailor` for the job slug first.
+missing, tell the user to run `$flow-cv-tailor` for the job slug first.
 
 ## Inputs
 
@@ -51,7 +85,7 @@ missing, tell the user to run `ocf:cv-tailor` for the job slug first.
      match is ambiguous, list all `*.pdf` files of the slug directory — the
      resume is the only PDF there (analysis reports are `.md`; cover letters
      live in `cartas/`, never here).
-   - if no resume PDF is found, tell the user to run `ocf:cv-tailor` for the
+   - if no resume PDF is found, tell the user to run `$flow-cv-tailor` for the
      job slug first.
 2. Extract the resume text from the located PDF with
    `pdftotext "<resume pdf>" -` (single-column readable text). The PDF is the
@@ -199,8 +233,8 @@ Resolution order (per `standards/cv-analysis.md` §1):
 
 1. Explicit user instruction (when given).
 2. The session/input language.
-3. `.opencode/locale` in the project directory.
-4. `~/.config/opencode/locale` (global fallback).
+3. `.codex/locale` in the project directory.
+4. `~/.codex/flow/locale` (global fallback).
 5. English.
 
 Protocol tokens are NEVER translated: `keyword_match`,

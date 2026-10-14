@@ -1,4 +1,4 @@
-## /ocf:discovery [proposal | id]
+## $discovery [proposal | id]
 
 ---
 description: Run discovery for an idea or existing issue — routes by Type+severity into a LOOP (feat-full / bug-expedite / bug-lean / chore) and writes a canonical, linted issue
@@ -15,14 +15,14 @@ depth (PO + TL). All loops end with `scripts/append-issue.sh` + `issue-lint.sh`.
 ### Arguments
 
 ```
-/ocf:discovery "Add CSV export to reports screen"
-/ocf:discovery 12          # refine an existing backlog/ready issue
-/ocf:discovery "Bug: login fails when token expires"
+$discovery "Add CSV export to reports screen"
+$discovery 12          # refine an existing backlog/ready issue
+$discovery "Bug: login fails when token expires"
 ```
 
 ### Flow
 
-1. **Resolve `known_issues.md`** (project `.opencode/` first, global fallback).
+1. **Resolve `known_issues.md`** (project `.codex/` first, global fallback).
 2. **Classify**: if argument is a number and the issue exists, refine it;
    otherwise treat as a new proposal. Infer `- Type:` (`bug` if it reads like a
    defect/regression, else `feat`) and `- Severity:` when stated.
@@ -38,8 +38,8 @@ depth (PO + TL). All loops end with `scripts/append-issue.sh` + `issue-lint.sh`.
 ### Notes
 
 - No PM agent, no remote question — `Remote:` is auto-created at promotion
-  (`ocf:develop` / `ocf:develop-full`).
+  (`$develop` / `$develop-full`).
 - For `feat`, include business rules + acceptance in the argument when possible
   to skip a refinement cycle.
-- After discovery, hand off with `/ocf:develop-full <id>` (end-to-end) or
-  `/ocf:develop <id>` (manual merge).
+- After discovery, hand off with `$develop-full <id>` (end-to-end) or
+  `$develop <id>` (manual merge).

@@ -1,11 +1,11 @@
-## /ocf:cv-cover-letter <candidate-directory> <job>
+## $flow-cv-cover-letter <candidate-directory> <job>
 
 ---
 description: Generate a job-tailored cover letter PDF from the candidate hub — analyze the job, reuse or build the gap analysis vs hub.json, draft the letter (never fabricate, highlight real achievements), HTML -> PDF in the job's language
 ---
 
 Generates a tailored cover letter for a specific job application, from the
-candidate's `hub.json` (built with `/ocf:cv-hub`). It analyzes the job, reuses
+candidate's `hub.json` (built with `$flow-cv-hub`). It analyzes the job, reuses
 the gap analysis from cv-tailor when available (or builds it inline), drafts
 the letter **without fabricating anything** — highlighting the specific hub
 achievements that match the job's key requirements — and produces the letter
@@ -15,12 +15,12 @@ language.
 ### Prerequisite
 
 The candidate needs a valid hub at `~/career/<candidate-name>/hub.json`.
-If it does not exist, run `/ocf:cv-hub` first.
+If it does not exist, run `$flow-cv-hub` first.
 
 ### Usage
 
 ```
-/ocf:cv-cover-letter ~/career/maria-silva "job URL or text"
+$flow-cv-cover-letter ~/career/maria-silva "job URL or text"
 ```
 
 The job can be provided as:
@@ -33,7 +33,7 @@ The job can be provided as:
 ### Flow
 
 1. **Validate hub** — `python3 $SCRIPTS_DIR/cv/validate.py hub.json`; if the
-   hub is missing/invalid, tell the user to run `/ocf:cv-hub` first.
+   hub is missing/invalid, tell the user to run `$flow-cv-hub` first.
 2. **Invoke the agent** `career/cv-cover-letter` via `task:` with the
    candidate directory and the job.
 3. **Analyze the job** — required/desirable requirements, keywords, seniority,

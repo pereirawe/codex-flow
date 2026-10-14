@@ -4,8 +4,8 @@
 #      echo "message" | telegram-notify.sh [flags]
 #
 # Credentials loaded from (priority order):
-#   1. ./.opencode/telegram.env (current project)
-#   2. ~/.config/opencode/.opencode/telegram.env (global)
+#   1. ./.codex/telegram.env (current project)
+#   2. ~/.codex/flow/.codex/telegram.env (global)
 #   3. Environment variables TELEGRAM_BOT_TOKEN / TELEGRAM_CHAT_ID
 
 set -euo pipefail
@@ -76,11 +76,11 @@ load_env_file() {
     fi
 }
 
-# 1. Project-level .opencode/telegram.env
-load_env_file "./.opencode/telegram.env"
+# 1. Project-level .codex/telegram.env
+load_env_file "./.codex/telegram.env"
 
-# 2. Global ~/.config/opencode/.opencode/telegram.env
-load_env_file "$HOME/.config/opencode/.opencode/telegram.env"
+# 2. Global ~/.codex/flow/.codex/telegram.env
+load_env_file "$HOME/.codex/flow/.codex/telegram.env"
 
 # 3. Environment variables (override)
 BOT_TOKEN="${TELEGRAM_BOT_TOKEN:-$BOT_TOKEN}"
@@ -89,13 +89,13 @@ CHAT_ID="${TELEGRAM_CHAT_ID:-$CHAT_ID}"
 # --- Validate ---
 if [[ -z "$BOT_TOKEN" ]]; then
     echo "❌ TELEGRAM_BOT_TOKEN not set." >&2
-    echo "   Create .opencode/telegram.env or export the variable." >&2
+    echo "   Create .codex/telegram.env or export the variable." >&2
     exit 1
 fi
 
 if [[ -z "$CHAT_ID" ]]; then
     echo "❌ TELEGRAM_CHAT_ID not set." >&2
-    echo "   Pass --chat-id, create .opencode/telegram.env or export the variable." >&2
+    echo "   Pass --chat-id, create .codex/telegram.env or export the variable." >&2
     exit 1
 fi
 

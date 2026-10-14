@@ -1,4 +1,4 @@
-## /ocf:review-branch
+## $flow-review-branch
 
 ---
 description: Full PR/MR-style code review
@@ -14,19 +14,19 @@ relative to the project root, **not** to the global opencode config.
 Review output is written to a branch-specific file, not a generic tracker:
 
 ```
-<project>/.opencode/<model>_<branch>_issues.md
+<project>/.codex/<model>_<branch>_issues.md
 ```
 
 - `<model>` — AI model name that generated the review (e.g. `claude-4`, `deepseek-v4`)
 - `<branch>` — current git branch name (e.g. `feat-add-auth`)
 - This keeps each review isolated, traceable by model, and branch-scoped
 
-Example: `.opencode/claude-4_feat-add-auth_issues.md`
+Example: `.codex/claude-4_feat-add-auth_issues.md`
 
 ### Flow
 
 1. **Load locale-loader skill first** to get locale-appropriate standards
-   (code-review.md, issues.md) — respect `.opencode/locale` in the project
+   (code-review.md, issues.md) — respect `.codex/locale` in the project
 2. **Read `- Reviewers:`** from the issue entry in `known_issues.md` — if
    the field is missing or empty, default to 1 — do **not** ask the user
 3. Pass the resolved locale context to all Senior Reviewer agents
@@ -42,7 +42,7 @@ Example: `.opencode/claude-4_feat-add-auth_issues.md`
 - Only review code changes that are part of the current branch (not changes from other branches)
 - Identify only Critical and Major issues (not Minor or Trivial)
 - Validate: tests exist, docs updated (if applicable)
-- Sync issues to `<project>/.opencode/<model>_<branch>_issues.md`
+- Sync issues to `<project>/.codex/<model>_<branch>_issues.md`
 - Follow the issue entry format from `standards/issues.md`
 - Do not resolve issues, only create new ones
 - Do not delete or modify existing issues in the issue tracker

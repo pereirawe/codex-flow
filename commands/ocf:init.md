@@ -1,10 +1,10 @@
-## /ocf:init
+## $flow-init
 
 ---
 description: Initialize opencode project config with repo context, locale, and LSP detection
 ---
 
-Initialize the `.opencode/` project configuration in the current working directory.
+Initialize the `.codex/` project configuration in the current working directory.
 
 ### Flow
 
@@ -16,18 +16,18 @@ Initialize the `.opencode/` project configuration in the current working directo
 6. If approved, settings are merged into `.vscode/settings.json` (preserving existing settings)
 7. Review the generated files
 
-!`bash $HOME/.config/opencode/scripts/init.sh "$PWD" "$LOCALE"`
+!`bash $HOME/.codex/flow/scripts/init.sh "$PWD" "$LOCALE"`
 
 Responsibilities:
-- Generate `.opencode/` directory with AGENTS.md, workflow.md, opencode.json
+- Generate `.codex/` directory with AGENTS.md, workflow.md, opencode.json
 - Inject repository context (default branch, remotes) into templates
-- Write chosen locale to `.opencode/locale`
+- Write chosen locale to `.codex/locale`
 - Create project-level `known_issues.md`
 - Detect project languages and suggest VS Code LSP configuration (interactive)
 - Merge LSP settings into `.vscode/settings.json` when approved
 
 Explicit copy criteria (no blind `cp -r`):
-- Whitelist (the ONLY files/dirs init copies into the target `.opencode/`):
+- Whitelist (the ONLY files/dirs init copies into the target `.codex/`):
   `AGENTS.md`, `workflow.md`, `opencode.json`, `locale`, `known_issues.md`
   (created from a skeleton when absent, never overwritten), `env-manifest.md`,
   `.gitignore` — each copied file-by-file from the global template.
@@ -49,5 +49,5 @@ Explicit copy criteria (no blind `cp -r`):
   project-owned `*.env` are never overwritten or deleted.
 
 Review the generated files. If the project is not a git repository, the Repository Context section will show `<not a git repo>`.
-Verify everything looks correct. The project's `known_issues.md` at `.opencode/known_issues.md` is for project-specific issues;
-global config issues go in `~/.config/opencode/known_issues.md`. Locale is stored in `.opencode/locale` — **not** in `opencode.json`.
+Verify everything looks correct. The project's `known_issues.md` at `.codex/known_issues.md` is for project-specific issues;
+global config issues go in `~/.codex/flow/known_issues.md`. Locale is stored in `.codex/locale` — **not** in `opencode.json`.

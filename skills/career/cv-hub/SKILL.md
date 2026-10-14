@@ -1,7 +1,36 @@
 ---
-name: cv-hub
-description: Build a candidate's resume hub — extract data from the CV PDF (pdftotext), official LinkedIn export (Download My Data), and complementary files, consolidating everything into hub.json (canonical AI schema) + a human-readable README.md. Update mode (command ocf:cv-hub-update) merges new information into an existing hub.json incrementally — ADD/UPDATE only, duplicates merged, [INFERIDO] preserved. Use when you need to create or update a candidate's data hub (commands ocf:cv-hub, ocf:cv-hub-update). Career sector.
+name: cf-cv-hub
+description: Build a candidate's resume hub — extract data from the CV PDF (pdftotext),
+  official LinkedIn export (Download My Data), and complementary files, consolidating
+  everything into hub.json (canonical AI schema) + a human-readable README.md. Update
+  mode (command $flow-cv-hub-update) merges new information into an existing hub.json
+  incrementally — ADD/UPDATE only, duplicates merged, [INFERIDO] preserved. Use when
+  you need to create or update a candidate's data hub (commands $flow-cv-hub, $flow-cv-hub-update).
+  Career sector.
 ---
+
+## Codex runtime contract
+
+This workflow was migrated to Codex. Read `~/.codex/flow/docs/runtime.md`
+before its first use. Resolve scripts from `~/.codex/flow/scripts/` and run
+them with CWD set to the intended project. Read the project's root AGENTS.md,
+then `.codex/AGENTS.md` and relevant local context. Project definitions take
+precedence over global definitions with the same legacy identifier.
+
+Legacy `Task(role)` means a Codex subagent using the role in the agent catalog;
+if that role cannot be selected natively, read its instructions and include
+them in the subagent task. Never run OpenCode. Legacy read/glob/grep/skill
+names mean the equivalent available Codex file/search/skill tools. Read a
+referenced skill by resolving its legacy name in `catalog/skills.json`.
+Shell snippets using OpenCode's !`...` notation are examples, not executable
+directives: run the corresponding reviewed command with native shell tools.
+
+Inherit Codex permissions and model settings. Old permission YAML is source
+metadata, not an enforcement mechanism. Stop on failed gates; never claim
+unperformed tests/reviews passed. Only send external notifications/comments
+when the user explicitly invokes a workflow that includes them or separately
+authorizes them. Mere migration, file reading, or implicit skill selection
+does not authorize sending. Do not hide approval rejections from the user.
 
 # CV Hub — building the candidate hub
 
@@ -272,7 +301,7 @@ Rules:
 - The `README.md` and `hub.json` may be committed by the user if they version
   their career; never commit anything without authorization.
 
-## Update mode (`ocf:cv-hub-update`)
+## Update mode (`$flow-cv-hub-update`)
 
 The update mode extends the build flow above for **incremental edits** to an
 existing hub. It NEVER recreates `hub.json` from scratch — the existing file
@@ -298,7 +327,7 @@ is the base for the update.
 ### Update-mode process
 
 1. **Verify the hub exists** — `hub.json` must exist in the candidate
-   directory. If it does not, tell the user to run `ocf:cv-hub` first and
+   directory. If it does not, tell the user to run `$flow-cv-hub` first and
    stop. Update mode never builds a hub.
 2. **Collect the new information** — pasted text, new PDF (pdftotext), new
    file, or the user's manual edits.

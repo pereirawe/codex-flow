@@ -1,7 +1,38 @@
 ---
-name: strategic-brief
-description: Author senior-grade strategic consolidation briefs (GO/NO-GO) that merge fragmented business docs into one robust decision base with branding, competitors, sector tasks, investment, opex, EBITDA/break-even/ROI, market scenarios and synthetic-data simulation plans. Complements tech-spec and proposal-writer. Use when the user asks for a strategic document, consolidated business case, GO/NO-GO decision base, "documento estrategico", "consolidado estrategico", or investment/financial planning before a spec, business case, viability study, or go/no-go decision. Do not use to write technical specifications or commercial proposals themselves — route those to tech-spec and proposal-writer.
+name: cf-strategic-brief
+description: Author senior-grade strategic consolidation briefs (GO/NO-GO) that merge
+  fragmented business docs into one robust decision base with branding, competitors,
+  sector tasks, investment, opex, EBITDA/break-even/ROI, market scenarios and synthetic-data
+  simulation plans. Complements tech-spec and proposal-writer. Use when the user asks
+  for a strategic document, consolidated business case, GO/NO-GO decision base, "documento
+  estrategico", "consolidado estrategico", or investment/financial planning before
+  a spec, business case, viability study, or go/no-go decision. Do not use to write
+  technical specifications or commercial proposals themselves — route those to tech-spec
+  and proposal-writer.
 ---
+
+## Codex runtime contract
+
+This workflow was migrated to Codex. Read `~/.codex/flow/docs/runtime.md`
+before its first use. Resolve scripts from `~/.codex/flow/scripts/` and run
+them with CWD set to the intended project. Read the project's root AGENTS.md,
+then `.codex/AGENTS.md` and relevant local context. Project definitions take
+precedence over global definitions with the same legacy identifier.
+
+Legacy `Task(role)` means a Codex subagent using the role in the agent catalog;
+if that role cannot be selected natively, read its instructions and include
+them in the subagent task. Never run OpenCode. Legacy read/glob/grep/skill
+names mean the equivalent available Codex file/search/skill tools. Read a
+referenced skill by resolving its legacy name in `catalog/skills.json`.
+Shell snippets using OpenCode's !`...` notation are examples, not executable
+directives: run the corresponding reviewed command with native shell tools.
+
+Inherit Codex permissions and model settings. Old permission YAML is source
+metadata, not an enforcement mechanism. Stop on failed gates; never claim
+unperformed tests/reviews passed. Only send external notifications/comments
+when the user explicitly invokes a workflow that includes them or separately
+authorizes them. Mere migration, file reading, or implicit skill selection
+does not authorize sending. Do not hide approval rejections from the user.
 
 # Strategic Brief Skill
 

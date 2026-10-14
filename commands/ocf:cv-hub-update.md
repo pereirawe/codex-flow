@@ -1,4 +1,4 @@
-## /ocf:cv-hub-update <candidate-directory>
+## $flow-cv-hub-update <candidate-directory>
 
 ---
 description: Update an existing candidate hub incrementally — accept new information (pasted text, new PDF, new file, or manual key-value edits), merge it into the existing hub.json without recreating the hub, re-validate, regenerate README.md, and report a diff/summary of the changes
@@ -10,18 +10,18 @@ field — without recreating the entire hub from scratch. The existing
 `hub.json` is the source of truth: entries are only **added** or **updated**,
 never deleted without explicit confirmation.
 
-This is the incremental counterpart of `/ocf:cv-hub` (full build).
+This is the incremental counterpart of `$flow-cv-hub` (full build).
 
 ### Prerequisite
 
 The candidate needs an existing hub at `~/career/<candidate-name>/hub.json`
-(built with `/ocf:cv-hub`). If `hub.json` does not exist, tell the user to
-run `/ocf:cv-hub` first — this command does not build hubs.
+(built with `$flow-cv-hub`). If `hub.json` does not exist, tell the user to
+run `$flow-cv-hub` first — this command does not build hubs.
 
 ### Usage
 
 ```
-/ocf:cv-hub-update ~/career/maria-silva
+$flow-cv-hub-update ~/career/maria-silva
 ```
 
 - `<candidate-directory>` — the candidate directory with an existing
@@ -34,7 +34,7 @@ The command accepts the new information in any of these forms (BR 2):
 1. **Pasted text** — a new job, certification, project description, etc.,
    pasted by the user in the conversation.
 2. **New PDF** — a new CV/PDF with additional content; extract with
-   `pdftotext -layout` (same flow as `ocf:cv-hub`).
+   `pdftotext -layout` (same flow as `$flow-cv-hub`).
 3. **New file** — a text/JSON/export file (e.g. a new certificate, a
    portfolio file, an updated LinkedIn export entry).
 4. **Manual key-value edits** — the user edited `hub.json` by hand; the
@@ -44,7 +44,7 @@ The command accepts the new information in any of these forms (BR 2):
 ### Flow
 
 1. **Check the hub exists** — `~/career/<candidate-name>/hub.json`; if
-   missing, tell the user to run `/ocf:cv-hub` first and stop (BR 5).
+   missing, tell the user to run `$flow-cv-hub` first and stop (BR 5).
 2. **Receive the new information** — collect the pasted text / PDF path /
    file path, or confirm the manual edits (BR 2).
 3. **Snapshot for the diff** — before any change, record the current state

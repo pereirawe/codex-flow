@@ -10,15 +10,15 @@
 ## Locale System
 
 - Standards documents are available in multiple languages via `standards/{locale}/`
-- The active locale is defined in `~/.config/opencode/locale` (single line, e.g., `pt`)
+- The active locale is defined in `~/.codex/flow/locale` (single line, e.g., `pt`)
 - Supported: `en` (English, default), `pt` (Português), `es` (Español)
 - The `locale-loader` skill resolves the correct locale and loads the appropriate files
-- Resolution order: project `.opencode/locale` → global `~/.config/opencode/locale` → `en` fallback
+- Resolution order: project `.codex/locale` → global `~/.codex/flow/locale` → `en` fallback
 - New standards should always include `pt` and `es` translations
 
 ## Skill Management
 
-- External skills are kept as git clones in `~/.config/opencode/vendor/` and
+- External skills are kept as git clones in `~/.codex/flow/vendor/` and
   loaded in-place via `skills.paths` in `opencode.json` — never copied into `skills/`.
 - Import/update/remove via `scripts/skill-vendor.sh` (add/update/list/remove);
   updates are plain `git pull` (no re-import).

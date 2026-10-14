@@ -1,0 +1,20 @@
+name: Validate Codex Flow
+on:
+  push:
+  pull_request:
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: sudo apt-get update && sudo apt-get install -y jq
+      - run: python -m pip install PyYAML
+      - run: python scripts/validate.py
+      - run: python scripts/tests/test_flowctl.py
+      - run: python scripts/tests/test_automation.py
+      - run: bash scripts/tests/run_all.sh --core

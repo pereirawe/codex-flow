@@ -359,14 +359,14 @@ else
 fi
 
 if [[ -f "$CMD_DOC" ]]; then
-  assert_contains "$CMD_DOC" "/ocf:cv-banner" "command doc names /ocf:cv-banner"
+  assert_contains "$CMD_DOC" "\$flow-cv-banner" "command doc names \$flow-cv-banner"
   assert_contains "$CMD_DOC" "banner-gen.sh" "command doc references the helper"
   assert_contains "$CMD_DOC" "EACHLABS_API_KEY" "command doc documents the key requirement"
   assert_contains "$CMD_DOC" "validate.py" "command doc validates the hub"
   assert_contains "$CMD_DOC" "linkedin/banner" "command doc documents the output dir"
   assert_contains "$CMD_DOC" "upload" "command doc states nothing is published (manual upload)"
 else
-  t_fail "ocf:cv-banner command doc missing at $CMD_DOC"
+  t_fail "\$flow-cv-banner command doc missing at $CMD_DOC"
 fi
 
 t_finish

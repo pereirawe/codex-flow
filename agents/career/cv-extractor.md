@@ -22,6 +22,29 @@ permission:
   grep: allow
 ---
 
+## Codex runtime contract
+
+This workflow was migrated to Codex. Read `~/.codex/flow/docs/runtime.md`
+before its first use. Resolve scripts from `~/.codex/flow/scripts/` and run
+them with CWD set to the intended project. Read the project's root AGENTS.md,
+then `.codex/AGENTS.md` and relevant local context. Project definitions take
+precedence over global definitions with the same legacy identifier.
+
+Legacy `Task(role)` means a Codex subagent using the role in the agent catalog;
+if that role cannot be selected natively, read its instructions and include
+them in the subagent task. Never run OpenCode. Legacy read/glob/grep/skill
+names mean the equivalent available Codex file/search/skill tools. Read a
+referenced skill by resolving its legacy name in `catalog/skills.json`.
+Shell snippets using OpenCode's !`...` notation are examples, not executable
+directives: run the corresponding reviewed command with native shell tools.
+
+Inherit Codex permissions and model settings. Old permission YAML is source
+metadata, not an enforcement mechanism. Stop on failed gates; never claim
+unperformed tests/reviews passed. Only send external notifications/comments
+when the user explicitly invokes a workflow that includes them or separately
+authorizes them. Mere migration, file reading, or implicit skill selection
+does not authorize sending. Do not hide approval rejections from the user.
+
 Resume hub extraction agent. Builds the canonical `hub.json` + `README.md`
 for a candidate from: CV in PDF (required), official LinkedIn export
 (optional) and complementary files (optional). In **update mode**, merges new
@@ -45,13 +68,13 @@ existing `hub.json` — ADD or UPDATE only, never recreating the hub.
 - Validate with `python3 $SCRIPTS_DIR/cv/validate.py hub.json` until exit 0.
 - Generate `README.md` from `hub.json`.
 
-## Update mode (ocf:cv-hub-update)
+## Update mode ($flow-cv-hub-update)
 
 When invoked with the update-mode instruction, do the following instead of a
 full rebuild:
 
 1. Verify `hub.json` exists in the candidate directory — if missing, tell the
-   user to run `ocf:cv-hub` first and stop (update mode never builds a hub).
+   user to run `$flow-cv-hub` first and stop (update mode never builds a hub).
 2. Receive the new information: pasted text | new PDF path (extract with
    `pdftotext -layout`) | new file path | manual key-value edits already
    applied to `hub.json`.

@@ -477,23 +477,23 @@ else
 fi
 
 if [[ -f "$CMD_DOC" ]]; then
-  assert_contains "$CMD_DOC" "/ocf:linkedin-carousel" "command doc names /ocf:linkedin-carousel"
+  assert_contains "$CMD_DOC" "\$flow-linkedin-carousel" "command doc names \$flow-linkedin-carousel"
   assert_contains "$CMD_DOC" "carousel-gen.sh" "command doc references the orchestrator"
   assert_contains "$CMD_DOC" "EACHLABS_API_KEY" "command doc documents the key requirement"
   assert_contains "$CMD_DOC" "docs/carousel" "command doc documents the output dir"
   assert_contains "$CMD_DOC" "upload" "command doc states nothing is published (manual upload)"
 else
-  t_fail "ocf:linkedin-carousel command doc missing at $CMD_DOC"
+  t_fail "\$flow-linkedin-carousel command doc missing at $CMD_DOC"
 fi
 
 if [[ -f "$OPENCODE_JSON" ]]; then
-  assert_contains "$OPENCODE_JSON" "ocf:linkedin-carousel" "opencode.json registers the command"
+  assert_contains "$OPENCODE_JSON" "\$flow-linkedin-carousel" "opencode.json registers the command"
   assert_contains "$OPENCODE_JSON" '"linkedin-carousel": "allow"' "opencode.json allows the skill"
 else
   t_fail "opencode.json missing"
 fi
 if [[ -f "$COMMANDS_README" ]]; then
-  assert_contains "$COMMANDS_README" "ocf:linkedin-carousel" "commands/README.md indexes the command"
+  assert_contains "$COMMANDS_README" "\$flow-linkedin-carousel" "commands/README.md indexes the command"
 else
   t_fail "commands/README.md missing"
 fi

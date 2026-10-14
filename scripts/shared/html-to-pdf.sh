@@ -91,14 +91,19 @@ render_chrome() {
   # prefer CSS page size when set.
   local url
   url="$(file_url "$INPUT_ABS")"
+  local profile chrome_rc=0
+  profile="$(mktemp -d)"
   "$chrome" \
+    --user-data-dir="$profile" \
     --headless=new \
     --disable-gpu \
     --no-sandbox \
     --disable-dev-shm-usage \
     --print-to-pdf="$OUTPUT_ABS" \
     --no-pdf-header-footer \
-    "$url" >/dev/null 2>&1
+    "$url" >/dev/null 2>&1 || chrome_rc=$?
+  rm -rf "$profile"
+  [[ "$chrome_rc" -eq 0 ]] || return 1
 
   if [[ ! -s "$OUTPUT_ABS" ]]; then
     echo "error: Chrome produced an empty PDF" >&2

@@ -1,11 +1,38 @@
 ---
-name: delivery-session-planner
-description: Plan and generate delivery-session prompts that batch refined (ready) issues into sequential/parallel opencode sessions for any pipeline-tracked repo. Use when the user wants to accelerate delivery, batch-develop multiple known_issues, create a delivery prompt, split work across sessions to save tokens, or order issues by effort and git-conflict safety.
+name: cf-delivery-session-planner
+description: Plan and generate delivery-session prompts that batch refined (ready)
+  issues into sequential/parallel Codex sessions for any pipeline-tracked repo. Use
+  when the user wants to accelerate delivery, batch-develop multiple known_issues,
+  create a delivery prompt, split work across sessions to save tokens, or order issues
+  by effort and git-conflict safety.
 ---
+
+## Codex runtime contract
+
+This workflow was migrated to Codex. Read `~/.codex/flow/docs/runtime.md`
+before its first use. Resolve scripts from `~/.codex/flow/scripts/` and run
+them with CWD set to the intended project. Read the project's root AGENTS.md,
+then `.codex/AGENTS.md` and relevant local context. Project definitions take
+precedence over global definitions with the same legacy identifier.
+
+Legacy `Task(role)` means a Codex subagent using the role in the agent catalog;
+if that role cannot be selected natively, read its instructions and include
+them in the subagent task. Never run OpenCode. Legacy read/glob/grep/skill
+names mean the equivalent available Codex file/search/skill tools. Read a
+referenced skill by resolving its legacy name in `catalog/skills.json`.
+Shell snippets using OpenCode's !`...` notation are examples, not executable
+directives: run the corresponding reviewed command with native shell tools.
+
+Inherit Codex permissions and model settings. Old permission YAML is source
+metadata, not an enforcement mechanism. Stop on failed gates; never claim
+unperformed tests/reviews passed. Only send external notifications/comments
+when the user explicitly invokes a workflow that includes them or separately
+authorizes them. Mere migration, file reading, or implicit skill selection
+does not authorize sending. Do not hide approval rejections from the user.
 
 # Delivery Session Planner
 
-Response language: user's input language → `.opencode/locale` (project → global) → EN.
+Response language: user's input language → `.codex/locale` (project → global) → EN.
 
 Creates session prompts to deliver the `ready` issues from `known_issues.md`
 in batches, prioritizing the easiest/fastest, parallelizing when safe and
@@ -15,7 +42,7 @@ save context/tokens.
 ## Input
 
 - The project (default: current workspace) — the `known_issues.md` lives in
-  `<project>/.opencode/known_issues.md`.
+  `<project>/.codex/known_issues.md`.
 - User priority rules (e.g. "backend only", "docs only", "max Xh per
   session"). If not given, use the defaults below.
 
@@ -91,9 +118,9 @@ The prompt MUST contain:
 
 1. **Role**: "You run the delivery pipeline (promote → develop →
    senior review → QA → committer gate → MR) for issue(s) X".
-2. **Command**: `/ocf:delivery <id>` or `ocf:develop <id>` — continuous
-   pipeline, no pause between phases. `ocf:develop` stops at MR creation
-   (manual merge, issue stays `in-publish`); use `ocf:develop-full <id>` only
+2. **Command**: `/ocf:delivery <id>` or `$develop <id>` — continuous
+   pipeline, no pause between phases. `$develop` stops at MR creation
+   (manual merge, issue stays `in-publish`); use `$develop-full <id>` only
    when the session should auto-merge and close/archive the issue.
 3. **Embedded record**: copy the issue block from `known_issues.md`
    (Location, Business rules, AC, Tests, Reviewers, Base branch) so the

@@ -1,8 +1,8 @@
 # Issue Tracking
 
 Two-tier issue tracking:
-- **Global**: `~/.config/opencode/known_issues.md` — opencode config-level issues
-- **Project**: `<project>/.opencode/known_issues.md` — project-specific issues
+- **Global**: `~/.codex/flow/known_issues.md` — opencode config-level issues
+- **Project**: `<project>/.codex/known_issues.md` — project-specific issues
 
 ## Entry Format
 
@@ -39,7 +39,7 @@ Two-tier issue tracking:
 for the card mirrored from this issue when the Jira sync is enabled (issue #48).
 It is separate from `Remote:` (which stays exclusive to the git provider
 GitHub/GitLab). Populated by `scripts/sync-jira.sh` (via hooks in
-`create_issue.sh`/`promote.sh`/`close_issue.sh` or the `ocf:sync-jira` command);
+`create_issue.sh`/`promote.sh`/`close_issue.sh` or the `$flow-sync-jira` command);
 the sync is non-blocking and the local `Status:` always wins over Jira.
 `Business rules:` is required for `feat` type issues — document the specific
 business logic, domain constraints, and rules that must be implemented.
@@ -177,10 +177,10 @@ in compact format. See `standards/resolved-issue.md` for details.
 
 ## Branch Review Naming
 
-Review output from `/ocf:review-branch` is written to:
+Review output from `$flow-review-branch` is written to:
 
 ```
-<project>/.opencode/<model>_<branch>_issues.md
+<project>/.codex/<model>_<branch>_issues.md
 ```
 
 This keeps reviews isolated by model and branch, avoiding clutter in the main tracker.

@@ -15,7 +15,7 @@
     },
     {
       "id": 3,
-      "prompt": "We have `.opencode/agents/reviewer.md` and `.github/agents/reviewer.agent.md` in a repo. Batch-audit both for their own hosts, especially permission/tool defaults and whether the body promises capabilities the metadata does not grant. Leave the files untouched.",
+      "prompt": "We have `.codex/agents/reviewer.md` and `.github/agents/reviewer.agent.md` in a repo. Batch-audit both for their own hosts, especially permission/tool defaults and whether the body promises capabilities the metadata does not grant. Leave the files untouched.",
       "expected_output": "A read-only, per-file audit that detects the two distinct host schemas, checks each host's permission/tool defaults independently, cites findings, and gives a concise cross-file summary without applying one platform's rules to the other.",
       "files": []
     }

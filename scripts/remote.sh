@@ -36,7 +36,7 @@ get_remote_url() {
 }
 
 # parse_remote <dir> — echo "<provider> <owner/repo>"
-#   github:  "github pereirawe/opencode-flow"
+#   github:  "github pereirawe/codex-flow"
 #   gitlab:  "gitlab group/project"
 #   none:    "none -"
 #   unknown: "unknown -"

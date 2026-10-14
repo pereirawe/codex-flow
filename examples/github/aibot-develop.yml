@@ -1,0 +1,60 @@
+# Optional template. Configure trusted AIBOT_ALLOWLIST, AIBOT_TRIGGER_AUTHORS,
+# CODEX_VERSION vars and CODEX_API_KEY/GH_TOKEN secrets before use.
+name: Codex Flow issue delivery
+on:
+  issue_comment:
+    types: [created]
+concurrency:
+  group: codex-flow-${{ github.repository }}-${{ github.event.issue.number }}
+  cancel-in-progress: false
+jobs:
+  develop:
+    if: >-
+      github.event.issue.pull_request == null &&
+      vars.AIBOT_TRIGGER_AUTHORS != '' &&
+      contains(format(',{0},', vars.AIBOT_TRIGGER_AUTHORS), format(',{0},', github.event.comment.user.login))
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GH_TOKEN || github.token }}
+      - name: Checkout global Codex Flow library
+        uses: actions/checkout@v4
+        with:
+          repository: pereirawe/codex-flow
+          path: .flow-library
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install pinned Codex CLI
+        env:
+          CODEX_VERSION: ${{ vars.CODEX_VERSION }}
+        run: |
+          test -n "$CODEX_VERSION"
+          npm install --global "@openai/codex@$CODEX_VERSION"
+          sudo apt-get update && sudo apt-get install -y jq
+          bash .flow-library/install.sh
+      - name: Authenticate Codex
+        env:
+          CODEX_API_KEY: ${{ secrets.CODEX_API_KEY }}
+        run: printf '%s' "$CODEX_API_KEY" | codex login --with-api-key
+      - name: Run explicitly authorized workflow
+        env:
+          AIBOT_ALLOWLIST: ${{ vars.AIBOT_ALLOWLIST }}
+          AIBOT_TRIGGER_AUTHORS: ${{ vars.AIBOT_TRIGGER_AUTHORS }}
+          GH_TOKEN: ${{ secrets.GH_TOKEN || github.token }}
+          COMMENT_AUTHOR: ${{ github.event.comment.user.login }}
+          COMMENT_BODY: ${{ github.event.comment.body }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          COMMENT_BODY_FILE=$(mktemp)
+          export COMMENT_BODY_FILE
+          trap 'rm -f "$COMMENT_BODY_FILE"' EXIT
+          printf '%s' "$COMMENT_BODY" > "$COMMENT_BODY_FILE"
+          unset COMMENT_BODY
+          bash .flow-library/scripts/run-ci-workflow.sh --workspace "$GITHUB_WORKSPACE" --issue "$ISSUE_NUMBER" --author "$COMMENT_AUTHOR"
