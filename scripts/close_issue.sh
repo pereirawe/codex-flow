@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 source "$(dirname "$0")/config.sh"
+source "$SCRIPTS_DIR/git-base.sh"
 
 # Usage: $SCRIPTS_DIR/close_issue.sh <local_issue_id>
 
@@ -15,6 +16,9 @@ if [[ ! -f "$FILE" ]]; then
   echo "known_issues.md not found"
   exit 1
 fi
+
+exec 9>"$PROJECT_ISSUES_DIR/.issues.lock"
+flock -x 9
 
 SECTION=$(awk -v id="$ID" '
   /^### Status/ {exit}
@@ -45,52 +49,24 @@ if [[ "$STATUS" != "in-publish" && "$STATUS" != "resolved" ]]; then
   exit 1
 fi
 
-SHOULD_CLOSE_REMOTE=true
-
+# Missing/unmerged PR, provider errors, cancellation and close failures preserve
+# the active issue and must not mark Jira terminal or archive anything.
+if [[ "$STATUS" == "in-publish" || ( -n "$REMOTE_ID" && "$REMOTE_ID" != "-" ) ]]; then
+  flow_require_merged "$PR_ID" || exit 1
+fi
 if [[ -n "$REMOTE_ID" && "$REMOTE_ID" != "-" ]]; then
-  # For resolved: check if remote is already closed
-  if [[ "$STATUS" == "resolved" ]]; then
-    if [[ "$REMOTE_URL" == *"github.com"* ]]; then
-      REMOTE_STATE=$(gh issue view "$REMOTE_ID" --json state --jq '.state' 2>/dev/null || echo "UNKNOWN")
-      if [[ "$REMOTE_STATE" == "CLOSED" ]]; then
-        echo "[remote] Issue #$REMOTE_ID is already closed — skipping remote close"
-        SHOULD_CLOSE_REMOTE=false
-      fi
-    fi
+  [[ "$REMOTE_ID" =~ ^[0-9]+$ ]] || { echo "Invalid remote issue reference"; exit 1; }
+  if [[ "${OCF_CLOSE_REMOTE_ASK:-0}" == 1 ]]; then
+    read -r -p "Fechar issue #$REMOTE_ID no remote? (s/N) " CONFIRM || true
+    [[ "${CONFIRM:-}" == s || "${CONFIRM:-}" == S ]] || { echo "Close cancelled"; exit 1; }
   fi
-
-  # For in-publish: verify PR is merged before closing
-  if [[ "$STATUS" == "in-publish" && -n "$PR_ID" && "$PR_ID" != "-" ]]; then
-    if [[ "$REMOTE_URL" == *"github.com"* ]]; then
-      PR_STATE=$(gh pr view "$PR_ID" --json state --jq '.state' 2>/dev/null || echo "UNKNOWN")
-      if [[ "$PR_STATE" != "MERGED" ]]; then
-        echo "[pr] PR #$PR_ID not merged yet (state: $PR_STATE). Skipping remote close."
-        SHOULD_CLOSE_REMOTE=false
-      fi
-    fi
-  fi
-
-  # Auto-close the remote issue. The delivery pipeline runs non-interactively
-  # (no prompts allowed), so the remote close is performed automatically once
-  # the safety gates above pass (resolved + already-closed check, or
-  # in-publish + PR merged). Interactive confirmation is opt-in via
-  # OCF_CLOSE_REMOTE_ASK=1 for manual use.
-  if $SHOULD_CLOSE_REMOTE; then
-    if [[ "${OCF_CLOSE_REMOTE_ASK:-0}" == "1" ]]; then
-      read -r -p "Fechar issue #$REMOTE_ID no remote? (s/N) " CONFIRM || true
-      if [[ "$CONFIRM" != "s" && "$CONFIRM" != "S" ]]; then
-        echo "[remote] User cancelled — skipping remote close"
-        SHOULD_CLOSE_REMOTE=false
-      fi
-    fi
-  fi
-
-  if $SHOULD_CLOSE_REMOTE; then
-    if [[ "$REMOTE_URL" == *"github.com"* ]]; then
-      gh issue close "$REMOTE_ID" || echo "[remote] Warning: failed to close issue #$REMOTE_ID"
-    elif [[ "$REMOTE_URL" == *"gitlab"* ]]; then
-      glab issue close "$REMOTE_ID" || echo "[remote] Warning: failed to close issue #$REMOTE_ID"
-    fi
+  if [[ "$REMOTE_URL" == *github.com* ]]; then
+    STATE=$(gh issue view "$REMOTE_ID" --json state --jq '.state') || exit 1
+    [[ "$STATE" == CLOSED ]] || gh issue close "$REMOTE_ID" || exit 1
+  elif [[ "$REMOTE_URL" == *gitlab* ]]; then
+    glab issue close "$REMOTE_ID" || exit 1
+  else
+    echo "Unsupported remote host"; exit 1
   fi
 fi
 
@@ -191,7 +167,6 @@ fi
 # Prepend to resolved archive (newest first), always rewriting the header.
 # Clean stale temp files from previous failed runs, then create a fresh one
 # in the target directory (same filesystem) for an atomic rename.
-rm -f "$(dirname "$RESOLVED_FILE")"/.resolved.*
 TMP_ARCHIVE=$(mktemp "$(dirname "$RESOLVED_FILE")/.resolved.XXXXXX")
 trap 'rm -f "$TMP_ARCHIVE"' EXIT
 printf '# Resolved Issues\n' > "$TMP_ARCHIVE"

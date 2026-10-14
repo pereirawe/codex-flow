@@ -63,9 +63,19 @@ if [[ -z "$TITLE" ]]; then echo "append-issue: --title required"; exit 3; fi
 FILE="$PROJECT_ISSUES_FILE"
 if [[ ! -f "$FILE" ]]; then echo "known_issues.md not found"; exit 3; fi
 
+# Serialize allocation and append; the archive reserves historical IDs.
+exec 9>"$PROJECT_ISSUES_DIR/.issues.lock"
+flock -x 9
 if [[ -z "$ID" ]]; then
-  ID=$(awk '/^### [0-9]+\./ {n=$2} END {print n+1}' "$FILE")
+  ID=$(awk '/^### [0-9]+\./ {n=$2+0; if(n>max)max=n} END {print max+1}' "$FILE" <(cat "$RESOLVED_FILE" 2>/dev/null || true))
 fi
+[[ "$ID" =~ ^[1-9][0-9]*$ ]] || { echo "Invalid issue ID"; exit 3; }
+if awk -v id="$ID" '$0 ~ "^### " id "\\." {found=1} END {exit !found}' "$FILE" <(cat "$RESOLVED_FILE" 2>/dev/null || true); then
+  echo "Issue $ID already exists (active or archived)"; exit 3
+fi
+BACKUP=$(mktemp "$PROJECT_ISSUES_DIR/.append.XXXXXX")
+cp "$FILE" "$BACKUP"
+trap 'rm -f "$BACKUP"' EXIT
 
 FLOW_LINE=""
 if [[ -n "$FLOW" && "$FLOW" != "-" ]]; then
@@ -98,5 +108,9 @@ fi
 echo "[append] issue $ID appended (status=$STATUS)"
 
 if [[ "$LINT" -eq 1 ]]; then
-  "$SCRIPTS_DIR/issue-lint.sh" "$ID" || true
+  if ! "$SCRIPTS_DIR/issue-lint.sh" "$ID"; then
+    cp "$BACKUP" "$FILE"
+    echo "append-issue: lint failed; tracker restored"
+    exit 2
+  fi
 fi

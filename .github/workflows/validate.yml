@@ -17,4 +17,5 @@ jobs:
       - run: python scripts/validate.py
       - run: python scripts/tests/test_flowctl.py
       - run: python scripts/tests/test_automation.py
+      - run: python scripts/tests/test_critical_lifecycle.py
       - run: bash scripts/tests/run_all.sh --core

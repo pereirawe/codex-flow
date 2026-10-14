@@ -66,7 +66,7 @@ case "$*" in
     echo "https://github.com/owner/repo/issues/42"
     exit 0 ;;
   *"pr view"*)    echo "MERGED"; exit 0 ;;
-  *"issue view"*) echo "CLOSED"; exit 0 ;;
+  *"issue view"*) echo "OPEN"; exit 0 ;;
 esac
 exit 0
 EOF
@@ -385,10 +385,10 @@ fix="$TMP/t20b"; make_fixture "$fix" in-publish "#42" "#9" 2026-08-01 2026-08-03
 GH_LOG="$TMP/t20b.ghlog"; export GH_LOG; : > "$GH_LOG"
 rc=0
 ( cd "$fix" && PATH="$MOCK_NET:$PATH" OCF_CLOSE_REMOTE_ASK=1 bash "$CLOSE" 1 ) <<< "n" >"$RUN_OUT" 2>&1 || rc=$?
-assert_eq "0" "$rc" "t20b: opt-in prompt (n) completes without hang"
+assert_eq "1" "$rc" "t20b: cancellation stops closure"
 assert_contains "$GH_LOG" "pr view" "t20b: PR merge still checked"
 assert_not_contains "$GH_LOG" "issue close" "t20b: remote close skipped on 'n'"
-assert_contains "$fix/.codex/resolved_issues.md" "- Resolved:" "t20b: local archive still written"
+assert_contains "$fix/.codex/known_issues.md" "### 1." "t20b: cancelled issue remains active"
 
 # ===========================================================================
 # t21 — DST spring-forward: UTC-anchored parse is DST-robust (BR 4 / AC 10)

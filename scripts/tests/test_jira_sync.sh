@@ -268,7 +268,7 @@ assert_contains "$RUN_OUT" "transitioned to 'To Do'" "t07: mode 1 transition log
 # ===========================================================================
 # t08 — close_issue resolved transitions the card to "Done"
 # ===========================================================================
-fix="$TMP/t08"; make_fixture "$fix" resolved "#42" "DEV-123"
+fix="$TMP/t08"; make_fixture "$fix" resolved "#42" "DEV-123" "#9"
 envs="$(jira_env) CURL_LOG=$TMP/t08.log"; export CURL_LOG="$TMP/t08.log"; : > "$CURL_LOG"
 rc=$(run "$fix" "$CLOSE" "$envs" 1)
 assert_eq "0" "$rc" "t08: close exit 0"
@@ -279,7 +279,7 @@ assert_not_contains "$fix/.codex/known_issues.md" "### 1." "t08: entry archived"
 # ===========================================================================
 # t08b — custom statusMap (resolved → "Closed", id 31) honored
 # ===========================================================================
-fix="$TMP/t08b"; make_fixture "$fix" resolved "#42" "DEV-123"
+fix="$TMP/t08b"; make_fixture "$fix" resolved "#42" "DEV-123" "#9"
 write_jira_json "$fix" '{"resolved":"Closed"}'
 envs="$(jira_env) CURL_LOG=$TMP/t08b.log"; export CURL_LOG="$TMP/t08b.log"; : > "$CURL_LOG"
 rc=$(run "$fix" "$CLOSE" "$envs" 1)
@@ -314,7 +314,7 @@ assert_eq "0" "$rc" "t10: promote exit 0 (no Jira config)"
 assert_eq "in-progress" "$(field "$fix/.codex/known_issues.md" Status)" "t10: promote advanced locally"
 assert_eq "0" "$(jira_calls "$CURL_LOG")" "t10: promote → zero Jira calls"
 
-fix="$TMP/t10c"; make_fixture "$fix" resolved "#42" "DEV-123"
+fix="$TMP/t10c"; make_fixture "$fix" resolved "#42" "DEV-123" "#9"
 envs="CURL_LOG=$TMP/t10c.log"; export CURL_LOG="$TMP/t10c.log"; : > "$CURL_LOG"
 rc=$(run "$fix" "$CLOSE" "$envs" 1)
 assert_eq "0" "$rc" "t10: close exit 0 (no Jira config)"

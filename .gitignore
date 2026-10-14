@@ -21,3 +21,7 @@ docs/delivery-prompts/
 hive/
 roster-backups/
 roster.json
+
+# Serialize local tracker mutations without publishing runtime locks.
+.issues.lock
+.codex/.issues.lock
