@@ -23,6 +23,8 @@ The installer creates links from this checkout into ~/.codex/flow,
 settings, unrelated skills and agents. Conflicting links/files are backed up
 privately in .local/install-backups. Keep this checkout available.
 
+The installer also accepts `--skills-dir ~/.codex/skills` for an existing compatibility skill directory. The selected location is retained privately for future updates.
+
 ## Projects
 
 ```bash

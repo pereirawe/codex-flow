@@ -97,25 +97,36 @@ def link(target, path, backups, relative=False):
     path.parent.mkdir(parents=True, exist_ok=True)
     path.symlink_to(os.path.relpath(target,path.parent) if relative else target, target_is_directory=target.is_dir())
 
-def global_install(home):
+def skill_location(home, override=None):
+    if override:return Path(override).expanduser().resolve()
+    saved=ROOT/".local/install-location.json"
+    if saved.exists():
+        data=json.loads(saved.read_text())
+        if data.get("home")==str(home):return Path(data["skills_dir"])
+    return home/".agents/skills"
+
+def global_install(home, skills_dir=None):
     home = Path(home).expanduser().resolve()
     stamp = datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%S%fZ')
     backups = ROOT / '.local' / 'install-backups' / stamp
     link(ROOT, home / '.codex/flow', backups)
     managed(home / '.codex/AGENTS.md', (ROOT / 'config/global-instructions.md').read_text(), backups)
+    destination=skill_location(home,skills_dir)
+    write(ROOT/".local/install-location.json",json.dumps({"home":str(home),"skills_dir":str(destination)}),True)
     count = 0
     for entry in load_catalog('skills') + load_catalog('commands'):
-        link((ROOT / entry['path']).parent, home / '.agents/skills' / entry['name'], backups)
+        link((ROOT / entry['path']).parent, destination / entry['name'], backups)
         count += 1
     for entry in load_catalog('agents'):
         link(ROOT / entry['config_file'], home / '.codex/agents' / (entry['name'] + '.toml'), backups)
-    vendor_count = vendor_register(home)
-    report = {'repo':str(ROOT), 'home':str(home), 'own_skills_and_commands':count, 'agents':len(load_catalog('agents')), 'vendor_skills':vendor_count, 'backups':str(backups), 'config_toml_changed':False}
+    vendor_count = vendor_register(home, destination)
+    report = {'repo':str(ROOT), 'home':str(home), 'own_skills_and_commands':count, 'agents':len(load_catalog('agents')), 'vendor_skills':vendor_count, 'backups':str(backups), 'config_toml_changed':False, 'skills_dir':str(destination)}
     write(ROOT / '.local/install-report.json', json.dumps(report, indent=2), True)
     print(json.dumps(report, indent=2))
 
-def vendor_register(home):
+def vendor_register(home, skills_dir=None):
     home = Path(home).expanduser().resolve()
+    destination=skill_location(home,skills_dir)
     adapters = ROOT / '.local/vendor-skills'
     entries=[]
     for base, dirs, files in os.walk(ROOT / 'vendor'):
@@ -141,10 +152,10 @@ def vendor_register(home):
     old=json.loads(old_path.read_text()) if old_path.exists() else []
     names={x['name'] for x in entries}
     for entry in old:
-        path=home/'.agents/skills'/entry['name']
+        path=destination/entry['name']
         if entry['name'] not in names and path.is_symlink() and str(path.resolve()).startswith(str(adapters.resolve())+'/'):path.unlink()
     backups=ROOT/'.local/install-backups'/datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%S%fZ')
-    for entry in entries:link((ROOT/entry['path']).parent, home/'.agents/skills'/entry['name'], backups)
+    for entry in entries:link((ROOT/entry['path']).parent, destination/entry['name'], backups)
     write(old_path,json.dumps(entries,indent=2),True)
     return len(entries)
 
@@ -367,7 +378,7 @@ def watcher(action, home):
 
 def main():
     p=argparse.ArgumentParser(description=__doc__);sub=p.add_subparsers(dest='cmd',required=True)
-    install=sub.add_parser('install');install.add_argument('--home',default=str(Path.home()))
+    install=sub.add_parser('install');install.add_argument('--home',default=str(Path.home()));install.add_argument('--skills-dir')
     vendor=sub.add_parser('vendor-register');vendor.add_argument('--home',default=str(Path.home()))
     proj=sub.add_parser('project');proj.add_argument('target');proj.add_argument('--locale');proj.add_argument('--dry-run',action='store_true')
     run=sub.add_parser('prompt');run.add_argument('workflow');run.add_argument('arguments',nargs='*')
@@ -375,7 +386,7 @@ def main():
     hist=sub.add_parser('history');hist.add_argument('--project');hist.add_argument('--query')
     watch=sub.add_parser('watcher');watch.add_argument('action',choices=['install','uninstall','status']);watch.add_argument('--home',default=str(Path.home()))
     a=p.parse_args()
-    if a.cmd=='install':global_install(a.home)
+    if a.cmd=='install':global_install(a.home,a.skills_dir)
     elif a.cmd=='vendor-register':print(vendor_register(a.home))
     elif a.cmd=='project':migrate_project(a.target,a.locale,a.dry_run)
     elif a.cmd=='prompt':print(prompt(a.workflow,a.arguments))
