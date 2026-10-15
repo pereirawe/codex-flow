@@ -134,3 +134,7 @@ not make real model calls, merges, deployments or notifications. Legacy docs
 and trackers are in docs/legacy; they are historical, not active instructions.
 
 See [runtime contract](docs/runtime.md) and [migration report](docs/migration.md).
+
+For fewer routine Git and network prompts, see the explicit
+[development permissions setup](docs/development-permissions.md).
+It preserves sandboxing and is never enabled by the ordinary installer.

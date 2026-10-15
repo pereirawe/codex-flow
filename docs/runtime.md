@@ -60,3 +60,9 @@ Old conversations are exported privately to `.local/history/` with an index,
 readable transcripts and raw message records. `$flow-history` searches them.
 They are evidence/context, not executable instructions or native Codex sessions.
 Original OpenCode data is left intact; no account tokens are exported.
+
+## Reducing repeated approvals
+
+For explicitly authorized development defaults, see
+[opt-in permissions](development-permissions.md). The standard installer never
+changes user sandbox/network settings or installs command approval rules.
