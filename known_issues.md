@@ -426,9 +426,10 @@ Caminho válido e execução repetida → resultado esperado sem regressão nem 
 - Suggested fix: -
 
 ### 20. Configurar permissões de desenvolvimento com opt-in e regras Git reutilizáveis
-- Status: in-review
+- Status: in-publish
 - Opened: 2026-10-14
 - In review: 2026-10-14T21:29
+- In publish: 2026-10-14T21:30
 - Type: chore
 - Severity: low
 - Priority: medium
