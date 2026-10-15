@@ -2,6 +2,16 @@
 
 Issues resolved from `known_issues.md`. See `standards/resolved-issue.md` for format.
 
+### 20. Configurar permissões de desenvolvimento com opt-in e regras Git reutilizáveis
+- Resolved: 2026-10-14T21:31
+- Durations: backlog=- waiting=- dev=- review=- qa=- publish=0h total=22h
+- Severity: low
+- Type: chore
+- Report: William Pereira
+- Reviewers: 2
+- Remote: #20
+- Summary: Comandos Git rotineiros e operações de rede repetem solicitações de autorização. Disponibilizar configuração explícita de desenvolvimento com approval_policy on-request, sandbox workspace-write e network_access true; aplicar apenas por opt-in autorizado, preservando configurações pessoais existentes. — -
+
 ### 4. IDs de issues arquivadas são reutilizados
 - Resolved: 2026-10-14T21:07
 - Durations: backlog=- waiting=- dev=- review=- qa=- publish=0h total=-
