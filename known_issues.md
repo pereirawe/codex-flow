@@ -438,13 +438,13 @@ Caminho válido e execução repetida → resultado esperado sem regressão nem 
 - Reviewers: 2 (security, runtime)
 - Remote: #20
 - Jira: -
-- PR: -
+- PR: #21
 - Location: scripts/; docs/runtime.md; templates/
 - Description: Comandos Git rotineiros e operações de rede repetem solicitações de autorização. Disponibilizar configuração explícita de desenvolvimento com approval_policy on-request, sandbox workspace-write e network_access true; aplicar apenas por opt-in autorizado, preservando configurações pessoais existentes.
 - Impact: Reduzir interrupções no desenvolvimento sem conceder acesso completo à máquina nem expor configurações privadas no repositório público.
 - Business rules: Configuração privada, backups e credenciais não entram no Git. Não alterar autenticação, modelo ou plugins. Instalação comum não aplica permissões automaticamente. Permissões efetivas da sessão podem prevalecer sobre a configuração persistida. Não permitir git genérico, shell genérico, Python, curl ou push force genérico.
 - Acceptance criteria: 1. TOML resultante é válido e preserva settings existentes não relacionados.
-2. Regras reutilizáveis cobrem status, diff, log, show, branch, checkout, switch, add, commit, fetch, pull e push de rotina, com sintaxe validada pelo Codex e sem aprovação genérica de operações destrutivas.
+2. Regras reutilizáveis cobrem status, diff, log, show, rev-parse, ls-files, add, commit, switch -c, fetch e pull --ff-only, com sintaxe validada pelo Codex. Push, checkout, reset e clean não recebem regras amplas; rede habilitada e aprovações de comando são controles distintos.
 3. Alteração depende de opt-in documentado e cria backup privado local antes de escrever.
 4. Template e documentação públicos explicam workspace-write, rede habilitada, on-request e prevalência das permissões da sessão ativa.
 5. Configuração pessoal, backups e segredos permanecem fora do versionamento; instalação normal mantém o comportamento atual.

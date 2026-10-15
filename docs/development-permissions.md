@@ -23,6 +23,8 @@ Git rules allow the listed command prefixes with their trailing arguments.
 They are reusable command approvals, not semantic argument validation: for
 example, `git commit` also matches `git commit --amend`. They do not authorize
 arbitrary Git operations, shells, Python, curl, force-push, reset or clean.
+Ordinary push and checkout do not receive new allow rules either; they may
+still require command approval. Network permission is a separate control.
 Other existing user rules may independently grant additional permissions.
 Rules do not override managed policy or make protected paths writable.
 
