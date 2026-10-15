@@ -1,0 +1,7 @@
+# Opt-in development defaults. Merge these keys into the USER config.toml;
+# do not replace the entire file. No personal paths or credentials belong here.
+approval_policy = "on-request"
+sandbox_mode = "workspace-write"
+
+[sandbox_workspace_write]
+network_access = true
