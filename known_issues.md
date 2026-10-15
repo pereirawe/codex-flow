@@ -81,7 +81,8 @@ Untrusted multiline comment -> cannot authorize its author.
 - Suggested fix: -
 
 ### 2. Fechamento arquiva issue sem merge comprovado
-- Status: in-review
+- Status: in-publish
+- In publish: 2026-10-14T21:05
 - Type: bug
 - Severity: high
 - Priority: high
@@ -92,7 +93,7 @@ Untrusted multiline comment -> cannot authorize its author.
 - Reviewers: 3 (security, runtime, qa)
 - Remote: #1
 - Jira: -
-- PR: -
+- PR: #19
 - Location: scripts/close_issue.sh:62
 - Description: PR OPEN/UNKNOWN apenas desliga o fechamento remoto; Jira terminal, arquivamento e remoção do tracker continuam. GitLab não verifica merge e ausência de PR não impede fechamento.
 - Impact: CF-AUDIT-01: integridade e funcionamento da configuração global Codex Flow.
@@ -104,7 +105,8 @@ Caminho válido e execução repetida → resultado esperado sem regressão nem 
 - Suggested fix: -
 
 ### 3. Discovery chama lint com argumentos incompatíveis
-- Status: in-review
+- Status: in-publish
+- In publish: 2026-10-14T21:05
 - Type: bug
 - Severity: high
 - Priority: high
@@ -115,7 +117,7 @@ Caminho válido e execução repetida → resultado esperado sem regressão nem 
 - Reviewers: 3 (security, runtime, qa)
 - Remote: #2
 - Jira: -
-- PR: -
+- PR: #19
 - Location: agents/development/discovery.md:101
 - Description: Os quatro loops prescrevem issue-lint.sh --strict <id>; scripts/issue-lint.sh:20 aceita apenas <id> --strict. A incompatibilidade também está nos agentes TOML.
 - Impact: CF-AUDIT-02: integridade e funcionamento da configuração global Codex Flow.
@@ -127,7 +129,8 @@ Caminho válido e execução repetida → resultado esperado sem regressão nem 
 - Suggested fix: -
 
 ### 4. IDs de issues arquivadas são reutilizados
-- Status: in-review
+- Status: in-publish
+- In publish: 2026-10-14T21:05
 - Type: bug
 - Severity: high
 - Priority: high
@@ -138,7 +141,7 @@ Caminho válido e execução repetida → resultado esperado sem regressão nem 
 - Reviewers: 3 (security, runtime, qa)
 - Remote: #3
 - Jira: -
-- PR: -
+- PR: #19
 - Location: scripts/append-issue.sh:66
 - Description: O próximo ID usa o último ID ativo, sem calcular o máximo e sem consultar resolved_issues.md. Ordem diferente e concorrência também podem gerar duplicatas.
 - Impact: CF-AUDIT-03: integridade e funcionamento da configuração global Codex Flow.

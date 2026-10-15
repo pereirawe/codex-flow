@@ -1,6 +1,6 @@
 # Changelog
 
-## Codex Flow 1.0.1 (pending release)
+## Codex Flow 1.0.1 (2026-10-14)
 
 - Block issue closure and archival until the provider proves the PR/MR merged; cancellation and provider errors preserve the active issue.
 - Accept discovery lint flags before or after the local issue ID.
