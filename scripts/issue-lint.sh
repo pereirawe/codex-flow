@@ -17,9 +17,13 @@ source "$(dirname "$0")/config.sh"
 # --strict: also warns on missing Remote at ready (used by the Committer gate).
 # Exit 0 = PASS (no blocking findings), 2 = FAIL (blocking findings).
 
-ID=${1:-}
-STRICT=0
-[[ "${2:-}" == "--strict" ]] && STRICT=1
+ID=""; STRICT=0
+for arg in "$@"; do
+  case "$arg" in
+    --strict) STRICT=1 ;;
+    *) if [[ -n "$ID" || ! "$arg" =~ ^[0-9]+$ ]]; then echo "Usage: issue-lint.sh <id> [--strict]"; exit 3; fi; ID="$arg" ;;
+  esac
+done
 if [[ -z "$ID" ]]; then echo "Usage: issue-lint.sh <id> [--strict]"; exit 3; fi
 
 FILE="$PROJECT_ISSUES_FILE"

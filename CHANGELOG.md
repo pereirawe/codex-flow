@@ -1,5 +1,12 @@
 # Changelog
 
+## Codex Flow 1.0.1 (2026-10-14)
+
+- Block issue closure and archival until the provider proves the PR/MR merged; cancellation and provider errors preserve the active issue.
+- Accept discovery lint flags before or after the local issue ID.
+- Allocate issue IDs across active and archived trackers under a shared lock; reject duplicates and roll back failed lint.
+- Add offline regressions for merge states, lint invocation and concurrent ID allocation.
+
 ## 2.2.0 (2026-09-30)
 
 - **feat(business-ops): `strategic-brief` skill** — senior-grade strategic
