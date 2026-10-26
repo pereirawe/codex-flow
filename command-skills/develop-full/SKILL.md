@@ -44,7 +44,8 @@ chain to 1+N and removes mechanical roundtrips.
 
 At least ONE issue ID is required. Multiple IDs may be separated by spaces,
 commas, or dashes; deduplicated (order preserved), processed sequentially. A
-single Telegram notification is sent after the LAST issue.
+single Telegram notification is sent after the LAST issue via
+`scripts/flow-notify.sh` (credentials in `.codex/telegram.env`).
 
 ### Arguments
 
@@ -102,16 +103,21 @@ Missing data handled gracefully: `Base branch:` → git default; `Reviewers:` �
     (clean base) so the next developer starts warm.
 13. **Repeat** for the next issue.
 
-### Telegram Notifications
+### Notify
 
-Exactly ONE, after the LAST issue: per-issue summary (id, PR link, merged). No
-intermediate notifications. Subagents (developer, reviewers) never notify.
+Exactly ONE `~/.codex/flow/scripts/flow-notify.sh` after the LAST issue:
+per-issue summary (id, PR link, merged). It calls `telegram-notify.sh` and
+reads `.codex/telegram.env`. No intermediate notifications. Subagents never
+notify.
 
 ### Failure Handling
 
 Any failure (not found, refused status, review not approved, committer gate
 FAIL, MR/merge fails) → STOP the list, send ONE failure notification. Already
 merged issues stay resolved; the failed issue keeps its current status.
+On success or stop, this agent reads
+`~/.codex/flow/skills/shared/flow-steward/SKILL.md` and runs it once for
+`develop-full`.
 
 ### Loop profiles
 

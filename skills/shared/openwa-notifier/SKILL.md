@@ -1,10 +1,7 @@
 ---
 name: cf-openwa-notifier
-description: Sends WhatsApp notifications via the OpenWA API when an Codex command
-  finishes or when an agent needs a response from the user. Use when finishing long
-  tasks, reporting results, or asking the user for input when they may be away from
-  the terminal ("notificar no whatsapp", "aviso whatsapp", "notificação whatsapp"
-  also trigger this skill).
+description: Sends WhatsApp via the local OpenWA API when the user asks for
+  WhatsApp. Discovery, develop, and develop-full notify through Telegram.
 ---
 
 ## Codex runtime contract
@@ -55,13 +52,8 @@ OPENWA_CHAT_ID=<chat-id>@lid
 
 ## When to use
 
-**ALWAYS when one of these situations occurs:**
-
-1. **When a command/task finishes** — notify the result (success or failure).
-2. **When you need a response from the user** — if the user is not visibly
-   active in the terminal, send the question via WhatsApp and wait.
-3. **When you hit a blocker** — missing business rule, conflict, failure.
-4. **When a milestone completes** — pipeline done, MR created, deploy done.
+When the user asks for WhatsApp. Discovery, develop, and develop-full notify
+through Telegram (`flow-notify.sh`), not this skill.
 
 ## How to send notifications
 

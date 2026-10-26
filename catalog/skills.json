@@ -594,6 +594,12 @@
     "description": "Import external skills (GitHub/GitLab) into Codex as git clones. Clones the repo into ~/.codex/flow/vendor/ and registers each discovered skill in Codex.json — never copies SKILL.md files into skills/. Use when importing skills from a repository URL, owner/repo shorthand, or when asked to install a third-party skill."
   },
   {
+    "legacy_name": "flow-steward",
+    "name": "flow-steward",
+    "path": "skills/shared/flow-steward/SKILL.md",
+    "description": "Reviews discovery, develop, and develop-full after they finish or stop, and applies one small durable fix."
+  },
+  {
     "legacy_name": "telegram-notifier",
     "name": "cf-telegram-notifier",
     "path": "skills/shared/telegram-notifier/SKILL.md",

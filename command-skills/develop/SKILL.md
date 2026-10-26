@@ -43,7 +43,8 @@ reviewers). Mechanical steps (promote, preflight, committer gate, create-pr) are
 scripts.
 
 At least ONE issue ID required. Multiple IDs separated by spaces/commas/dashes;
-deduplicated, processed sequentially. One Telegram notification after the LAST.
+deduplicated, processed sequentially. One Telegram notification after the LAST,
+via `scripts/flow-notify.sh` (credentials in `.codex/telegram.env`).
 
 ### Arguments
 
@@ -91,8 +92,12 @@ auto-created via `create_issue.sh` if missing.
 
 Closing/archiving after manual merge: `$flow-check-pr <id>` (or Close Requester).
 
-### Telegram & Failure
+### Notify, failure, steward
 
-One notification after the LAST issue. Any failure → STOP list, one failure
-notification. Delivered issues stay `in-publish` with MR open.
+One `~/.codex/flow/scripts/flow-notify.sh` after the LAST issue. It calls
+`telegram-notify.sh` and reads `.codex/telegram.env`. Any failure → STOP the
+list and send that one failure notification. Delivered issues stay
+`in-publish` with MR open.
+Then, in this agent, read `~/.codex/flow/skills/shared/flow-steward/SKILL.md`
+and run it once for `develop`.
 

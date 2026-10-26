@@ -58,8 +58,10 @@ $discovery "Bug: login fails when token expires"
    --strict`, and reports the created `id`.
 4. **Verify**: re-run `scripts/issue-lint.sh <id>` on the result; if it fails,
    report the gaps (do not auto-fix — discovery already attempted).
-5. **One Telegram notification** with the outcome (id, type, loop, lint status,
-   `known_issues.md` link).
+5. **One notification** via `~/.codex/flow/scripts/flow-notify.sh` (Telegram;
+   credentials in `.codex/telegram.env`): id, type, loop, lint status.
+6. **Steward**, in this agent, on success or stop: read
+   `~/.codex/flow/skills/shared/flow-steward/SKILL.md` and run it for `discovery`.
 
 ### Notes
 
