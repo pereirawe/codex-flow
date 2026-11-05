@@ -78,27 +78,39 @@ Missing data handled gracefully: `Base branch:` → git default; `Reviewers:` �
 3. **Promote**: run the flow above (`create_issue.sh` + `promote.sh`).
 4. **Warm current issue**: `scripts/preflight.sh <id>` builds the file
    inventory so the developer skips re-exploration.
-5. **Pick dev agent**: `LANG=$(scripts/detect-lang.sh [location])` →
+5. **Pick dev agent**: prefer `delivery-route.sh` → `dev_agent`, or
+   `LANG=$(scripts/detect-lang.sh [location])` →
    `development/devs/golang` | `development/devs/python` | `development/developer`.
+   If every `Location:` file is `.ts` or `.tsx`, use `development/developer`
+   even when detect-lang prints python (`src/` is scored as Python).
 6. **Implement**: `Task(<devagent>)` — implement per business rules, write
    tests via `test-runner` skill, self-review, `transition.sh <id> in-review`.
-   No pausing.
-7. **Review preflight (per profile)**: read `- Reviewers:` (`<n> (profiles)`).
-   For EACH profile, run `scripts/review-preflight.sh <id> <profile>` — a fast
-   sequential loop of N calls that writes
-   `.codex/preflight/review-<id>-<profile>.md` (scoped, profile-filtered
-   context for the reviewer). Only then dispatch the reviewers (next step).
-8. **Parallel senior review**: read `- Reviewers:` (`<n> (profiles)`). Launch
-   **one `Task(development/senior-reviewers/<profile>)` per profile in a SINGLE
-   message** for true parallelism. All must approve. On issues → `Task(<devagent>)`
-   fixes, then re-review (loop within this step).
-9. **Quality + committer gate**: run `scripts/committer-check.sh <id>` — the
-   single gate. Must PASS → `transition.sh <id> in-publish`. On FAIL → STOP
-   the list, notify (do not auto-merge).
-10. **Create MR**: `scripts/create-pr.sh <id>` (builds body from issue fields,
-    sets `- PR: #<n>`).
-11. **Merge + archive**: `OCF_CLOSE_COMMENT=1 scripts/merge-and-close.sh <id>`
-    (merges MR, returns to base + pull, archives via `close_issue.sh`).
+   No pausing. Record `metrics-record.sh --issue <id> --flow develop-full --step implement`.
+7. **Route reviewers**:
+
+```bash
+bash ~/.codex/flow/scripts/delivery-route.sh <id>
+```
+
+   Launch Tasks only for `reviewers_to_run`. Skipped = no domain files (script
+   attest). Floor/security already enforced. `review-preflight.sh` is invoked
+   by the router for each profile.
+8. **Parallel senior review**: one `Task(development/senior-reviewers/<profile>)`
+   per `reviewers_to_run` entry in a **single** message. All must approve.
+   On issues → `Task(<devagent>)` fixes, then re-review — at most
+   **`max_rereview_cycles` (2)**; then STOP + notify.
+9. **Quality + committer gate**: after the last tracker edit, run
+   `test-runner.sh --run` then `committer-check.sh <id>`. Must PASS before any
+   `in-publish` transition (never set in-publish on FAIL). On FAIL → STOP.
+   Record `metrics-record.sh --issue <id> --flow develop-full --step committer`.
+10. **Create MR**: `git push -u origin HEAD` first (create-pr does not push),
+    then `scripts/create-pr.sh <id>` (sets `- PR: #<n>` only — never a full URL).
+11. **Merge + archive**: commit+push tracker `- PR: #<n>`, then
+    `OCF_CLOSE_COMMENT=1 scripts/merge-and-close.sh <id>` with unrestricted
+    network/`gh` (sandbox GraphQL returns Forbidden). Retry once on
+    `Base branch was modified`. Empty `- PR: -` → set `#<n>` and
+    `close_issue.sh` on base. After squash, hard-reset local base to origin
+    if diverged, then archive.
 12. **Warm next**: if there is a next ID, `scripts/preflight.sh <next-id>` now
     (clean base) so the next developer starts warm.
 13. **Repeat** for the next issue.
@@ -106,9 +118,8 @@ Missing data handled gracefully: `Base branch:` → git default; `Reviewers:` �
 ### Notify
 
 Exactly ONE `~/.codex/flow/scripts/flow-notify.sh` after the LAST issue:
-per-issue summary (id, PR link, merged). It calls `telegram-notify.sh` and
-reads `.codex/telegram.env`. No intermediate notifications. Subagents never
-notify.
+per-issue summary (id, PR link, merged). Telegram first, then OpenWA; non-zero
+when both fail. No intermediate notifications. Subagents never notify.
 
 ### Failure Handling
 

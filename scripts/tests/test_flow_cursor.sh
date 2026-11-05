@@ -37,11 +37,12 @@ assert_eq "fix lint-path: call issue-lint with the project tracker" "$lessons" "
 other="$("$STEWARD" lessons --flow develop)"
 assert_eq "" "$other" "other flows stay empty"
 
-assert_contains "$NOTIFY" "telegram-notify.sh" "cursor/codex notify uses Telegram"
-assert_not_contains "$NOTIFY" "openwa-notify.sh" "flow-notify does not call OpenWA"
+assert_contains "$NOTIFY" "telegram-notify.sh" "flow-notify tries Telegram first"
+assert_contains "$NOTIFY" "openwa-notify.sh" "flow-notify falls back to OpenWA"
+assert_contains "$NOTIFY" "exit 1" "flow-notify fails when both channels fail"
 assert_contains "$ROOT/skills/shared/flow-steward/SKILL.md" "command-skills/<flow>/SKILL.md" "steward edits only the flow skill"
 assert_contains "$ROOT/command-skills/discovery/SKILL.md" "flow-steward/SKILL.md" "discovery runs the steward"
-assert_contains "$ROOT/command-skills/develop/SKILL.md" "telegram-notify.sh" "develop notifies via Telegram"
+assert_contains "$ROOT/command-skills/develop/SKILL.md" "flow-notify.sh" "develop notifies via flow-notify"
 assert_contains "$ROOT/command-skills/develop-full/SKILL.md" "flow-steward/SKILL.md" "develop-full runs the steward"
 
 t_finish

@@ -11,19 +11,30 @@ Requires Python 3.11+, Git, Bash and an authenticated Codex app/CLI. Delivery
 also uses gh/glab, jq and each project's test tools. Specialist skills keep
 their own documented dependencies.
 
+Safe first-time sequence:
+
 ```bash
 git clone https://github.com/pereirawe/codex-flow.git
 cd codex-flow
 bash install.sh
+python3 scripts/restore-vendors.py
+cp .codex/telegram.env.example .codex/telegram.env   # fill credentials
+python3 scripts/validate.py && python3 scripts/tests/test_flowctl.py
+bash scripts/init.sh /path/to/project pt
 ```
 
-The installer creates links from this checkout into ~/.codex/flow,
-~/.agents/skills and ~/.codex/agents. It adds a managed block to
-~/.codex/AGENTS.md, preserving existing instructions, auth, model/provider
-settings, unrelated skills and agents. Conflicting links/files are backed up
-privately in .local/install-backups. Keep this checkout available.
+Preflight without installing: `bash install.sh --check`.
 
-The installer also accepts `--skills-dir ~/.codex/skills` for an existing compatibility skill directory. The selected location is retained privately for future updates.
+The installer links this checkout into `~/.codex/flow`, `~/.codex/skills`
+(default), and `~/.codex/agents`. When `~/.cursor` exists, the same skill
+links are mirrored under `~/.cursor/skills`. Override the skill directory with
+`bash install.sh --skills-dir ~/.agents/skills` (or any path); the choice is
+saved in `.local/install-location.json` for later runs.
+
+It adds a managed block to `~/.codex/AGENTS.md`, preserving existing
+instructions, auth, model/provider settings, unrelated skills and agents.
+Conflicting links/files are backed up privately in `.local/install-backups`.
+Keep this checkout available. After moving the checkout, re-run `bash install.sh`.
 
 ## Projects
 
@@ -68,6 +79,69 @@ bash ~/.codex/flow/scripts/codex-run.sh /path/to/project develop-full 12
 
 The headless adapter uses codex exec and existing Codex auth/settings. It does
 not depend on OpenCode's web server or bypass sandbox/approval controls.
+
+## Parallel tracker + sessions
+
+Optional hybrid layout (recommended for mass parallel delivery):
+
+```bash
+bash ~/.codex/flow/scripts/issues-migrate.sh --keep-monolith
+bash ~/.codex/flow/scripts/issues-reindex.sh          # recover index conflicts
+bash ~/.codex/flow/scripts/issue-path.sh 12           # resolve body path
+bash ~/.codex/flow/scripts/session-plan.sh --horizon day [--launch] [--parallel 2] [--worktree]
+```
+
+- Bodies: `.codex/issues/<id>.md` (+ `resolved/`); overview: `issues/index.md`.
+- Sessions always write `schedule.md` + `session-N.md` + `session-N.plan.md` under
+  `.codex/sessions/<date>/` (gitignored). Command: `$flow-plan-sessions`.
+- Monolith `known_issues.md` still works until you migrate.
+
+## Commercial tooling (neutral)
+
+Proposal, spec bootstrap, CNPJ lookup, and client hub templates live under
+`scripts/commercial/`, `templates/commercial/`, and `standards/commercial/`.
+**No issuer branding in Flow core** — copy
+`standards/brand/brand.profile.json.example` to the project's
+`.codex/brand/brand.profile.json` (+ `pricing.md`, logo). Details:
+[`docs/brand.md`](docs/brand.md).
+
+```bash
+bash ~/.codex/flow/scripts/commercial/novo-cliente.sh <slug>
+bash ~/.codex/flow/scripts/spec-init.sh <slug>
+bash ~/.codex/flow/scripts/commercial/consulta-cnpj.sh <CNPJ>
+python3 ~/.codex/flow/scripts/commercial/proposal.py 2>&1 | head -3
+python3 ~/.codex/flow/scripts/lib-brand.py placeholders
+```
+
+Skills: `cf-proposal-writer`, `cf-tech-spec`, `cf-consulta-cnpj`.
+
+## Product reporting
+
+Two reports, two audiences:
+
+| Command | Audience | Script | Output |
+|---------|----------|--------|--------|
+| `$flow-progress-report` | Client | `scripts/progress-report.sh` | `docs/progress/<date>-progress-report.md` |
+| `$flow-ops-report` | Internal | `scripts/ops-report.sh` | `.codex/reports/ops-<date>.md` |
+
+- Progress uses issue status + optional `.codex/progress-modules.json` (hours).
+  Never include LLM tokens. Brand/PDF extras stay in the project (`cf-progress-report`).
+- Ops rolls up `.codex/metrics/issue-runs.jsonl`, open-issue age, steward lessons.
+  Per-issue: `scripts/flow-issue-cost.sh <id>`.
+- Discovery/delivery record metrics via `metrics-record.sh` (fail-soft; tokens nullable).
+
+Routing gates (token-lean, quality floors unchanged):
+
+```bash
+bash ~/.codex/flow/scripts/discovery-route.sh --text proposal.md
+bash ~/.codex/flow/scripts/delivery-route.sh <issue-id>
+```
+
+## Design, marketing, finance routing
+
+- **Design — explore:** `agents/designer.md` + taste vendor skills. **Production / refactor gate:** `$flow-build-ui`, `$flow-audit-ui` → `standards/design-pipeline.md`; canonical tokens/patterns in `skills/design/*`.
+- **Marketing:** read `marketing-router` first; six stub skills (`landing-pages`, `market-research`, `marketing-reports`, `marketing-templates`, `presentations`, `social-media`) are pointer-only.
+- **Finance:** read `finance-hub` for models, board materials, and variance; use `skills/bi/*` for warehouse/dashboards and `skills/commercial/*` for pricing and deal economics.
 
 ## External skills
 

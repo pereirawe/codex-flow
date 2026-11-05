@@ -36,6 +36,12 @@
     "description": "Resource and capacity planning — demand forecasting, resource allocation, utilization modeling, headcount planning, skills gap analysis."
   },
   {
+    "legacy_name": "consulta-cnpj",
+    "name": "cf-consulta-cnpj",
+    "path": "skills/business-ops/consulta-cnpj/SKILL.md",
+    "description": "Look up Brazilian company registry data by CNPJ for contract qualification and client onboarding via ~/.codex/flow/scripts/commercial/consulta-cnpj.sh. Use for CNPJ lookup, cadastro de empresa, qualificação contratual, \"consulta cnpj\"."
+  },
+  {
     "legacy_name": "internal-comms",
     "name": "cf-internal-comms",
     "path": "skills/business-ops/internal-comms/SKILL.md",
@@ -63,7 +69,13 @@
     "legacy_name": "progress-report",
     "name": "cf-progress-report",
     "path": "skills/business-ops/progress-report/SKILL.md",
-    "description": "Generate a client-facing progress/delivery report for a tracked project (issues vs commercial proposal) — with Codetomika logo, PDF output, Mermaid Gantt, date, what is done, % completion by hours, delivery metrics for the client, and an explicit highlight of tasks that were not mapped in the proposal/issues. Use when the user asks to create, refresh, or standardize a progress report, delivery report, status report, \"relatório de avanço\", \"relatório de progresso\", \"relatório de entrega\", or to communicate value/delivery to the client. Also use when creating/improving the progress-report skill/script itself."
+    "description": "Generate a client-facing progress/delivery report for a tracked project (issues vs commercial proposal hours) — MD via ~/.codex/flow/scripts/progress-report.sh, optional PDF/Gantt with project brand assets. Use for progress report, delivery report, status report, \"relatório de avanço\", \"relatório de progresso\", \"relatório de entrega\". For internal cost/age/ledger use cf-ops-report instead."
+  },
+  {
+    "legacy_name": "ops-report",
+    "name": "cf-ops-report",
+    "path": "skills/business-ops/ops-report/SKILL.md",
+    "description": "Internal delivery ops report — issue age, wall_ms/token ledger from issue-runs.jsonl, bottlenecks, steward lessons. Use for ops report, cost report, gargalos, \"relatório interno\". Never for client-facing progress (use cf-progress-report)."
   },
   {
     "legacy_name": "proposal-writer",
@@ -312,6 +324,12 @@
     "description": "Secure code review checklist and severity classification — injection, auth, access control, crypto, secrets, SSRF, deserialization, file handling, error handling, logging, and dependency review. Use when reviewing code for security vulnerabilities, classifying findings by severity, or producing a security review report."
   },
   {
+    "legacy_name": "security-audit",
+    "name": "cf-security-audit",
+    "path": "skills/development/security/security-audit/SKILL.md",
+    "description": "Defensive security audit router for any local codebase — secure code review, OWASP Top 10 / ASVS / WSTG mapping, STRIDE threat modeling, hardening and remediation. Use when the user asks for security review, auditoría de seguridad, AppSec, OWASP, threat model, hardening, review-security, or to audit vulnerabilities in this or other sites/repos. Never plans or runs attacks, exploits, payloads, or evasion (VPN/IP bypass)."
+  },
+  {
     "legacy_name": "threat-modeling",
     "name": "cf-threat-modeling",
     "path": "skills/development/security/threat-modeling/SKILL.md",
@@ -358,6 +376,12 @@
     "name": "cf-revenue-analytics",
     "path": "skills/finance/revenue-analytics/SKILL.md",
     "description": "Revenue analysis and SaaS metrics — MRR/ARR decomposition, revenue recognition (ASC 606), cohort retention, churn analysis, LTV, NRR, expansion revenue."
+  },
+  {
+    "legacy_name": "finance-hub",
+    "name": "cf-finance-hub",
+    "path": "skills/finance/finance-hub/SKILL.md",
+    "description": "Finance skill router — models, board packs, variance, unit economics vs skills/bi (warehouse/dashboards) and skills/commercial (pricing, pipeline forecasts). Read first for ambiguous finance requests."
   },
   {
     "legacy_name": "ab-testing",
@@ -448,6 +472,12 @@
     "name": "cf-marketing-plan",
     "path": "skills/marketing/marketing-plan/SKILL.md",
     "description": "Comprehensive marketing and campaign planning — GTM strategy, marketing calendars, budget allocation, channel mix, integrated campaigns."
+  },
+  {
+    "legacy_name": "marketing-router",
+    "name": "cf-marketing-router",
+    "path": "skills/marketing/marketing-router/SKILL.md",
+    "description": "Marketing skill router — when to use which cf-marketing-* skill (strategy, channels, CRO, SEO, analytics). Stub marketing skills point here; production UI uses $flow-build-ui / design-tokens."
   },
   {
     "legacy_name": "marketing-psychology",
@@ -592,6 +622,12 @@
     "name": "cf-skill-importer",
     "path": "skills/shared/skill-importer/SKILL.md",
     "description": "Import external skills (GitHub/GitLab) into Codex as git clones. Clones the repo into ~/.codex/flow/vendor/ and registers each discovered skill in Codex.json — never copies SKILL.md files into skills/. Use when importing skills from a repository URL, owner/repo shorthand, or when asked to install a third-party skill."
+  },
+  {
+    "legacy_name": "flow-resolve",
+    "name": "flow-resolve",
+    "path": "skills/shared/flow-resolve/SKILL.md",
+    "description": "Resolve a catalog agent, skill, or command name to its canonical file path via flow-resolve.py."
   },
   {
     "legacy_name": "flow-steward",

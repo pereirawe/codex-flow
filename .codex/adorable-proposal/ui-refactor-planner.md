@@ -6,7 +6,7 @@ description: >
   estratégia de migração incremental e sem quebra de funcionalidades.
   Output consumido pelo ui-architect e ui-implementer.
 mode: subagent
-model: anthropic/claude-opus-4-5
+# model: inherit Codex session model (capability preference in role prose only)
 temperature: 0.2
 permission:
   edit: deny

@@ -37,3 +37,7 @@ Plan, create, and manage social media content.
 - Platform-optimized copywriting
 - Engagement strategy and community management
 - Performance analytics and reporting
+
+## Router (stub)
+
+Pointer-only entry — read `marketing-router` first. For depth use `content-strategy` and `copywriting`.

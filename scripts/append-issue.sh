@@ -1,32 +1,16 @@
 #!/usr/bin/env bash
 set -euo pipefail
 source "$(dirname "$0")/config.sh"
+source "$(dirname "$0")/lib-issues.sh"
 
 # Usage: append-issue.sh [flags]
 #
-# Appends a CANONICAL issue entry to the project/local known_issues.md using the
-# exact schema from standards/issues.md. Removes PO/PM format variance — the
-# discovery flow produces fields, this script writes them. Multiline values
-# (tests, acceptance, business rules, description, impact) accept "\n" escapes.
+# Appends a CANONICAL issue entry (hybrid issues/<id>.md or monolith
+# known_issues.md) using the schema from standards/issues.md.
 #
-# Flags:
-#   --id <n>            issue id (auto if omitted = max+1)
-#   --title <t>         required
-#   --type <t>          bug|feat|doc|chore
-#   --severity <s>      critical|high|medium|low
-#   --priority <p>      low|medium|high|critical
-#   --base <b>          base branch (default: detected later)
-#   --reviewers <r>     "1 (backend)" etc.
-#   --location <l>      file:line
-#   --description <d>   (accepts \n)
-#   --impact <i>        (accepts \n)
-#   --business-rules <b> (accepts \n)
-#   --acceptance <a>    (accepts \n)
-#   --tests <t>         scenario lines (accepts \n)
-#   --flow <f>          lean|escalated (bugs only)
-#   --report <r>        reporter (default: model)
-#   --status <s>        default backlog
-#   --no-lint           skip the post-append lint
+# Flags: --id --title --type --severity --priority --base --reviewers
+#   --location --description --impact --business-rules --acceptance
+#   --tests --work-plan --flow --report --status --no-lint
 
 decode() { printf '%s' "${1:-}" | sed 's/\\n/\n/g'; }
 
@@ -34,7 +18,7 @@ ID=""
 TITLE=""; TYPE="feat"; SEVERITY="medium"; PRIORITY="medium"
 BASE="-"; REVIEWERS="1 (backend)"; LOCATION="-"
 DESCRIPTION=""; IMPACT=""; BUS="-"; ACCEPTANCE=""; TESTS="-"
-FLOW=""; REPORT="model"; STATUS="backlog"; LINT=1
+WORK_PLAN=""; FLOW=""; REPORT="model"; STATUS="backlog"; LINT=1
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -51,6 +35,7 @@ while [[ $# -gt 0 ]]; do
     --business-rules) BUS="$2"; shift 2 ;;
     --acceptance) ACCEPTANCE="$2"; shift 2 ;;
     --tests) TESTS="$2"; shift 2 ;;
+    --work-plan) WORK_PLAN="$2"; shift 2 ;;
     --flow) FLOW="$2"; shift 2 ;;
     --report) REPORT="$2"; shift 2 ;;
     --status) STATUS="$2"; shift 2 ;;
@@ -61,55 +46,79 @@ done
 
 if [[ -z "$TITLE" ]]; then echo "append-issue: --title required"; exit 3; fi
 FILE="$PROJECT_ISSUES_FILE"
-if [[ ! -f "$FILE" ]]; then echo "known_issues.md not found"; exit 3; fi
+MODE="$(issues_mode)"
+if [[ "$MODE" == monolith && ! -f "$FILE" ]]; then
+  echo "known_issues.md not found"; exit 3
+fi
+if [[ "$MODE" == hybrid ]]; then
+  mkdir -p "$PROJECT_ISSUES_DIR/issues"
+fi
 
-# Serialize allocation and append; the archive reserves historical IDs.
 exec 9>"$PROJECT_ISSUES_DIR/.issues.lock"
 flock -x 9
+
 if [[ -z "$ID" ]]; then
-  ID=$(awk '/^### [0-9]+\./ {n=$2+0; if(n>max)max=n} END {print max+1}' "$FILE" <(cat "$RESOLVED_FILE" 2>/dev/null || true))
+  ID=$(( $(issues_max_id) + 1 ))
 fi
 [[ "$ID" =~ ^[1-9][0-9]*$ ]] || { echo "Invalid issue ID"; exit 3; }
-if awk -v id="$ID" '$0 ~ "^### " id "\\." {found=1} END {exit !found}' "$FILE" <(cat "$RESOLVED_FILE" 2>/dev/null || true); then
+
+if issue_path "$ID" >/dev/null 2>&1; then
   echo "Issue $ID already exists (active or archived)"; exit 3
 fi
-BACKUP=$(mktemp "$PROJECT_ISSUES_DIR/.append.XXXXXX")
-cp "$FILE" "$BACKUP"
-trap 'rm -f "$BACKUP"' EXIT
 
 FLOW_LINE=""
 if [[ -n "$FLOW" && "$FLOW" != "-" ]]; then
   FLOW_LINE=$'\n'"- Flow: $FLOW"
 fi
+WP_LINE=""
+if [[ -n "$WORK_PLAN" && "$WORK_PLAN" != "-" ]]; then
+  WP_LINE=$'\n'"- Work plan: $(decode "$WORK_PLAN")"
+fi
 
-{
-  echo ""
-  echo "### $ID. $(decode "$TITLE")"
-  echo "- Status: $STATUS"
-  echo "- Type: $TYPE"
-  echo "- Severity: $SEVERITY"
-  echo "- Priority: $PRIORITY"
-  printf '%s\n' "$FLOW_LINE"
-  echo "- Report: $REPORT"
-  echo "- Base branch: $BASE"
-  echo "- Reviewers: $REVIEWERS"
-  echo "- Remote: -"
-  echo "- Jira: -"
-  echo "- PR: -"
-  echo "- Location: $LOCATION"
-  echo "- Description: $(decode "$DESCRIPTION")"
-  echo "- Impact: $(decode "$IMPACT")"
-  echo "- Business rules: $(decode "$BUS")"
-  echo "- Acceptance criteria: $(decode "$ACCEPTANCE")"
-  echo "- Tests: $(decode "$TESTS")"
-  echo "- Suggested fix: -"
-} >> "$FILE"
+BODY=$(cat <<EOF
+### $ID. $(decode "$TITLE")
+- Status: $STATUS
+- Type: $TYPE
+- Severity: $SEVERITY
+- Priority: $PRIORITY$FLOW_LINE
+- Report: $REPORT
+- Base branch: $BASE
+- Reviewers: $REVIEWERS
+- Remote: -
+- Jira: -
+- PR: -
+- Location: $LOCATION
+- Description: $(decode "$DESCRIPTION")
+- Impact: $(decode "$IMPACT")
+- Business rules: $(decode "$BUS")
+- Acceptance criteria: $(decode "$ACCEPTANCE")
+- Tests: $(decode "$TESTS")$WP_LINE
+- Suggested fix: -
+EOF
+)
 
-echo "[append] issue $ID appended (status=$STATUS)"
+BACKUP=""
+if [[ "$MODE" == hybrid ]]; then
+  DEST="$(issue_write_body "$ID" <<<"$BODY")"
+  bash "$SCRIPTS_DIR/issues-reindex.sh" >/dev/null
+  BACKUP="$DEST"
+else
+  BACKUP=$(mktemp "$PROJECT_ISSUES_DIR/.append.XXXXXX")
+  cp "$FILE" "$BACKUP"
+  trap 'rm -f "$BACKUP"' EXIT
+  printf '\n%s\n' "$BODY" >> "$FILE"
+fi
+
+echo "[append] issue $ID appended (status=$STATUS mode=$MODE)"
 
 if [[ "$LINT" -eq 1 ]]; then
   if ! "$SCRIPTS_DIR/issue-lint.sh" "$ID"; then
-    cp "$BACKUP" "$FILE"
+    if [[ "$MODE" == hybrid ]]; then
+      rm -f "$DEST"
+      bash "$SCRIPTS_DIR/issues-reindex.sh" >/dev/null
+    else
+      cp "$BACKUP" "$FILE"
+    fi
     echo "append-issue: lint failed; tracker restored"
     exit 2
   fi

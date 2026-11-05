@@ -38,3 +38,7 @@ Create and maintain reusable marketing templates.
 - Social media post templates
 - Ad creative templates
 - Brand guideline enforcement
+
+## Router (stub)
+
+Pointer-only entry — read `marketing-router` first. For depth use `theme-factory` and `copywriting`.

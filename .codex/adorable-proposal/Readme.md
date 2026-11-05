@@ -1,3 +1,5 @@
+> **Archived.** Active routing and agents: see [`README.md`](README.md) in this folder and `standards/design-pipeline.md`.
+
 CHAT COMPARTILHADO NO LINK - https://claude.ai/share/f806879e-e891-40a5-bd90-da36d2630f8f
 
 ## ISSUES QUE EU IDENTIFIQUEI

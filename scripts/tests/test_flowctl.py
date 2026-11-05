@@ -33,7 +33,7 @@ class FlowTests(unittest.TestCase):
         content=(home/'.codex/AGENTS.md').read_text()
         self.assertIn('Existing personal instructions.',content)
         self.assertEqual(content.count(flow.BEGIN),1)
-        self.assertTrue((home/'.agents/skills/develop').is_symlink())
+        self.assertTrue((home/'.codex/skills/develop').is_symlink())
         self.assertTrue((home/'.codex/agents/cf_development_discovery.toml').is_symlink())
 
     def test_project_preserves_issues_rules_extensions_and_repeated_init(self):
@@ -83,7 +83,7 @@ class FlowTests(unittest.TestCase):
         (vendor/'SKILL.md').write_text('---\nname: custom\ndescription: Test skill\n---\n\nOriginal upstream instructions.\n')
         home=self.base/'home'
         self.assertEqual(flow.vendor_register(home),1)
-        link=home/'.agents/skills/vendor-example-custom';self.assertTrue(link.is_symlink())
+        link=home/'.codex/skills/vendor-example-custom';self.assertTrue(link.is_symlink())
         self.assertIn(str(vendor/'SKILL.md'),(link/'SKILL.md').read_text())
         shutil.rmtree(vendor.parent)
         self.assertEqual(flow.vendor_register(home),0);self.assertFalse(link.is_symlink())
@@ -125,6 +125,6 @@ class FlowTests(unittest.TestCase):
         shutil.move(flow.ROOT,destination);flow.ROOT=destination
         flow.global_install(home)
         self.assertTrue((destination/'scripts/flowctl.py').is_file())
-        self.assertTrue((home/'.agents/skills/develop').is_symlink())
+        self.assertTrue((home/'.codex/skills/develop').is_symlink())
 
 if __name__=='__main__':unittest.main()

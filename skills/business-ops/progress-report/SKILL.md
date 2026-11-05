@@ -1,13 +1,10 @@
 ---
 name: cf-progress-report
 description: Generate a client-facing progress/delivery report for a tracked project
-  (issues vs commercial proposal) — with Codetomika logo, PDF output, Mermaid Gantt,
-  date, what is done, % completion by hours, delivery metrics for the client, and
-  an explicit highlight of tasks that were not mapped in the proposal/issues. Use
-  when the user asks to create, refresh, or standardize a progress report, delivery
-  report, status report, "relatório de avanço", "relatório de progresso", "relatório
-  de entrega", or to communicate value/delivery to the client. Also use when creating/improving
-  the progress-report skill/script itself.
+  (issues vs commercial proposal hours) via ~/.codex/flow/scripts/progress-report.sh,
+  with optional project brand/PDF/Gantt. Use for progress report, delivery report,
+  status report, "relatório de avanço", "relatório de progresso", "relatório de
+  entrega". For internal cost/age/ledger use cf-ops-report instead.
 ---
 
 ## Codex runtime contract
@@ -114,15 +111,24 @@ Order is deliberate — the client reads value first, then details.
 
 ## Generation pipeline
 
-Run these in order (the `ocf:progress-report` command does this):
+Canonical generator (Flow core — project-agnostic):
 
-1. `progress-report.sh --date <YYYY-MM-DD>` reads `known_issues.md` +
-   `resolved_issues.md` and the proposal hours table, computes metrics, and
-   writes the MD. It must:
+```bash
+bash ~/.codex/flow/scripts/progress-report.sh [--date YYYY-MM-DD] [--project DIR]
+```
+
+Optional hours mapping: `.codex/progress-modules.json`. Project wrappers under
+`.codex/scripts/progress-report.sh` may call this script then add brand/PDF.
+
+Run these in order (the `$flow-progress-report` command does this):
+
+1. `~/.codex/flow/scripts/progress-report.sh --date <YYYY-MM-DD>` reads
+   `known_issues.md` + `resolved_issues.md` and optional
+   `.codex/progress-modules.json`, computes metrics, and writes the MD. It must:
    - resolve the report date dynamically (never hardcode a past date);
    - read `resolved` issues from `resolved_issues.md` (they are never in
      `known_issues.md`), so % resolved is correct;
-   - compute % by **hours** (proposal modules) with a per-module status;
+   - compute % by **hours** (modules JSON) with a per-module status when present;
    - print a one-line summary to stdout for the agent/user.
 2. `convert-mermaid.sh` renders the Gantt SVG (idempotent — same input, same
    output; skip if unchanged).

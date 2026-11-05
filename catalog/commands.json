@@ -219,6 +219,24 @@
     "description": "Search private historical conversations"
   },
   {
+    "legacy_name": "ocf:progress-report",
+    "name": "flow-progress-report",
+    "path": "command-skills/flow-progress-report/SKILL.md",
+    "description": "Client-facing progress report from known/resolved issues (+ optional hours modules)"
+  },
+  {
+    "legacy_name": "ocf:ops-report",
+    "name": "flow-ops-report",
+    "path": "command-skills/flow-ops-report/SKILL.md",
+    "description": "Internal ops report: issue age, cost ledger, steward — not for clients"
+  },
+  {
+    "legacy_name": "ocf:plan-sessions",
+    "name": "flow-plan-sessions",
+    "path": "command-skills/flow-plan-sessions/SKILL.md",
+    "description": "Build delivery schedule + session prompts + plans under .codex/sessions/ (optional --launch/--worktree)"
+  },
+  {
     "legacy_name": "web-service-commands",
     "name": "flow-runtime",
     "path": "command-skills/flow-runtime/SKILL.md",

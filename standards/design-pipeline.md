@@ -126,7 +126,36 @@ stage. Stages do not retry silently.
 - **Response language** — agents respond in the user's input language
   (locale rule, issue #73).
 
+## Routing — when to use which path
+
+| Goal | Entry | Notes |
+|------|-------|-------|
+| Quick UI exploration, one-off pages, marketing polish | `agents/designer.md` + vendored **taste** skills (`design-taste-frontend`, etc.) | No JSON handoffs; fastest iteration; not the delivery gate |
+| Greenfield product UI with contracts + critic gate | `$flow-build-ui` | 4-pass pipeline; outputs under `.codex/design-outputs/<session-id>/` |
+| Audit/refactor existing frontend without losing behavior | `$flow-audit-ui` | Auditor → refactor planner; optional chain into build pipeline (same session id) |
+| Marketing page **production** with token discipline | `$flow-build-ui` or read `cf-frontend-design` → then Adorable/`design-tokens` for shipped app UI | Marketing skills plan copy/CRO; Adorable implements gated product UI |
+
+**Capability:** no stage hardcodes a model — subagents inherit the session default (see issue #82). Prefer high-capability models for art-director and critic when available; implementer fidelity matters more than model brand.
+
+**Agent ↔ skill map (canonical content lives in skills):**
+
+| Agent | Read before output |
+|-------|-------------------|
+| `art-director` | `design-tokens`, `reference-library`, `visual-hierarchy` |
+| `ui-architect` | `component-patterns`, `design-tokens` |
+| `ui-implementer` | `component-patterns`, `design-tokens` |
+| `ui-critic` | all four design skills |
+| `ui-auditor` | all four design skills |
+| `ui-refactor-planner` | `design-tokens`, `component-patterns`, `reference-library` |
+
+**Critic ↔ implementer loops:** pass failing checklist IDs + file diff; avoid re-loading full `component_tree` unless the architect contract changed.
+
+### Legacy Adorable proposal archive
+
+Historical chat notes and early agent drafts (including deprecated `model:` frontmatter) live under `.codex/adorable-proposal/`. Active agents are `agents/design/*.md`; this standard supersedes the proposal for routing and output paths.
+
 ## Related
 
 - Agents: `agents/design/README.md` (pipeline flow and per-agent contracts)
-- Commands: `commands$flow-build-ui.md`, `commands$flow-audit-ui.md`
+- Commands: `command-skills/flow-build-ui/SKILL.md`, `command-skills/flow-audit-ui/SKILL.md`
+- Quick explore: `agents/designer.md`

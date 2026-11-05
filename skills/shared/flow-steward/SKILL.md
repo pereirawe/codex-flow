@@ -25,6 +25,6 @@ Use `ok` when nothing in the flow should change. Use `fix` after a patch. Use `b
 
 ## Do not
 
-- Load the agent or skill catalogs.
+- Load whole agent or skill catalogs (one path: `flow-resolve.py`).
 - Send Telegram or OpenWA from this skill.
 - Lengthen a flow to "be safer" without removing a repeated failure.

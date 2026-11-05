@@ -25,6 +25,8 @@ Each business sector has its own agents and skills under `agents/<sector>/` and
 - `marketing` — Ads, SEO, social media, presentations, reports, research
 - `bi` — Business intelligence, dashboards, analytics
 - `sales` — Sales pipeline, CRM, proposals
+- `commercial/` — Neutral proposal/spec/discovery standards (see `docs/brand.md`)
+- `brand/` — Example `brand.profile.json` and `pricing.md` for projects
 - `finance` — Financial modeling, budgeting, reporting
 - `commercial` — Pricing, partnerships, deal desk, channel economics
 - `business-ops` — Process mapping, vendor management, capacity planning

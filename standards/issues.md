@@ -31,8 +31,15 @@ Two-tier issue tracking:
 - Business rules: <specific business logic, constraints, and domain rules>
 - Acceptance criteria: <what must be true for the issue to be complete>
 - Tests: <scenario → outcome lines, defined during discovery>
+- Work plan: <optional-recommended 3–8 steps with → outcomes; discovery fills this>
 - Suggested fix: <approach or next step>
 ```
+
+`Work plan:` is optional but recommended for `feat`/`bug` at `ready`. Discovery
+(`feat-lean`/`feat-full`) should generate short verifiable steps. `issue-lint`
+warns (non-blocking) when ready feat/bug lacks it. Session plans read this
+field; it does not replace `.codex/sessions/*/session-N.plan.md`.
+
 
 `Remote:` is required. Use `-` when no remote issue exists yet.
 `Jira:` is optional (default `-`) — the Jira Cloud issue key (e.g. `DEV-123`)

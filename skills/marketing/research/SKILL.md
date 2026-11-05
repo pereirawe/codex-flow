@@ -37,3 +37,7 @@ Conduct thorough market research and analysis.
 - Audience research and persona development
 - Trend spotting and market sizing
 - SWOT and PESTLE analysis
+
+## Router (stub)
+
+Pointer-only entry — read `marketing-router` first. For depth use `customer-research` and `competitor-intelligence`.

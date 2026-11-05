@@ -37,3 +37,7 @@ Build comprehensive marketing analytics reports.
 - Campaign performance analysis
 - Executive summary writing
 - Data visualization and insight extraction
+
+## Router (stub)
+
+Pointer-only entry — read `marketing-router` first. For depth use `marketing-analytics`.

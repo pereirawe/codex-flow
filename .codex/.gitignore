@@ -8,6 +8,8 @@ cache/
 preflight/
 reviews/
 design-outputs/
+sessions/
+metrics/
 # Spikes keep their versioned markdown deliverables; only transient scratch files are ignored
 spikes/*
 !spikes/*.md

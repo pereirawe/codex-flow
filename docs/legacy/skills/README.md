@@ -90,6 +90,13 @@ Native (`skills/career/` — resume optimization & LinkedIn flow; backed by
 |-------|---------|
 | `go/*` | Go language idioms, package design, testing, API design |
 | `python/*` | Python style, typing, docstrings, Flask API design |
+| `security/security-audit` | Defensive security audit router (OWASP agent + review skills; no offensive work) |
+| `security/secure-code-review` | Secure code review checklist and severity classification |
+| `security/owasp-top10` | OWASP Top 10 (2021) categories, CWE mapping, mitigation |
+| `security/owasp-asvs` | ASVS 4.0 chapters and verification levels L1/L2/L3 |
+| `security/owasp-wstg` | WSTG categories as defensive verification checklists |
+| `security/owasp-samm` | SAMM maturity assessment and improvement roadmap |
+| `security/threat-modeling` | STRIDE threat modeling and DREAD ranking |
 
 ## Marketing
 

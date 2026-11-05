@@ -29,46 +29,70 @@ does not authorize sending. Do not hide approval rejections from the user.
 
 ## $discovery [proposal | id]
 
-
-Transform a raw idea (free text) or an existing issue id into a tracked, typed,
-linted issue. Discovery is the ONLY phase with user interaction — give the
-business context in the argument; the agent does not prompt mid-flow.
-
-Bugs and feats use **different loops** (see `workflow.md` § Loop Profiles):
-bugs resolve faster (fewer agents) with a higher quality bar; feats keep full
-depth (PO + TL). All loops end with `scripts/append-issue.sh` + `issue-lint.sh`.
+Transform a raw idea or existing issue id into a tracked, typed, linted issue.
+Discovery is the ONLY phase with user interaction — put business context in the
+argument; do not prompt mid-flow.
 
 ### Arguments
 
 ```
 $discovery "Add CSV export to reports screen"
-$discovery 12          # refine an existing backlog/ready issue
+$discovery 12
 $discovery "Bug: login fails when token expires"
 ```
 
 ### Flow
 
 1. **Resolve `known_issues.md`** (project `.codex/` first, global fallback).
-2. **Classify**: if argument is a number and the issue exists, refine it;
-   otherwise treat as a new proposal. Infer `- Type:` (`bug` if it reads like a
-   defect/regression, else `feat`) and `- Severity:` when stated.
-3. **Run the discovery subagent**: `Task(development/discovery)` with the
-   proposal/context. It selects the loop, runs PO/TL as needed, calls
-   `scripts/append-issue.sh` (canonical entry) and `scripts/issue-lint.sh
-   --strict`, and reports the created `id`.
-4. **Verify**: re-run `scripts/issue-lint.sh <id>` on the result; if it fails,
-   report the gaps (do not auto-fix — discovery already attempted).
-5. **One notification** via `~/.codex/flow/scripts/flow-notify.sh` (Telegram;
-   credentials in `.codex/telegram.env`): id, type, loop, lint status.
-6. **Steward**, in this agent, on success or stop: read
-   `~/.codex/flow/skills/shared/flow-steward/SKILL.md` and run it for `discovery`.
+2. **Classify** via script (do not invent the loop):
+
+```bash
+printf '%s' "<proposal or existing issue text>" \
+  | bash ~/.codex/flow/scripts/discovery-route.sh --text -
+```
+
+Record `METRICS_START` and after routing:
+
+```bash
+bash ~/.codex/flow/scripts/metrics-record.sh \
+  --issue 0 --flow discovery --step route --result ok
+```
+
+(Use the real id after append; for route-only use `--issue 0` or skip until id exists.)
+
+3. **Follow the JSON**:
+   - `agents: []` (`chore` or `feat-lean`): in **this** agent, fill fields from the
+     proposal + `defaults`, including a short `- Work plan:` (3–8 steps with
+     `→` outcomes from rules/Tests/Suggested fix), run `scripts/append-issue.sh`
+     (supports `--work-plan`) then `scripts/issue-lint.sh --strict <id>`.
+     **No** `Task(development/discovery)` and **no** PO/TL Tasks. If lint FAIL →
+     escalate: re-run router is not enough; invoke the agents that `feat-full`
+     would need (PO and/or TL) and fix — never leave a weak `ready`.
+   - `agents` non-empty: invoke **only** those roles (in order), each via
+     `Task(<role>)` with the proposal + router JSON. Prefer not wrapping in
+     `Task(development/discovery)` when the list is already explicit. Then
+     `append-issue.sh` + `issue-lint.sh --strict` (Work plan still required for
+     ready feat/bug — warn if missing).
+4. **Verify** lint PASS. On FAIL, report gaps; do not mark ready.
+5. **Notify** once via `~/.codex/flow/scripts/flow-notify.sh` (Telegram).
+6. **Metrics** after append (with real id):
+
+```bash
+bash ~/.codex/flow/scripts/metrics-record.sh \
+  --issue <id> --flow discovery --step complete \
+  --agents "<comma roles used>" --result ok|fail
+```
+
+7. **Steward**: read `~/.codex/flow/skills/shared/flow-steward/SKILL.md` for
+   `discovery`.
+
+### Quality bar (fail closed)
+
+Same floors as `issue-lint` (feat rules; Tests by severity). `feat-lean` is
+allowed only when the router reports empty `gate_failures`. Delivery reviewers
+and `committer-check` are unchanged.
 
 ### Notes
 
-- No PM agent, no remote question — `Remote:` is auto-created at promotion
-  (`$develop` / `$develop-full`).
-- For `feat`, include business rules + acceptance in the argument when possible
-  to skip a refinement cycle.
-- After discovery, hand off with `$develop-full <id>` (end-to-end) or
-  `$develop <id>` (manual merge).
-
+- Remote is created at promotion (`$develop` / `$develop-full`).
+- After discovery: `$develop-full <id>` or `$develop <id>`.

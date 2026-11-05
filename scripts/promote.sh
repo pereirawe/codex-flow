@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 source "$(dirname "$0")/config.sh"
+source "$(dirname "$0")/lib-issues.sh"
 
 # Usage: $SCRIPTS_DIR/promote.sh <local_issue_id>
-# Reads Base branch, Reviewers, and Remote from known_issues.md
+# Reads Base branch, Reviewers, and Remote from known_issues.md / hybrid issues/
 # backlog → ready: just status change (no branch, Tech Lead creates remote separately)
 # ready → in-progress: reads Base branch, creates feature branch, no user interaction
 
@@ -13,27 +14,21 @@ if [[ -z "$ID" ]]; then
   exit 1
 fi
 
+MODE="$(issues_mode)"
 ISS_FILE="$PROJECT_ISSUES_FILE"
 
-if [[ ! -f "$ISS_FILE" ]]; then
+if [[ "$MODE" == monolith && ! -f "$ISS_FILE" ]]; then
   echo "known_issues.md not found"
   exit 1
 fi
 
-# Extract issue section
-SECTION=$(awk -v id="$ID" '
-  $0 ~ "^### " id "\\." {found=1}
-  found {
-    if ($0 ~ /^### [0-9]+\./ && $0 !~ "^### " id "\\.") {
-      exit
-    }
-    print
-  }
-' "$ISS_FILE")
-
+SECTION="$(issue_section "$ID" || true)"
 if [[ -z "$SECTION" ]]; then
   echo "Issue $ID not found"
   exit 1
+fi
+if [[ "$MODE" == hybrid ]]; then
+  ISS_FILE="$(issue_path "$ID")" || { echo "Issue $ID not found"; exit 1; }
 fi
 
 STATUS=$(printf '%s\n' "$SECTION" | awk -F': ' '/^- Status:/ {print $2; exit}')
@@ -104,7 +99,12 @@ rewrite_entry() { # <file> <id> <new_status|''> <opened|''> <ready|''> <started|
 if [[ "$STATUS" == "backlog" ]]; then
   TODAY=$(date +%Y-%m-%dT%H:%M)
   # Stamp `- Ready:` (today, set-if-absent) alongside the status change (BR 2)
+  exec 9>"$PROJECT_ISSUES_DIR/.issues.lock"
+  flock -x 9
   rewrite_entry "$ISS_FILE" "$ID" "ready" "" "$TODAY" "" ""
+  if [[ "$MODE" == hybrid ]]; then
+    bash "$SCRIPTS_DIR/issues-reindex.sh" >/dev/null
+  fi
 
   echo "[promote] Issue $ID promoted from backlog to ready"
   echo "[promote] Remote issue will be created during promotion (PM step) or by the next promoter."
@@ -179,7 +179,12 @@ if [[ "$STATUS" == "ready" ]]; then
   # backfill Opened set-if-absent (BR 2/BR 3 — documented approximation when
   # the remote was auto-created during promotion and has no Opened stamp yet)
   TODAY=$(date +%Y-%m-%dT%H:%M)
+  exec 9>"$PROJECT_ISSUES_DIR/.issues.lock"
+  flock -x 9
   rewrite_entry "$ISS_FILE" "$ID" "in-progress" "$TODAY" "" "$TODAY" ""
+  if [[ "$MODE" == hybrid ]]; then
+    bash "$SCRIPTS_DIR/issues-reindex.sh" >/dev/null
+  fi
 
   # Jira Cloud sync (issue #48): reflect ready→in-progress on the card when
   # Jira is configured and a card exists. Non-blocking (BR 8).

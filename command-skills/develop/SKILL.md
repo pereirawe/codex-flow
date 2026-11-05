@@ -75,15 +75,22 @@ auto-created via `create_issue.sh` if missing.
 4. **Warm current**: `scripts/preflight.sh <id>`.
 5. **Pick dev agent**: `LANG=$(scripts/detect-lang.sh [location])`.
 6. **Implement**: `Task(<devagent>)` → tests → self-review → `transition.sh <id> in-review`.
-7. **Review preflight (per profile)**: read `- Reviewers:` (`<n> (profiles)`).
-   For EACH profile, run `scripts/review-preflight.sh <id> <profile>` — a fast
-   sequential loop of N calls that writes
-   `.codex/preflight/review-<id>-<profile>.md` (scoped, profile-filtered
-   context for the reviewer). Only then dispatch the reviewers (next step).
+   Record metrics: `metrics-record.sh --issue <id> --flow develop --step implement`.
+7. **Route reviewers** (do not invent the list):
+
+```bash
+bash ~/.codex/flow/scripts/delivery-route.sh <id>
+```
+
+   Use `reviewers_to_run` only. Skipped profiles are attested in the JSON
+   (`no matching files`) — do **not** launch those Tasks. Floor / security
+   mandatory profiles are already enforced by the script.
 8. **Parallel senior review**: one `Task(development/senior-reviewers/<profile>)`
-   per profile, in a single message. All approve; else fix+re-review loop.
-9. **Gate**: `scripts/committer-check.sh <id>` → PASS ⇒ `transition.sh <id>
-   in-publish`. FAIL ⇒ STOP + notify.
+   per entry in `reviewers_to_run`, in a single message. All must approve.
+   Fix→re-review at most **`max_rereview_cycles` (2)**; then STOP + notify.
+9. **Gate**: `scripts/test-runner.sh --run` then `scripts/committer-check.sh <id>`
+   → PASS ⇒ `transition.sh <id> in-publish`. FAIL ⇒ STOP + notify.
+   Record `metrics-record.sh --issue <id> --flow develop --step committer`.
 10. **Create MR**: `scripts/create-pr.sh <id>` (sets `- PR: #<n>`).
 11. **Report "esperando merge manual"**: do NOT merge/close. Issue stays
     `in-publish`, MR OPEN.
@@ -94,9 +101,9 @@ Closing/archiving after manual merge: `$flow-check-pr <id>` (or Close Requester)
 
 ### Notify, failure, steward
 
-One `~/.codex/flow/scripts/flow-notify.sh` after the LAST issue. It calls
-`telegram-notify.sh` and reads `.codex/telegram.env`. Any failure → STOP the
-list and send that one failure notification. Delivered issues stay
+One `~/.codex/flow/scripts/flow-notify.sh` after the LAST issue (Telegram, then
+OpenWA). Credentials live in `.codex/telegram.env` / `.codex/openwa.env`. Non-zero
+exit when both channels fail → STOP the list. Delivered issues stay
 `in-publish` with MR open.
 Then, in this agent, read `~/.codex/flow/skills/shared/flow-steward/SKILL.md`
 and run it once for `develop`.

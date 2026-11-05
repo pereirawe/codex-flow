@@ -112,15 +112,24 @@ is replaced by that lint. PM/remote creation is deferred to promotion.
 
 | Loop | Trigger | Discovery agents | Delivery reviewers | Quality bar |
 |------|---------|-----------------|--------------------|-------------|
-| `feat-full` | `feat` | PO (rules+`Tests:`) → TL (branch/reviewers) | from TL | full |
+| `feat-lean` | `feat` with rules+`Tests:` + no risk (router gates PASS) | none (script + parent) | defaults / detect-lang | **same** floors as full |
+| `feat-full` | `feat` incomplete or risk | only missing roles (PO and/or TL; CTO if architecture) | from TL or defaults | full |
 | `bug-expedite` | `bug` + `critical`/`high` | PO triage only (lean) | 2 (incl `security` if applicable) | high |
 | `bug-lean` | `bug` + `low`/`medium` | PO triage only (lean) | 1 | normal |
 | `chore` | `doc`/`chore` | none (script) | 1 | light |
 
+Routing is mechanical: `scripts/discovery-route.sh`. Fail closed — never mark
+`ready` when lint or gates fail.
+
+- **feat-lean** cuts agents, not quality: same `issue-lint` floors as feat-full.
 - **Expedite** (critical/high bugs) is the fastest path to code yet mandates 2
   reviewers and `security` when relevant — speed without dropping the bar.
 - **Lean** (low/medium bugs) is the minimal path: one PO triage pass, one
   reviewer, lint-strict.
+
+> Historical note: older text describing a mandatory 6-phase discovery
+> (CTO→TL→PO→QA→PM) is **legacy**. Delivery still uses developer + parallel
+> senior reviewers + committer gate.
 
 ### Aging policy (progressive prioritization)
 
