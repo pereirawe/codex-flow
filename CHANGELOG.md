@@ -2,6 +2,11 @@
 
 ## Codex Flow 1.1.0 (2026-11-05)
 
+### Cross-platform install
+- `install --check` reports Linux / macOS / WSL / Windows; native Windows fails with WSL guidance.
+- `install.ps1` forwards into WSL; `docs/install.md` matrix for Linux, macOS, Windows.
+- `scripts/lib-os.sh`: portable locks (`flock` or mkdir) + `flow_epoch` (no GNU `date -d`).
+
 ### Delivery cost ↓ (same quality floors)
 - `discovery-route.sh` + `feat-lean` fail-closed; discovery skill skips PO/TL when gates pass.
 - `delivery-route.sh` prunes reviewers with no matching files (floor/security preserved); develop/develop-full cap re-reviews at 2 and share `test-runner` gate.

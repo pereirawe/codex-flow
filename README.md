@@ -11,11 +11,20 @@ Requires Python 3.11+, Git, Bash and an authenticated Codex app/CLI. Delivery
 also uses gh/glab, jq and each project's test tools. Specialist skills keep
 their own documented dependencies.
 
-Safe first-time sequence:
+| OS | Status |
+|----|--------|
+| Linux | Supported (`bash install.sh`) |
+| macOS | Supported (Homebrew recommended) |
+| Windows | **WSL2 only** — native PowerShell/cmd unsupported (`install.ps1` forwards to WSL) |
+
+Full matrix, deps, and troubleshooting: **[docs/install.md](docs/install.md)**.
+
+Safe first-time sequence (Linux / macOS / WSL):
 
 ```bash
 git clone https://github.com/pereirawe/codex-flow.git
 cd codex-flow
+bash install.sh --check
 bash install.sh
 python3 scripts/restore-vendors.py
 cp .codex/telegram.env.example .codex/telegram.env   # fill credentials
@@ -23,7 +32,10 @@ python3 scripts/validate.py && python3 scripts/tests/test_flowctl.py
 bash scripts/init.sh /path/to/project pt
 ```
 
-Preflight without installing: `bash install.sh --check`.
+On Windows (PowerShell), prefer WSL; or from the repo: `.\install.ps1 --check`.
+
+Preflight without installing: `bash install.sh --check` (reports platform,
+Python/git/bash, symlink capability, vendors, telegram.env).
 
 The installer links this checkout into `~/.codex/flow`, `~/.codex/skills`
 (default), and `~/.codex/agents`. When `~/.cursor` exists, the same skill
@@ -35,6 +47,8 @@ It adds a managed block to `~/.codex/AGENTS.md`, preserving existing
 instructions, auth, model/provider settings, unrelated skills and agents.
 Conflicting links/files are backed up privately in `.local/install-backups`.
 Keep this checkout available. After moving the checkout, re-run `bash install.sh`.
+Pipeline locks/dates use `scripts/lib-os.sh` so macOS works without GNU
+`flock` / `date -d`.
 
 ## Projects
 

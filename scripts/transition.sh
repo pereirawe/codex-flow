@@ -2,6 +2,7 @@
 set -euo pipefail
 source "$(dirname "$0")/config.sh"
 source "$(dirname "$0")/lib-issues.sh"
+source "$(dirname "$0")/lib-os.sh"
 
 # Usage: $SCRIPTS_DIR/transition.sh <local_issue_id> <new_status>
 #
@@ -121,8 +122,7 @@ rewrite_entry() { # <file> <id> <new_status> <field> <today>
   ' "$file" > "$file.tmp" && mv "$file.tmp" "$file"
 }
 
-exec 9>"$PROJECT_ISSUES_DIR/.issues.lock"
-flock -x 9
+flow_lock_begin "$PROJECT_ISSUES_DIR/.issues.lock"
 
 rewrite_entry "$ISS_FILE" "$ID" "$NEW_STATUS" "$FIELD" "$TODAY"
 

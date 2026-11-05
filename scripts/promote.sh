@@ -2,6 +2,7 @@
 set -euo pipefail
 source "$(dirname "$0")/config.sh"
 source "$(dirname "$0")/lib-issues.sh"
+source "$(dirname "$0")/lib-os.sh"
 
 # Usage: $SCRIPTS_DIR/promote.sh <local_issue_id>
 # Reads Base branch, Reviewers, and Remote from known_issues.md / hybrid issues/
@@ -99,8 +100,7 @@ rewrite_entry() { # <file> <id> <new_status|''> <opened|''> <ready|''> <started|
 if [[ "$STATUS" == "backlog" ]]; then
   TODAY=$(date +%Y-%m-%dT%H:%M)
   # Stamp `- Ready:` (today, set-if-absent) alongside the status change (BR 2)
-  exec 9>"$PROJECT_ISSUES_DIR/.issues.lock"
-  flock -x 9
+  flow_lock_begin "$PROJECT_ISSUES_DIR/.issues.lock"
   rewrite_entry "$ISS_FILE" "$ID" "ready" "" "$TODAY" "" ""
   if [[ "$MODE" == hybrid ]]; then
     bash "$SCRIPTS_DIR/issues-reindex.sh" >/dev/null
@@ -179,8 +179,7 @@ if [[ "$STATUS" == "ready" ]]; then
   # backfill Opened set-if-absent (BR 2/BR 3 — documented approximation when
   # the remote was auto-created during promotion and has no Opened stamp yet)
   TODAY=$(date +%Y-%m-%dT%H:%M)
-  exec 9>"$PROJECT_ISSUES_DIR/.issues.lock"
-  flock -x 9
+  flow_lock_begin "$PROJECT_ISSUES_DIR/.issues.lock"
   rewrite_entry "$ISS_FILE" "$ID" "in-progress" "$TODAY" "" "$TODAY" ""
   if [[ "$MODE" == hybrid ]]; then
     bash "$SCRIPTS_DIR/issues-reindex.sh" >/dev/null

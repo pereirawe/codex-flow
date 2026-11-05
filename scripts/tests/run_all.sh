@@ -12,7 +12,7 @@ tests=("$SCRIPT_DIR"/test_*.sh)
 if [[ "${1:-}" == --core ]]; then
   tests=()
   for name in remote language issue_lint timestamps jira_sync committer_check test_runner \
-    discovery_route delivery_route metrics_record progress_ops_report hybrid_issues; do
+    discovery_route delivery_route metrics_record progress_ops_report hybrid_issues lib_os; do
     tests+=("$SCRIPT_DIR/test_${name}.sh")
   done
 fi

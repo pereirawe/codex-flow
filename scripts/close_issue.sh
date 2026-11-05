@@ -3,6 +3,7 @@ set -euo pipefail
 source "$(dirname "$0")/config.sh"
 source "$SCRIPTS_DIR/git-base.sh"
 source "$SCRIPTS_DIR/lib-issues.sh"
+source "$SCRIPTS_DIR/lib-os.sh"
 
 # Usage: $SCRIPTS_DIR/close_issue.sh <local_issue_id>
 
@@ -19,8 +20,7 @@ if [[ "$MODE" == monolith && ! -f "$FILE" ]]; then
   exit 1
 fi
 
-exec 9>"$PROJECT_ISSUES_DIR/.issues.lock"
-flock -x 9
+flow_lock_begin "$PROJECT_ISSUES_DIR/.issues.lock"
 
 SECTION="$(issue_section "$ID" || true)"
 if [[ -z "$SECTION" ]]; then
@@ -97,21 +97,18 @@ RESOLVED_DATE=$(date +%Y-%m-%dT%H:%M)
 SUMMARY="${DESC:-no description}${SUGGESTED:+ — ${SUGGESTED}}"
 
 # days_between <start|-> <end|-> — prints "<N>d", "<N>h", or "-"
-# Duration math is UTC-anchored (TZ=UTC date -d "$d" +%s), which is DST-robust
-# (BR 4): naive local-epoch /86400 day counting fails the spring-forward DST
-# scenario (23-hour day → integer division floors to 0 days).
+# Duration math is UTC-anchored via flow_epoch (Python) so Linux/macOS/WSL
+# behave the same — avoids GNU `date -d` (missing on BSD/macOS).
 # Guards (BR 5/BR 10): start > end renders `-` BEFORE division; missing dates
 # render `-`; differences are floored at 0 (non-negative); diff == 0 → "0h".
-# Sub-day durations render in hours ("<N>h") so the lifecycle report is not
-# vague (issue: timestamps previously stored date-only, hiding intra-day gaps).
 days_between() {
   local s="$1" e="$2"
   if [[ -z "$s" || -z "$e" || "$s" == "-" || "$e" == "-" ]]; then
     echo "-"; return
   fi
   local se ee
-  se=$(TZ=UTC date -d "$s" +%s 2>/dev/null || echo "")
-  ee=$(TZ=UTC date -d "$e" +%s 2>/dev/null || echo "")
+  se=$(flow_epoch "$s" || true)
+  ee=$(flow_epoch "$e" || true)
   if [[ -z "$se" || -z "$ee" ]]; then
     echo "-"; return
   fi

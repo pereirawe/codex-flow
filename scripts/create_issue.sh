@@ -2,6 +2,7 @@
 set -euo pipefail
 source "$(dirname "$0")/config.sh"
 source "$(dirname "$0")/lib-issues.sh"
+source "$(dirname "$0")/lib-os.sh"
 
 # Usage:
 # $SCRIPTS_DIR/create_issue.sh "Issue Title" "Issue Body"
@@ -184,8 +185,7 @@ if [[ "$INPUT" =~ ^[0-9]+$ ]]; then
     if [[ -n "$ISSUE_ID" ]]; then
       OPENED_DATE=$(date +%Y-%m-%d)
     fi
-    exec 9>"$PROJECT_ISSUES_DIR/.issues.lock"
-    flock -x 9
+    flow_lock_begin "$PROJECT_ISSUES_DIR/.issues.lock"
     rewrite_entry "$FILE" "$INPUT" "$NEW_STATUS" "$OPENED_DATE" "" "" "$REMOTE_VAL"
     if [[ "$MODE" == hybrid ]]; then
       bash "$SCRIPTS_DIR/issues-reindex.sh" >/dev/null

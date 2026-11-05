@@ -127,4 +127,20 @@ class FlowTests(unittest.TestCase):
         self.assertTrue((destination/'scripts/flowctl.py').is_file())
         self.assertTrue((home/'.codex/skills/develop').is_symlink())
 
+    def test_detect_platform_known_keys(self):
+        key, detail = flow.detect_platform()
+        self.assertIn(key, {'linux', 'macos', 'windows', 'wsl', 'unknown'})
+        self.assertTrue(detail)
+
+    def test_install_check_passes_on_unix_like(self):
+        home = self.base / 'home'
+        (home / '.codex').mkdir(parents=True)
+        # Fresh home: missing flow link is a WARN, not ERROR (unless OS is windows).
+        code = flow.install_check(home)
+        key, _ = flow.detect_platform()
+        if key == 'windows':
+            self.assertEqual(code, 1)
+        else:
+            self.assertEqual(code, 0)
+
 if __name__=='__main__':unittest.main()

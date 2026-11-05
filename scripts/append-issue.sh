@@ -2,6 +2,7 @@
 set -euo pipefail
 source "$(dirname "$0")/config.sh"
 source "$(dirname "$0")/lib-issues.sh"
+source "$(dirname "$0")/lib-os.sh"
 
 # Usage: append-issue.sh [flags]
 #
@@ -54,8 +55,7 @@ if [[ "$MODE" == hybrid ]]; then
   mkdir -p "$PROJECT_ISSUES_DIR/issues"
 fi
 
-exec 9>"$PROJECT_ISSUES_DIR/.issues.lock"
-flock -x 9
+flow_lock_begin "$PROJECT_ISSUES_DIR/.issues.lock"
 
 if [[ -z "$ID" ]]; then
   ID=$(( $(issues_max_id) + 1 ))

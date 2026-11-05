@@ -5,6 +5,7 @@
 set -euo pipefail
 source "$(dirname "${BASH_SOURCE[0]}")/config.sh"
 source "$(dirname "${BASH_SOURCE[0]}")/lib-issues.sh"
+source "$(dirname "${BASH_SOURCE[0]}")/lib-os.sh"
 
 FORCE=0
 KEEP=0
@@ -27,8 +28,7 @@ fi
 
 [[ -f "$PROJECT_ISSUES_FILE" ]] || { echo "missing $PROJECT_ISSUES_FILE" >&2; exit 2; }
 
-exec 9>"$PROJECT_ISSUES_DIR/.issues.lock"
-flock -x 9
+flow_lock_begin "$PROJECT_ISSUES_DIR/.issues.lock"
 
 mkdir -p "$ISSUES_DIR/resolved"
 

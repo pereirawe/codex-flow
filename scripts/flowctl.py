@@ -137,15 +137,84 @@ def broken_symlinks(paths):
             broken.append(str(path))
     return broken
 
+def detect_platform():
+    """Return (os_key, detail) where os_key is linux|macos|windows|wsl|unknown."""
+    import platform
+    system=platform.system().lower()
+    if system=='darwin':
+        return 'macos', platform.mac_ver()[0] or platform.release()
+    if system=='windows':
+        return 'windows', platform.release()
+    if system=='linux':
+        try:
+            ver=Path('/proc/version').read_text(encoding='utf-8',errors='ignore').lower()
+        except OSError:
+            ver=''
+        if 'microsoft' in ver or 'wsl' in ver or os.environ.get('WSL_DISTRO_NAME'):
+            return 'wsl', os.environ.get('WSL_DISTRO_NAME') or platform.release()
+        return 'linux', platform.release()
+    return 'unknown', system or platform.platform()
+
+def probe_symlinks(tmpdir: Path) -> bool:
+    target=tmpdir/'target';link=tmpdir/'link'
+    try:
+        target.write_text('ok',encoding='utf-8')
+        link.symlink_to(target)
+        return link.is_symlink() and link.resolve()==target.resolve()
+    except OSError:
+        return False
+    finally:
+        try:
+            if link.exists() or link.is_symlink():link.unlink()
+        except OSError:pass
+        try:
+            if target.exists():target.unlink()
+        except OSError:pass
+
 def install_check(home, skills_dir=None):
     home=Path(home).expanduser().resolve()
     errors=[];warns=[]
+    os_key,os_detail=detect_platform()
+    print(f'ok platform={os_key} ({os_detail})')
+
+    if os_key=='windows':
+        errors.append(
+            'Native Windows is not supported. Install WSL2 (Ubuntu), clone inside WSL, '
+            'then run: bash install.sh — see docs/install.md (or run install.ps1 to forward).'
+        )
+    elif os_key=='wsl':
+        print('ok running under WSL (supported Windows path)')
+    elif os_key=='macos':
+        print('ok macOS (Bash + Python 3.11+ required; brew recommended)')
+        if not shutil.which('flock'):
+            warns.append(
+                'flock not found — issue scripts use mkdir locks via lib-os.sh. '
+                'Optional: brew install flock (or util-linux) for util-linux flock.'
+            )
+    elif os_key=='linux':
+        print('ok Linux')
+    else:
+        warns.append(f'Unrecognized OS ({os_key}); Unix-like Bash environment assumed')
+
     if sys.version_info<(3,11):
         errors.append(f'python {sys.version.split()[0]} (need 3.11+)')
     else:
         print(f'ok python {sys.version.split()[0]}')
     if shutil.which('git'):print('ok git')
     else:errors.append('git not found in PATH')
+    if shutil.which('bash'):print('ok bash')
+    else:errors.append('bash not found in PATH (required for install.sh / pipeline scripts)')
+
+    # Symlink capability (needed for ~/.codex/flow and skill links)
+    import tempfile
+    with tempfile.TemporaryDirectory() as td:
+        if probe_symlinks(Path(td)):
+            print('ok symlink create/resolve')
+        else:
+            errors.append(
+                'Cannot create symlinks. On Windows use WSL2. On macOS/Linux check filesystem permissions.'
+            )
+
     vendor_count=count_vendor_sources()
     if vendor_count==0:
         warns.append('vendor_skills=0 — run: python3 scripts/restore-vendors.py')
@@ -172,9 +241,14 @@ def install_check(home, skills_dir=None):
         print('ok install symlinks resolve')
     elif not flow_link.exists():
         warns.append('~/.codex/flow not linked — run: bash install.sh')
+
+    if os_key in ('linux','wsl') and not shutil.which('systemctl'):
+        warns.append('systemctl not found — optional aibot-watcher systemd units unavailable')
+
     for msg in warns:print('WARN: '+msg,file=sys.stderr)
     for msg in errors:print('ERROR: '+msg,file=sys.stderr)
     print('hint: restore upstream skills with python3 scripts/restore-vendors.py')
+    print('docs: docs/install.md (Linux / macOS / Windows-WSL)')
     return 1 if errors else 0
 
 def global_install(home, skills_dir=None):
@@ -469,7 +543,7 @@ def watcher(action, home):
 
 def main():
     p=argparse.ArgumentParser(description=__doc__);sub=p.add_subparsers(dest='cmd',required=True)
-    install=sub.add_parser('install');install.add_argument('--home',default=str(Path.home()));install.add_argument('--skills-dir');install.add_argument('--check',action='store_true',help='Preflight: Python, git, vendors, telegram.env, symlinks')
+    install=sub.add_parser('install');install.add_argument('--home',default=str(Path.home()));install.add_argument('--skills-dir');install.add_argument('--check',action='store_true',help='Preflight: platform (Linux/macOS/WSL), Python, git, bash, symlinks, vendors, telegram.env')
     vendor=sub.add_parser('vendor-register');vendor.add_argument('--home',default=str(Path.home()))
     proj=sub.add_parser('project');proj.add_argument('target');proj.add_argument('--locale');proj.add_argument('--dry-run',action='store_true')
     run=sub.add_parser('prompt');run.add_argument('workflow');run.add_argument('arguments',nargs='*')
