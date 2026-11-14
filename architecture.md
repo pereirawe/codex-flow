@@ -49,3 +49,11 @@
 - **Two-phase QA**: QA reviews stories for testability early (pre-dev), and verifies quality post-senior-review (pre-MR)
 - **Prioritization proposals**: PO registers proposals in `.codex/prioritization.md` (project-level) or `~/.codex/flow/prioritization.md` (global fallback) before promoting to `known_issues.md`
 - **Agent discovery protocol**: Each agent asks context-based questions (CTO: architecture, PO: value, TL: feasibility, QA: test scenarios) to progressively refine proposals
+
+## Família de Grok Bots
+
+`grok-bots/` documents personal assistants that run in the Grok Bot app. They
+sit outside the load order above. The installer does not register them as
+Codex roles, and `catalog/agents.json` does not list them. Ika coordinates the
+family and is the bot that invokes the roles in `agents/` and `codex-agents/`.
+See [grok-bots/README.md](grok-bots/README.md).

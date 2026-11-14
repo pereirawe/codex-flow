@@ -425,3 +425,27 @@ Falha de dependência ou pré-condição → código não zero e nenhum estado/a
 Caminho válido e execução repetida → resultado esperado sem regressão nem duplicação.
 - Suggested fix: -
 
+### 22. Documentar a família de Grok Bots e a ligação com os agentes Codex
+- Status: in-progress
+- Opened: 2026-11-14
+- Ready: -
+- Started: 2026-11-14
+- In review: -
+- In QA: -
+- In publish: -
+- Type: doc
+- Severity: low
+- Report: Codex
+- Base branch: main
+- Reviewers: 1 (qa)
+- Remote: -
+- Jira: -
+- PR: -
+- Location: grok-bots/README.md
+- Description: Documentar os assistentes pessoais do app Grok Bot, o roteamento pelo Ika e o reúso dos agentes de currículo pela Aga, sem dados pessoais.
+- Impact: Leitores do repositório público passam a distinguir Grok Bots de agentes Codex.
+- Business rules: A pasta grok-bots descreve papéis. Ficam de fora nomes de membros da Igreja, dados financeiros, telefone, e-mail, salário, processos, dados de saúde, IDs de bots e IDs de pastas. Grok Bots não entram no catalog/agents.json.
+- Acceptance criteria: Cada bot tem página com papel, acionamento, skills, rotinas, limites e ligação com os agentes. O índice, o README raiz, architecture.md e agents/README.md apontam para a família. validate.py continua passando.
+- Tests: -
+- Suggested fix: -
+
