@@ -440,7 +440,7 @@ Caminho válido e execução repetida → resultado esperado sem regressão nem 
 - Reviewers: 1 (qa)
 - Remote: -
 - Jira: -
-- PR: -
+- PR: #22
 - Location: grok-bots/README.md
 - Description: Documentar os assistentes pessoais do app Grok Bot, o roteamento pelo Ika e o reúso dos agentes de currículo pela Aga, sem dados pessoais.
 - Impact: Leitores do repositório público passam a distinguir Grok Bots de agentes Codex.
