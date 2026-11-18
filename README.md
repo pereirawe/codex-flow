@@ -5,6 +5,16 @@ and particular functions inside each project. Migrated from
 [pereirawe/opencode-flow](https://github.com/pereirawe/opencode-flow), preserving
 its Git ancestry, standards, original role instructions and prior decisions.
 
+## Família de Grok Bots
+
+Personal assistants that run in the Grok Bot app are documented in
+[grok-bots/](grok-bots/README.md) (pt-BR). Ika coordinates that family and is
+the bot that invokes the Codex roles in this repository: `cf_ceo`, `cf_cto`,
+`cf_cfo`, `cf_cmo`, `cf_coo`, and the groups development, marketing, sales,
+finance, bi, business-ops, design and career. Those roles stay in `agents/`,
+`codex-agents/` and `catalog/agents.json`. The Grok Bot pages are role notes,
+not installer manifests.
+
 ## Install
 
 Requires Python 3.11+, Git, Bash and an authenticated Codex app/CLI. Delivery

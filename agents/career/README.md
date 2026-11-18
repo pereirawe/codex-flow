@@ -65,3 +65,12 @@ the single source of truth for every agent and skill.
   `cv-interview-prep`, `cv-ats-score`, `cv-pdf`); supporting scripts under
   `scripts/cv/*` (`pdf.sh`, `validate.py`, `check-inference.sh`,
   `linkedin-sync.py`, `banner-gen.sh`, `migrate-schema.py`).
+
+## Família de Grok Bots
+
+The Grok Bot Aga reuses this group while preparing applications. Extractor,
+optimizer and LinkedIn sit on the profile; tailor, ATS score and cover letter
+sit on a specific job; interview prep starts when an interview appears. The
+stage map is in [grok-bots/aga.md](../../grok-bots/aga.md). Aga does not send
+an application without approval. Ika is the bot that invokes the rest of the
+Codex team.
