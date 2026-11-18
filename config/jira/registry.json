@@ -1,0 +1,51 @@
+{
+  "site": {
+    "baseUrl": "https://codetomika.atlassian.net",
+    "cloudId": "0a47e6c9-07a5-4128-a03f-b42897250d18",
+    "leadAccountId": "5e0e7c440af0d70e911c7940",
+    "leadDisplayName": "William Pereira"
+  },
+  "projects": [
+    {
+      "key": "KAN",
+      "name": "CODETOMIKA",
+      "purpose": "product-engineering",
+      "repos": [
+        "codetomika-landing-page",
+        "codetomika",
+        "codetomika-admin",
+        "codetomika-ads-trigger"
+      ]
+    },
+    {
+      "key": "MKT",
+      "name": "Codetomika Marketing & Leads",
+      "purpose": "marketing-leads",
+      "repos": []
+    },
+    {
+      "key": "REV",
+      "name": "Revanca",
+      "purpose": "product",
+      "repos": ["revanca", "revanca-sentry"]
+    },
+    {
+      "key": "VIZ",
+      "name": "Vizzupy",
+      "purpose": "product",
+      "repos": ["vizzupy_project"]
+    },
+    {
+      "key": "ISY",
+      "name": "ISYNVE",
+      "purpose": "product",
+      "repos": ["isynve"]
+    },
+    {
+      "key": "HSK",
+      "name": "Handshake",
+      "purpose": "product",
+      "repos": ["handshake"]
+    }
+  ]
+}

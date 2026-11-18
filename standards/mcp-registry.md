@@ -108,6 +108,9 @@ MCP servers are configured in `opencode.json` under the `mcpServers` key. Exampl
 
 ## Jira Cloud sync (issue #48)
 
+Canonical docs: **`standards/jira.md`**, skill **`cf-jira`**, registry
+`config/jira/registry.json`, bootstrap `scripts/jira-init.sh`.
+
 The pipeline mirrors `known_issues.md` into Jira Cloud (cards, status
 transitions, one-way repo→Jira comments) via `scripts/sync-jira.sh` — a
 deterministic, headless, CI-testable REST v3 client. It is **the** sync
@@ -116,35 +119,19 @@ path for the pipeline: hooks in `create_issue.sh` (card creation),
 the `$flow-sync-jira` command for full reconciliation. Sync is non-blocking and
 the local `Status:` always wins.
 
-Configuration: `.codex/jira.json` (`baseUrl`, `email`, `projectKey`,
-optional `statusMap`/`authMode`) or env vars `JIRA_BASE_URL`,
-`JIRA_PROJECT_KEY`, `JIRA_EMAIL`; the API token comes **exclusively** from the
-`JIRA_API_TOKEN` environment variable — never committed, never logged.
-`baseUrl` should use `https://` (Basic auth would otherwise transmit the
-email+token in cleartext over `http://`). `jira.json` is an operator-owned,
-trusted file — it controls which host the sync talks to and must never come
-from untrusted input. `JIRA_CONFIG_FILE` overrides the config file path
-(default `.codex/jira.json`).
+Configuration (env > project `.codex/jira.json` > `config/jira/defaults.json`
+for baseUrl/email): `projectKey` is always per-project. The API token comes
+**exclusively** from `JIRA_API_TOKEN` — never committed, never logged.
+`baseUrl` should use `https://`. `JIRA_CONFIG_FILE` overrides the project
+config path (default `.codex/jira.json`).
 
-```json
-{
-  "baseUrl": "https://your-domain.atlassian.net",
-  "email": "you@example.com",
-  "projectKey": "DEV",
-  "statusMap": {
-    "backlog": "To Do",
-    "ready": "To Do",
-    "in-progress": "In Progress",
-    "in-review": "In Review",
-    "in-qa": "QA/Testing",
-    "in-publish": "Ready for Release",
-    "resolved": "Done"
-  }
-}
-```
+### Interactive MCP (preferred for agents)
 
-An optional Jira **MCP server** can be registered per-project for agent-side
-backlog queries (agent reads; the pipeline sync always lives in the script):
+Use the official **Atlassian Rovo MCP** in Cursor (`https://mcp.atlassian.com/v2/mcp`,
+marketplace plugin **Atlassian**). Creating spaces needs admin-enabled
+`manage_jira`. Pipeline sync stays on `sync-jira.sh` regardless of MCP.
+
+Legacy local MCP package (optional headless alternative):
 
 ```json
 {

@@ -11,3 +11,5 @@ the agents/skills catalogs to resolve role/skill names. Read full instructions
 only when relevant; do not inject the whole library into every conversation.
 For historical context use flow-history and the private `.local/history/index.json`.
 Read `~/.codex/flow/docs/runtime.md` for tool and permission adaptation.
+For Jira across products, use skill `cf-jira`, `standards/jira.md`, and
+`config/jira/registry.json` (scripts: `sync-jira.sh`, `jira-init.sh`).

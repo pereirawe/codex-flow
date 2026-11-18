@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+### Jira (global)
+- Skill `cf-jira`, standard `standards/jira.md`, portfolio `config/jira/registry.json`
+- `scripts/jira-init.sh` bootstraps `.codex/jira.json` from registry + defaults
+- `jira_config_load` falls back to `config/jira/defaults.json` for baseUrl/email
+- `$flow-sync-jira` / `mcp-registry.md` point at the shared Jira docs
+
 ## Codex Flow 1.1.0 (2026-11-05)
 
 ### Cross-platform install

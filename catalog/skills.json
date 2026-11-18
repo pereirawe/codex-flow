@@ -600,6 +600,12 @@
     "description": "Maintain the tracked work register with code-backed evidence and remote sync"
   },
   {
+    "legacy_name": "jira",
+    "name": "cf-jira",
+    "path": "skills/shared/jira/SKILL.md",
+    "description": "Global Jira Cloud integration — Codetomika portfolio map, Atlassian MCP, jira.json setup, and known_issues sync"
+  },
+  {
     "legacy_name": "locale-loader",
     "name": "cf-locale-loader",
     "path": "skills/shared/locale-loader/SKILL.md",
