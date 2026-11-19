@@ -6,7 +6,7 @@ description: >
   problemas visuais, estruturais, de estado, de acessibilidade e de
   manutenibilidade. Output consumido pelo ui-refactor-planner.
 mode: subagent
-model: anthropic/claude-opus-4-5
+# model: inherit Codex session model (capability preference in role prose only)
 temperature: 0.1
 permission:
   edit: deny

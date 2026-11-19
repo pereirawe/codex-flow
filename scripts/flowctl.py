@@ -103,7 +103,153 @@ def skill_location(home, override=None):
     if saved.exists():
         data=json.loads(saved.read_text())
         if data.get("home")==str(home):return Path(data["skills_dir"])
-    return home/".agents/skills"
+    return Path(home).expanduser().resolve()/".codex/skills"
+
+def count_vendor_sources():
+    count=0
+    vendor=ROOT/'vendor'
+    if not vendor.is_dir():return 0
+    for base, dirs, files in os.walk(vendor):
+        dirs[:]=[x for x in dirs if x not in SKIP_DIRS]
+        if 'SKILL.md' in files:count+=1
+    return count
+
+def mirror_skills_to_cursor(home, destination, backups):
+    cursor=Path(home).expanduser().resolve()/'.cursor'/'skills'
+    if not cursor.parent.is_dir():return 0
+    cursor.mkdir(parents=True, exist_ok=True)
+    destination=Path(destination)
+    mirrored=0
+    if not destination.is_dir():return 0
+    for item in destination.iterdir():
+        if not (item.is_symlink() or item.is_dir()):continue
+        target=item.resolve()
+        if not target.exists():continue
+        link(target, cursor/item.name, backups)
+        mirrored+=1
+    return mirrored
+
+def broken_symlinks(paths):
+    broken=[]
+    for path in paths:
+        path=Path(path)
+        if path.is_symlink() and not path.exists():
+            broken.append(str(path))
+    return broken
+
+def detect_platform():
+    """Return (os_key, detail) where os_key is linux|macos|windows|wsl|unknown."""
+    import platform
+    system=platform.system().lower()
+    if system=='darwin':
+        return 'macos', platform.mac_ver()[0] or platform.release()
+    if system=='windows':
+        return 'windows', platform.release()
+    if system=='linux':
+        try:
+            ver=Path('/proc/version').read_text(encoding='utf-8',errors='ignore').lower()
+        except OSError:
+            ver=''
+        if 'microsoft' in ver or 'wsl' in ver or os.environ.get('WSL_DISTRO_NAME'):
+            return 'wsl', os.environ.get('WSL_DISTRO_NAME') or platform.release()
+        return 'linux', platform.release()
+    return 'unknown', system or platform.platform()
+
+def probe_symlinks(tmpdir: Path) -> bool:
+    target=tmpdir/'target';link=tmpdir/'link'
+    try:
+        target.write_text('ok',encoding='utf-8')
+        link.symlink_to(target)
+        return link.is_symlink() and link.resolve()==target.resolve()
+    except OSError:
+        return False
+    finally:
+        try:
+            if link.exists() or link.is_symlink():link.unlink()
+        except OSError:pass
+        try:
+            if target.exists():target.unlink()
+        except OSError:pass
+
+def install_check(home, skills_dir=None):
+    home=Path(home).expanduser().resolve()
+    errors=[];warns=[]
+    os_key,os_detail=detect_platform()
+    print(f'ok platform={os_key} ({os_detail})')
+
+    if os_key=='windows':
+        errors.append(
+            'Native Windows is not supported. Install WSL2 (Ubuntu), clone inside WSL, '
+            'then run: bash install.sh — see docs/install.md (or run install.ps1 to forward).'
+        )
+    elif os_key=='wsl':
+        print('ok running under WSL (supported Windows path)')
+    elif os_key=='macos':
+        print('ok macOS (Bash + Python 3.11+ required; brew recommended)')
+        if not shutil.which('flock'):
+            warns.append(
+                'flock not found — issue scripts use mkdir locks via lib-os.sh. '
+                'Optional: brew install flock (or util-linux) for util-linux flock.'
+            )
+    elif os_key=='linux':
+        print('ok Linux')
+    else:
+        warns.append(f'Unrecognized OS ({os_key}); Unix-like Bash environment assumed')
+
+    if sys.version_info<(3,11):
+        errors.append(f'python {sys.version.split()[0]} (need 3.11+)')
+    else:
+        print(f'ok python {sys.version.split()[0]}')
+    if shutil.which('git'):print('ok git')
+    else:errors.append('git not found in PATH')
+    if shutil.which('bash'):print('ok bash')
+    else:errors.append('bash not found in PATH (required for install.sh / pipeline scripts)')
+
+    # Symlink capability (needed for ~/.codex/flow and skill links)
+    import tempfile
+    with tempfile.TemporaryDirectory() as td:
+        if probe_symlinks(Path(td)):
+            print('ok symlink create/resolve')
+        else:
+            errors.append(
+                'Cannot create symlinks. On Windows use WSL2. On macOS/Linux check filesystem permissions.'
+            )
+
+    vendor_count=count_vendor_sources()
+    if vendor_count==0:
+        warns.append('vendor_skills=0 — run: python3 scripts/restore-vendors.py')
+    else:
+        print(f'ok vendor_skills={vendor_count} (sources under vendor/)')
+    example=ROOT/'.codex'/'telegram.env.example'
+    env_candidates=[ROOT/'.codex'/'telegram.env', home/'.codex'/'flow'/'.codex'/'telegram.env']
+    if example.is_file() and not any(p.is_file() for p in env_candidates):
+        warns.append('telegram.env missing — cp .codex/telegram.env.example .codex/telegram.env and fill credentials')
+    destination=skill_location(home, skills_dir)
+    flow_link=home/'.codex'/'flow'
+    to_check=[]
+    if flow_link.is_symlink() or flow_link.is_dir():
+        to_check.append(flow_link)
+    if destination.is_dir():
+        to_check.extend(destination.iterdir())
+    agents_dir=home/'.codex'/'agents'
+    if agents_dir.is_dir():
+        to_check.extend(agents_dir.glob('*.toml'))
+    broken=broken_symlinks(to_check)
+    if broken:
+        for line in broken:errors.append('broken symlink: '+line)
+    elif flow_link.is_symlink():
+        print('ok install symlinks resolve')
+    elif not flow_link.exists():
+        warns.append('~/.codex/flow not linked — run: bash install.sh')
+
+    if os_key in ('linux','wsl') and not shutil.which('systemctl'):
+        warns.append('systemctl not found — optional aibot-watcher systemd units unavailable')
+
+    for msg in warns:print('WARN: '+msg,file=sys.stderr)
+    for msg in errors:print('ERROR: '+msg,file=sys.stderr)
+    print('hint: restore upstream skills with python3 scripts/restore-vendors.py')
+    print('docs: docs/install.md (Linux / macOS / Windows-WSL)')
+    return 1 if errors else 0
 
 def global_install(home, skills_dir=None):
     home = Path(home).expanduser().resolve()
@@ -120,9 +266,14 @@ def global_install(home, skills_dir=None):
     for entry in load_catalog('agents'):
         link(ROOT / entry['config_file'], home / '.codex/agents' / (entry['name'] + '.toml'), backups)
     vendor_count = vendor_register(home, destination)
-    report = {'repo':str(ROOT), 'home':str(home), 'own_skills_and_commands':count, 'agents':len(load_catalog('agents')), 'vendor_skills':vendor_count, 'backups':str(backups), 'config_toml_changed':False, 'skills_dir':str(destination)}
+    cursor_mirrored=mirror_skills_to_cursor(home, destination, backups)
+    report = {'repo':str(ROOT), 'home':str(home), 'own_skills_and_commands':count, 'agents':len(load_catalog('agents')), 'vendor_skills':vendor_count, 'cursor_skills_mirrored':cursor_mirrored, 'backups':str(backups), 'config_toml_changed':False, 'skills_dir':str(destination)}
     write(ROOT / '.local/install-report.json', json.dumps(report, indent=2), True)
     print(json.dumps(report, indent=2))
+    if vendor_count==0:
+        print('WARN: vendor_skills=0 — run: python3 scripts/restore-vendors.py', file=sys.stderr)
+    print('next: python3 scripts/restore-vendors.py  # if vendor/ is empty', file=sys.stderr)
+    print('notify: cp .codex/telegram.env.example .codex/telegram.env  # optional Telegram', file=sys.stderr)
 
 def vendor_register(home, skills_dir=None):
     home = Path(home).expanduser().resolve()
@@ -207,7 +358,21 @@ def migrate_project(target, locale=None, dry_run=False):
         if source.suffix=='.env' or '.env.' in source.name:dest.chmod(0o600)
     local=target/'.codex'
     local.mkdir(exist_ok=True)
-    if not (local/'known_issues.md').exists():write(local/'known_issues.md','## Known Issues\n\nProject issue tracker for Codex Flow.\n')
+    if not (local/'known_issues.md').exists():
+        write(local/'known_issues.md','''## Known Issues
+
+Project issue tracker for Codex Flow. Append canonical `### N. Title` sections
+(see `~/.codex/flow/standards/issues.md`). For parallel delivery, migrate with:
+
+```bash
+bash ~/.codex/flow/scripts/issues-migrate.sh --keep-monolith
+```
+
+''')
+    if not (local/'resolved_issues.md').exists():
+        write(local/'resolved_issues.md','# Resolved Issues\n\nIssues resolved from `known_issues.md`.\n\n')
+    # Do NOT create issues/index.md here — that switches scripts to hybrid mode.
+    # Migration is explicit via issues-migrate.sh.
     if not (local/'locale').exists():write(local/'locale',(locale or 'pt')+'\n')
     if not (local/'workflow.md').exists():write(local/'workflow.md','Use ~/.codex/flow/workflow.md and the project root AGENTS.md.\n')
     context='''## Codex Flow project context
@@ -230,7 +395,7 @@ after the prescribed reviews and gates. Honor stricter project rules.
             write(backup/'AGENTS.md.before',before,True);write(root,after)
     managed(root,'Read `.codex/AGENTS.md` and the relevant project context before implementation.\nGlobal agents, skills and scripts are at `~/.codex/flow`.\nProject-local definitions take precedence. Read old conversation evidence with `$flow-history`.',backup)
     managed(local/'AGENTS.md',context,backup)
-    managed(local/'.gitignore','*.env\n*.env.*\n!*.env.example\ncache/\ntest-cache/\npreflight/\nreviews/\ndesign-outputs/\nspikes/*\n!spikes/*.md\n',backup,begin='# codex-flow:begin',end='# codex-flow:end')
+    managed(local/'.gitignore','*.env\n*.env.*\n!*.env.example\ncache/\ntest-cache/\npreflight/\nreviews/\ndesign-outputs/\nsessions/\nmetrics/\nspikes/*\n!spikes/*.md\n',backup,begin='# codex-flow:begin',end='# codex-flow:end')
     records={'skills':[],'agents':[],'commands':[]}
     local_skills=local/'skills'
     for p in sorted(local_skills.rglob('SKILL.md')) if local_skills.exists() else []:
@@ -378,7 +543,7 @@ def watcher(action, home):
 
 def main():
     p=argparse.ArgumentParser(description=__doc__);sub=p.add_subparsers(dest='cmd',required=True)
-    install=sub.add_parser('install');install.add_argument('--home',default=str(Path.home()));install.add_argument('--skills-dir')
+    install=sub.add_parser('install');install.add_argument('--home',default=str(Path.home()));install.add_argument('--skills-dir');install.add_argument('--check',action='store_true',help='Preflight: platform (Linux/macOS/WSL), Python, git, bash, symlinks, vendors, telegram.env')
     vendor=sub.add_parser('vendor-register');vendor.add_argument('--home',default=str(Path.home()))
     proj=sub.add_parser('project');proj.add_argument('target');proj.add_argument('--locale');proj.add_argument('--dry-run',action='store_true')
     run=sub.add_parser('prompt');run.add_argument('workflow');run.add_argument('arguments',nargs='*')
@@ -386,7 +551,9 @@ def main():
     hist=sub.add_parser('history');hist.add_argument('--project');hist.add_argument('--query')
     watch=sub.add_parser('watcher');watch.add_argument('action',choices=['install','uninstall','status']);watch.add_argument('--home',default=str(Path.home()))
     a=p.parse_args()
-    if a.cmd=='install':global_install(a.home,a.skills_dir)
+    if a.cmd=='install':
+        if a.check:raise SystemExit(install_check(a.home,a.skills_dir))
+        global_install(a.home,a.skills_dir)
     elif a.cmd=='vendor-register':print(vendor_register(a.home))
     elif a.cmd=='project':migrate_project(a.target,a.locale,a.dry_run)
     elif a.cmd=='prompt':print(prompt(a.workflow,a.arguments))

@@ -15,6 +15,8 @@ Project-wide conventions and patterns shared across all sectors.
 | `resolved-issue.md` | Resolved issue archive format |
 | `test-env.md` | Test environment — version pins, manifest ranges, sync guard, warning contract |
 | `design-pipeline.md` | Design pipeline output conventions, session management, and pipeline stages (build-ui/audit-ui) |
+| `jira.md` | Jira Cloud — config resolution, status map, Atlassian MCP, portfolio registry |
+| `mcp-registry.md` | Recommended MCP servers (includes Jira sync + Rovo MCP notes) |
 
 ## Sector Agents
 
@@ -25,6 +27,8 @@ Each business sector has its own agents and skills under `agents/<sector>/` and
 - `marketing` — Ads, SEO, social media, presentations, reports, research
 - `bi` — Business intelligence, dashboards, analytics
 - `sales` — Sales pipeline, CRM, proposals
+- `commercial/` — Neutral proposal/spec/discovery standards (see `docs/brand.md`)
+- `brand/` — Example `brand.profile.json` and `pricing.md` for projects
 - `finance` — Financial modeling, budgeting, reporting
 - `commercial` — Pricing, partnerships, deal desk, channel economics
 - `business-ops` — Process mapping, vendor management, capacity planning

@@ -36,6 +36,20 @@ Produce technical specifications that are unambiguous, testable, and
 decision-ready. A good spec eliminates ambiguity so the delivery team never
 has to guess.
 
+## Bootstrap (global scripts)
+
+From the project root:
+
+```bash
+bash ~/.codex/flow/scripts/spec-init.sh <slug>
+bash ~/.codex/flow/scripts/commercial/novo-cliente.sh <slug>   # optional commercial hub
+bash ~/.codex/flow/scripts/commercial/consulta-cnpj.sh <CNPJ>  # optional client qualification
+```
+
+`spec-init.sh` copies logo from `.codex/brand/`, then `docs/assets/`, then Flow
+defaults. Template: `~/.codex/flow/templates/commercial/tech-spec/tech-spec.md`.
+Brand docs: `~/.codex/flow/docs/brand.md`.
+
 ## Canonical Structure
 
 Every tech spec produced through this skill MUST have these sections, in

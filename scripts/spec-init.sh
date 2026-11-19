@@ -10,8 +10,9 @@
 #   docs/specs/<slug>/assets/logo.<ext>   (copied from first available source)
 #
 # Logo resolution order:
-#   1) $PWD/docs/assets/logo.{svg,png,jpg,jpeg,webp}
-#   2) ~/.codex/flow/assets/logo.{svg,png,jpg,jpeg,webp}
+#   1) .codex/brand/ (brand.profile.json logo_path or logo.*)
+#   2) $PWD/docs/assets/logo.{svg,png,jpg,jpeg,webp}
+#   3) ~/.codex/flow/assets/logo.{svg,png,jpg,jpeg,webp}
 #
 # If no logo is found, writes a placeholder text file and exits 0 with a
 # warning — the agent decides how to proceed.
@@ -37,8 +38,15 @@ ASSETS_DIR="${TARGET_DIR}/assets"
 mkdir -p "$ASSETS_DIR"
 
 find_logo() {
+  local flow_root="$HOME/.codex/flow"
+  local brand_logo
+  brand_logo="$(python3 "$flow_root/scripts/lib-brand.py" --root "$PWD" logo-path 2>/dev/null || true)"
+  if [[ -n "$brand_logo" && -f "$brand_logo" ]]; then
+    echo "$brand_logo"
+    return 0
+  fi
   local base
-  for base in "docs/assets" "$HOME/.codex/flow/assets"; do
+  for base in "docs/assets" "$flow_root/assets"; do
     for ext in svg png jpg jpeg webp; do
       if [[ -f "$base/logo.$ext" ]]; then
         echo "$base/logo.$ext"
@@ -60,6 +68,7 @@ else
   cat > "$PLACEHOLDER" <<EOF
 No logo was found. Place your company logo at one of:
 
+  .codex/brand/logo.{svg,png,jpg,jpeg,webp}  (+ brand.profile.json)
   docs/assets/logo.{svg,png,jpg,jpeg,webp}
   ~/.codex/flow/assets/logo.{svg,png,jpg,jpeg,webp}
 

@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 source "$(dirname "$0")/config.sh"
+source "$(dirname "$0")/lib-issues.sh"
+source "$(dirname "$0")/lib-os.sh"
 
 # Usage: $SCRIPTS_DIR/transition.sh <local_issue_id> <new_status>
 #
@@ -34,26 +36,20 @@ if ! printf '%s\n' "$VALID_STATUSES" | tr ' ' '\n' | grep -qxF "$NEW_STATUS"; th
   exit 1
 fi
 
+MODE="$(issues_mode)"
 ISS_FILE="$PROJECT_ISSUES_FILE"
-if [[ ! -f "$ISS_FILE" ]]; then
+if [[ "$MODE" == monolith && ! -f "$ISS_FILE" ]]; then
   echo "known_issues.md not found"
   exit 1
 fi
 
-# Extract issue section
-SECTION=$(awk -v id="$ID" '
-  $0 ~ "^### " id "\\." {found=1}
-  found {
-    if ($0 ~ /^### [0-9]+\./ && $0 !~ "^### " id "\\.") {
-      exit
-    }
-    print
-  }
-' "$ISS_FILE")
-
+SECTION="$(issue_section "$ID" || true)"
 if [[ -z "$SECTION" ]]; then
   echo "Issue $ID not found"
   exit 1
+fi
+if [[ "$MODE" == hybrid ]]; then
+  ISS_FILE="$(issue_path "$ID")" || { echo "Issue $ID not found"; exit 1; }
 fi
 
 # Map status -> timestamp field ('' = none)
@@ -126,7 +122,13 @@ rewrite_entry() { # <file> <id> <new_status> <field> <today>
   ' "$file" > "$file.tmp" && mv "$file.tmp" "$file"
 }
 
+flow_lock_begin "$PROJECT_ISSUES_DIR/.issues.lock"
+
 rewrite_entry "$ISS_FILE" "$ID" "$NEW_STATUS" "$FIELD" "$TODAY"
+
+if [[ "$MODE" == hybrid ]]; then
+  bash "$SCRIPTS_DIR/issues-reindex.sh" >/dev/null
+fi
 
 # Jira Cloud sync (issue #48): reflect the status transition on the card when
 # Jira is configured. Non-blocking (BR 8): failures never fail.

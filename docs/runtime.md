@@ -1,7 +1,9 @@
 # Codex runtime
 
 Global checkout: `~/.codex/flow` (installer creates a symlink to this repo).
-Global skills: `~/.agents/skills/`, linked to native skill and command folders.
+Global skills: `~/.codex/skills/` (default install; override with `--skills-dir`),
+linked to native skill and command folders. Cursor may also read `~/.cursor/skills/`
+when the installer mirrors links there.
 Global agents: `~/.codex/agents/`, linked to standalone TOML role files.
 Global entrypoint: managed block in `~/.codex/AGENTS.md`.
 The installer preserves existing Codex settings, auth, skills and agents.

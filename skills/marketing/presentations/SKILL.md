@@ -37,3 +37,7 @@ Create compelling presentations and slide decks.
 - Data visualization (charts, graphs, infographics)
 - Slide design and layout
 - Template creation and brand consistency
+
+## Router (stub)
+
+Pointer-only entry — read `marketing-router` first. For depth use `copywriting` and `marketing-plan`.

@@ -139,79 +139,15 @@ Select the best direction and justify it in one sentence.
 Expand the chosen direction into the JSON output below. No exceptions to the
 process above: 3 directions are always generated before selection.
 
-## Design token composition rules (mandatory)
+## Design token & layout canon (read skills)
 
-### Palette — composition rules
+Before filling `design_spec` and `layout_spec`, read (do not paraphrase from memory):
 
-Every palette has exactly 7 functional layers:
+- `design-tokens` — palette layers, typography scale, spacing, radius philosophy, shadow tiers, motion
+- `visual-hierarchy` — contrast minimums, density modes, responsive expectations
+- `reference-library` — named UI patterns when anchoring `component_vocabulary`
 
-```
-background          → what everything sits on
-surface             → cards, panels, containers
-surface_elevated    → raised surfaces (dropdowns, modals, popovers)
-border              → dividers, outlines
-border_subtle       → hairline dividers, quiet outlines
-text-primary        → primary content
-text-muted          → labels, placeholders, metadata
-```
-
-Plus 2 accent layers:
-
-```
-accent-primary   → primary actions, links, CTAs
-accent-secondary → hover states, badges, highlights
-```
-
-Plus `accent-primary-foreground` (the text/icon color rendered ON
-`accent-primary` — its contrast is checked against WCAG AA) and 4 semantic
-colors:
-
-```
-semantic.success → positive states, deltas, confirmation
-semantic.warning → caution states, partial data
-semantic.error   → destructive states, validation failures
-semantic.info    → neutral information states
-```
-
-Never use more than 2 accent colors. If you need more color, use
-opacity/alpha of an accent — never new colors. All values MUST map to
-`design-tokens` palette layers.
-
-### Typography — composition rules
-
-Maximum 2 type families, each with a clear role:
-
-```
-display  → headlines, heroes, large numbers (may be more expressive)
-body     → paragraphs, labels, UI text (must be highly legible)
-```
-
-If the display face is expressive, the body **must** compensate with
-neutrality. If the display is neutral, the body may carry more personality.
-Sizes MUST come from the `design-tokens` scale (xs–4xl).
-
-### Spacing — 4pt scale
-
-Base: 4px. Scale: 4, 8, 12, 16, 20, 24, 32, 40, 48, 64 (per `design-tokens`).
-Declare only the values the design actually uses.
-
-### Border radius — declare the philosophy
-
-Choose one philosophy and be consistent:
-- `4px` → professional, contained
-- `8px` → modern, accessible
-- `12px` → friendly, consumer
-- `16px+` → playful, card-centric
-- `9999px` → pill components only (badges/tags, never cards)
-
-### Shadow philosophy
-
-- **No shadow** → flat, modern, clean
-- **Subtle shadow** (Tier 1) → light elevation
-- **Expressive shadow** (Tier 2/3) → clear hierarchy, intentional depth
-- **Inner shadow** → inset states, form fields
-
-Use only the three shadow tiers defined in `design-tokens`.
+Every hex/size/duration in your JSON MUST resolve to `design-tokens`. Encode philosophy in `radius.philosophy`, `shadow.philosophy`, and `motion.philosophy` where the schema provides those fields.
 
 ## Signature element (mandatory)
 

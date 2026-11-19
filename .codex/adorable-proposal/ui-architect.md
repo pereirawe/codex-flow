@@ -6,7 +6,7 @@ description: >
   Output exclusivo em JSON estruturado para o ui-implementer.
   Não escreve CSS nem decide cores — isso já foi decidido.
 mode: subagent
-model: anthropic/claude-opus-4-5
+# model: inherit Codex session model (capability preference in role prose only)
 temperature: 0.2
 permission:
   edit: deny

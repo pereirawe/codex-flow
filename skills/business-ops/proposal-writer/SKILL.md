@@ -40,6 +40,27 @@ and sign — grounded in an approved technical specification.
 - `docs/specs/<slug>/tech-spec.md` exists and is in `Status: approved`.
 - Logo asset is in place at `docs/specs/<slug>/assets/logo.<ext>`.
 - The user has confirmed client identity, budget envelope, and timeline.
+- Project brand: `.codex/brand/brand.profile.json` + `pricing.md` when not using
+  only `proposal-data.json` (see `~/.codex/flow/docs/brand.md`).
+
+## Global toolchain (`~/.codex/flow/scripts/commercial/`)
+
+Run from the **project root** (CWD = repo):
+
+| Step | Command |
+|------|---------|
+| Client hub scaffold | `bash ~/.codex/flow/scripts/commercial/novo-cliente.sh <slug>` |
+| Validate JSON manifest | `python3 ~/.codex/flow/scripts/commercial/proposal.py validate <source.json>` |
+| Build Markdown | `python3 ~/.codex/flow/scripts/commercial/proposal.py build <source.json>` |
+| Pack client zip | `python3 ~/.codex/flow/scripts/commercial/proposal.py pack <source.json>` |
+| DOCX | `python3 ~/.codex/flow/scripts/commercial/render_docx.py <source.json> <out.docx>` |
+| Mermaid → PNG/SVG | `node ~/.codex/flow/scripts/commercial/render_diagrams.cjs <source.json> <mermaid.min.js>` |
+| MD → HTML/PDF | `bash ~/.codex/flow/scripts/shared/convert-md.sh …` |
+
+Templates (Padrão A/B/C): `~/.codex/flow/templates/commercial/proposta/`.
+Standards: `~/.codex/flow/standards/commercial/proposta.md`.
+Placeholders `{{company}}`, `{{hourly_rate_formatted}}`, `{{logo_path}}` resolve via
+`python3 ~/.codex/flow/scripts/lib-brand.py placeholders`.
 
 ## Proposal Data (`proposal-data.json`)
 

@@ -4,7 +4,7 @@ description: >
   opinionado e com identidade própria — nunca genérico. Output exclusivo em
   JSON estruturado para consumo pelos agentes ui-architect e ui-implementer.
 mode: subagent
-model: anthropic/claude-opus-4-5
+# model: inherit Codex session model (capability preference in role prose only)
 temperature: 0.7
 permission:
   edit: deny

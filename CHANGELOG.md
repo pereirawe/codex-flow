@@ -1,5 +1,49 @@
 # Changelog
 
+## Unreleased
+
+### Jira (global)
+- Skill `cf-jira`, standard `standards/jira.md`, portfolio `config/jira/registry.json`
+- `scripts/jira-init.sh` bootstraps `.codex/jira.json` from registry + defaults
+- `jira_config_load` falls back to `config/jira/defaults.json` for baseUrl/email
+- `$flow-sync-jira` / `mcp-registry.md` point at the shared Jira docs
+
+## Codex Flow 1.1.0 (2026-11-05)
+
+### Cross-platform install
+- `install --check` reports Linux / macOS / WSL / Windows; native Windows fails with WSL guidance.
+- `install.ps1` forwards into WSL; `docs/install.md` matrix for Linux, macOS, Windows.
+- `scripts/lib-os.sh`: portable locks (`flock` or mkdir) + `flow_epoch` (no GNU `date -d`).
+
+### Delivery cost ↓ (same quality floors)
+- `discovery-route.sh` + `feat-lean` fail-closed; discovery skill skips PO/TL when gates pass.
+- `delivery-route.sh` prunes reviewers with no matching files (floor/security preserved); develop/develop-full cap re-reviews at 2 and share `test-runner` gate.
+- Per-issue ledger: `metrics-record.sh` → `.codex/metrics/issue-runs.jsonl`; `flow-issue-cost.sh`.
+
+### Product reporting
+- Global `progress-report.sh` (client) and `ops-report.sh` (internal); commands `$flow-progress-report` / `$flow-ops-report`.
+
+### Parallel tracker + sessions
+- Hybrid issues layout: `issues-migrate.sh`, `issues-reindex.sh`, `issue-path.sh`, `lib-issues.sh`; append/transition/promote/create/close/lint/delivery-route aware.
+- `session-plan.sh` / `$flow-plan-sessions`: schedule + session prompt + plan always; optional `--launch --parallel --worktree`.
+- Optional `- Work plan:` on issues; lint warns at ready.
+
+### Install / Cursor
+- Default global `skills_dir` → `~/.codex/skills` (optional mirror under `~/.cursor/skills`).
+- `bash install.sh --check` (Python 3.11+, git, vendors, telegram.env, symlinks).
+- `flow-notify.sh` exits non-zero when Telegram and OpenWA both fail.
+- `flow-resolve` skill catalogued; steward/resolve polish; init creates `resolved_issues.md`; gitignore keeps `sessions/` + `metrics/`.
+
+### Commercial (brand-neutral)
+- `scripts/commercial/` (proposal/render/novo-cliente/consulta-cnpj) + `lib-brand.py`.
+- Templates/standards under `templates/commercial/` and `standards/commercial/`; brand examples in `standards/brand/`.
+- Skills: `cf-consulta-cnpj`; proposal/tech-spec commands wired to global scripts. Project overrides via `.codex/brand/`.
+
+### Adorable + hubs
+- Design agents slimmed (skill pointers; JSON schemas kept); `standards/design-pipeline.md` routing (explore vs `$flow-build-ui` / `$flow-audit-ui`).
+- Hubs: `marketing-router`, `finance-hub`; marketing stubs + `frontend-design` point at router/Adorable.
+- Legacy `.codex/adorable-proposal` archived (no active `model:`).
+
 ## Codex Flow 1.0.1 (2026-10-14)
 
 - Block issue closure and archival until the provider proves the PR/MR merged; cancellation and provider errors preserve the active issue.

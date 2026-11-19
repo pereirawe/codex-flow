@@ -1,9 +1,8 @@
 ---
 name: cf-telegram-notifier
-description: Sends Telegram notifications via the Bot API when an Codex command finishes
-  or when an agent needs a response from the user. Use when finishing long tasks,
-  reporting results, or asking the user for input when they may be away from the terminal
-  ("notificar", "telegram", "avisar no telegram" also trigger this skill).
+description: Sends Telegram notifications via the Bot API for Codex and Cursor
+  flows. Credentials come from .codex/telegram.env. Use when discovery, develop,
+  or develop-full finishes, or when the user asks for Telegram.
 ---
 
 ## Codex runtime contract
@@ -45,13 +44,9 @@ Credentials are loaded from (priority order):
 
 ## When to use
 
-**ALWAYS when one of these situations occurs:**
-
-1. **When a command/task finishes** — notify the result (success or failure).
-2. **When you need a response from the user** — if the user is not visibly
-   active in the terminal, send the question via Telegram and wait.
-3. **When you hit a blocker** — missing business rule, conflict, failure.
-4. **When a milestone completes** — pipeline done, MR created, deploy done.
+Codex and Cursor flows send one message with
+`$HOME/.codex/flow/scripts/flow-notify.sh`. That script calls
+`telegram-notify.sh` and loads `.codex/telegram.env`. Subagents do not notify.
 
 ## How to send notifications
 

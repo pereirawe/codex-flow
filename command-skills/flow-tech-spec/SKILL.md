@@ -51,8 +51,10 @@ $flow-tech-spec loyalty-program "B2C loyalty program with points and tiers"
 ## What happens
 
 1. The `business-ops/spec-writer` agent bootstraps
-   `docs/specs/<slug>/` via `scripts/spec-init.sh`, copying the company
-   logo from `docs/assets/` or `~/.codex/flow/assets/`.
+   `docs/specs/<slug>/` via `bash ~/.codex/flow/scripts/spec-init.sh <slug>`,
+   copying the logo from `.codex/brand/`, then `docs/assets/`, then
+   `~/.codex/flow/assets/`. Optional hub:
+   `bash ~/.codex/flow/scripts/commercial/novo-cliente.sh <slug>`.
 2. It runs structured discovery across the 12 spec dimensions defined in
    the `tech-spec` skill, asking the user targeted questions in batches.
 3. It invokes C-level agents (`cto`, `cmo`, `cfo`, `coo`) in parallel when

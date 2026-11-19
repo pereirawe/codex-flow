@@ -72,4 +72,7 @@ $flow-proposal dia-educacao-2026
    Mermaid diagrams (flowchart, gantt, pie), runs the quality checklist, and
    asks for explicit sign-off before saving.
 5. Output: `docs/specs/<slug>/proposal.md`.
+6. Optional render pipeline: `~/.codex/flow/scripts/commercial/proposal.py`,
+   `render_docx.py`, `shared/convert-md.sh` (see `cf-proposal-writer`).
+   Brand/pricing: `.codex/brand/` (`docs/brand.md`).
 

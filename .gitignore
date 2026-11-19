@@ -22,6 +22,9 @@ hive/
 roster-backups/
 roster.json
 
+# Operator Jira site defaults (email); commit defaults.example.json only.
+config/jira/defaults.json
+
 # Serialize local tracker mutations without publishing runtime locks.
 .issues.lock
 .codex/.issues.lock

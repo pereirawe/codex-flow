@@ -2,6 +2,8 @@
 set -euo pipefail
 source "$(dirname "$0")/config.sh"
 source "$SCRIPTS_DIR/git-base.sh"
+source "$SCRIPTS_DIR/lib-issues.sh"
+source "$SCRIPTS_DIR/lib-os.sh"
 
 # Usage: $SCRIPTS_DIR/close_issue.sh <local_issue_id>
 
@@ -11,29 +13,22 @@ if [[ -z "$ID" ]]; then
   exit 1
 fi
 
+MODE="$(issues_mode)"
 FILE="$PROJECT_ISSUES_FILE"
-if [[ ! -f "$FILE" ]]; then
+if [[ "$MODE" == monolith && ! -f "$FILE" ]]; then
   echo "known_issues.md not found"
   exit 1
 fi
 
-exec 9>"$PROJECT_ISSUES_DIR/.issues.lock"
-flock -x 9
+flow_lock_begin "$PROJECT_ISSUES_DIR/.issues.lock"
 
-SECTION=$(awk -v id="$ID" '
-  /^### Status/ {exit}
-  $0 ~ "^### " id "\\." {found=1}
-  found {
-    if ($0 ~ /^### [0-9]+\./ && $0 !~ "^### " id "\\.") {
-      exit
-    }
-    print
-  }
-' "$FILE")
-
+SECTION="$(issue_section "$ID" || true)"
 if [[ -z "$SECTION" ]]; then
   echo "Issue $ID not found"
   exit 1
+fi
+if [[ "$MODE" == hybrid ]]; then
+  FILE="$(issue_path "$ID")" || { echo "Issue $ID not found"; exit 1; }
 fi
 
 STATUS=$(printf '%s\n' "$SECTION" | awk -F': ' '/^- Status:/ {print $2; exit}')
@@ -102,21 +97,18 @@ RESOLVED_DATE=$(date +%Y-%m-%dT%H:%M)
 SUMMARY="${DESC:-no description}${SUGGESTED:+ — ${SUGGESTED}}"
 
 # days_between <start|-> <end|-> — prints "<N>d", "<N>h", or "-"
-# Duration math is UTC-anchored (TZ=UTC date -d "$d" +%s), which is DST-robust
-# (BR 4): naive local-epoch /86400 day counting fails the spring-forward DST
-# scenario (23-hour day → integer division floors to 0 days).
+# Duration math is UTC-anchored via flow_epoch (Python) so Linux/macOS/WSL
+# behave the same — avoids GNU `date -d` (missing on BSD/macOS).
 # Guards (BR 5/BR 10): start > end renders `-` BEFORE division; missing dates
 # render `-`; differences are floored at 0 (non-negative); diff == 0 → "0h".
-# Sub-day durations render in hours ("<N>h") so the lifecycle report is not
-# vague (issue: timestamps previously stored date-only, hiding intra-day gaps).
 days_between() {
   local s="$1" e="$2"
   if [[ -z "$s" || -z "$e" || "$s" == "-" || "$e" == "-" ]]; then
     echo "-"; return
   fi
   local se ee
-  se=$(TZ=UTC date -d "$s" +%s 2>/dev/null || echo "")
-  ee=$(TZ=UTC date -d "$e" +%s 2>/dev/null || echo "")
+  se=$(flow_epoch "$s" || true)
+  ee=$(flow_epoch "$e" || true)
   if [[ -z "$se" || -z "$ee" ]]; then
     echo "-"; return
   fi
@@ -157,6 +149,32 @@ if [[ "$BACKLOG_D$WAITING_D$DEV_D$REVIEW_D$QA_D$PUBLISH_D$TOTAL_D" == "-------" 
   DURATIONS_VAL="-"
 else
   DURATIONS_VAL="backlog=$BACKLOG_D waiting=$WAITING_D dev=$DEV_D review=$REVIEW_D qa=$QA_D publish=$PUBLISH_D total=$TOTAL_D"
+fi
+
+if [[ "$MODE" == hybrid ]]; then
+  PAD="$(issue_pad "$ID")"
+  mkdir -p "$PROJECT_ISSUES_DIR/issues/resolved"
+  ARCHIVE_BODY=$(printf '%s\n' "$SECTION" | awk -v st=resolved -v rd="$RESOLVED_DATE" -v dur="$DURATIONS_VAL" '
+    BEGIN { printed_status=0 }
+    /^- Status:/ {
+      print "- Status: resolved"
+      print "- Resolved: " rd
+      print "- Durations: " dur
+      printed_status=1
+      next
+    }
+    /^- (Resolved|Durations):/ { next }
+    { print }
+  ')
+  printf '%s\n' "$ARCHIVE_BODY" >"$PROJECT_ISSUES_DIR/issues/resolved/${PAD}.md"
+  rm -f "$PROJECT_ISSUES_DIR/issues/${PAD}.md" "$PROJECT_ISSUES_DIR/issues/${ID}.md"
+  bash "$SCRIPTS_DIR/issues-reindex.sh" >/dev/null
+  # Optional monolith mirror for progress-report consumers
+  if [[ -f "$RESOLVED_FILE" ]] && ! grep -q 'Hybrid tracker' "$RESOLVED_FILE" 2>/dev/null; then
+    bash "$SCRIPTS_DIR/issues-reindex.sh" --also-monolith >/dev/null || true
+  fi
+  echo "[issue] closed $ID → issues/resolved/${PAD}.md"
+  exit 0
 fi
 
 # Ensure resolved archive exists (rewrite block below always writes the header)

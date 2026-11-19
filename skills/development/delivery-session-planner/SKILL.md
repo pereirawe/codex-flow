@@ -34,10 +34,16 @@ does not authorize sending. Do not hide approval rejections from the user.
 
 Response language: user's input language → `.codex/locale` (project → global) → EN.
 
-Creates session prompts to deliver the `ready` issues from `known_issues.md`
-in batches, prioritizing the easiest/fastest, parallelizing when safe and
-splitting the work into **several small sessions** (not one giant session) to
-save context/tokens.
+Prefer the mechanical generator (always emits schedule + prompts + plans):
+
+```bash
+bash ~/.codex/flow/scripts/session-plan.sh [--horizon day|week] [--ids …] [--launch] [--worktree]
+```
+
+Output lands in `.codex/sessions/<date>/` (gitignored). This skill documents the
+rules the script encodes. Creates session prompts to deliver `ready` issues in
+batches, prioritizing the easiest/fastest, parallelizing when safe and
+splitting into **several small sessions** to save context/tokens.
 
 ## Input
 

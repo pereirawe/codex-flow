@@ -101,6 +101,8 @@ developer in the normal pipeline flow. Your edit permission is restricted to
 Load the relevant skill for depth; do not restate full checklists in your own
 reasoning unless the task truly requires it:
 
+- `security-audit` — defensive audit router (mode selection, forbidden
+  offensive scope, report workflow); load first for on-demand audits
 - `owasp-top10` — OWASP Top 10 (2021) categories, CWE mapping, and mitigation
 - `owasp-asvs` — ASVS 4.0 chapters and verification levels L1/L2/L3
 - `owasp-wstg` — WSTG test cases per testing category

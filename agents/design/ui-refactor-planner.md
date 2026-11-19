@@ -185,42 +185,9 @@ replacement is working. Plan coexistence.
 
 ### STEP 4 — Token strategy (the foundation of the refactor)
 
-Before any component, the token system must exist. Plan how the design_spec
-tokens are implemented in the project's specific stack:
+Plan how `design_spec` tokens land in the detected stack. Read `design-tokens` for canonical layers and stack wiring patterns — your `refactor_plan.json` `token_mapping` and `token_strategy` sections describe **what** changes in this repo (paths, migration order, coexistence), not a second copy of the token tables.
 
-**For React/Vue/Next with Tailwind:**
-```
-1. Create a tailwind.config with the design_spec tokens as custom values
-2. Keep compatibility with existing classes during migration
-   (extend, not replace — until all components are migrated)
-3. Create a CSS custom properties token file as fallback/complement
-4. Define a purge/safelist strategy for classes in transition
-```
-
-**For React/Vue/Next with CSS Modules or Vanilla CSS:**
-```
-1. Create tokens.css or _tokens.scss with the design_spec CSS custom properties
-2. Import it at the entry point
-3. Create basic utility classes (equivalents of the most-used Tailwind ones)
-4. Migrate component by component
-```
-
-**For PHP + HTML with Bootstrap:**
-```
-1. Create _custom-bootstrap.scss overriding Bootstrap variables
-   with the design_spec values
-2. Add global CSS custom properties for what Bootstrap does not cover
-3. Create new components as PHP partials
-4. Migrate page by page
-```
-
-**For PHP + HTML with pure CSS:**
-```
-1. Create design-tokens.css with global custom properties
-2. Include it before any other stylesheet
-3. Refactor existing CSS to use var(--token-name)
-4. Migrate selector by selector (not file by file)
-```
+For each stack class (Tailwind, Bootstrap SCSS, CSS Modules, PHP partials), document: entry file, extend-vs-replace policy during migration, and rollback if tokens are wrong.
 
 ### STEP 5 — Phase plan
 

@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 source "$(dirname "$0")/config.sh"
+source "$(dirname "$0")/lib-issues.sh"
 
 # Usage: issue-lint.sh <local_issue_id> [--strict]
 #
@@ -26,13 +27,11 @@ for arg in "$@"; do
 done
 if [[ -z "$ID" ]]; then echo "Usage: issue-lint.sh <id> [--strict]"; exit 3; fi
 
+MODE="$(issues_mode)"
 FILE="$PROJECT_ISSUES_FILE"
-if [[ ! -f "$FILE" ]]; then echo "known_issues.md not found"; exit 3; fi
+if [[ "$MODE" == monolith && ! -f "$FILE" ]]; then echo "known_issues.md not found"; exit 3; fi
 
-SECTION=$(awk -v id="$ID" '
-  $0 ~ "^### " id "\\." {found=1}
-  found { if ($0 ~ /^### [0-9]+\./ && $0 !~ "^### " id "\\.") exit; print }
-' "$FILE")
+SECTION="$(issue_section "$ID" || true)"
 if [[ -z "$SECTION" ]]; then echo "lint: FAIL — issue $ID not found"; exit 2; fi
 
 field() { # <fieldname>
@@ -109,6 +108,13 @@ fi
 
 if [[ "$STRICT" == "1" && ( -z "$REMOTE" || "$REMOTE" == "-" ) ]]; then
   note "WARN: Remote missing at ready (auto-created during promotion)"
+fi
+
+WORK=$(val "Work plan")
+if [[ "$STATUS" == "ready" && ( "$TYPE" == "feat" || "$TYPE" == "bug" ) ]]; then
+  if [[ -z "$WORK" || "$WORK" == "-" ]]; then
+    note "WARN: Work plan missing at ready (recommended for session-plan)"
+  fi
 fi
 
 if [[ "$FAIL" -eq 0 ]]; then

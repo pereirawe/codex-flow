@@ -49,3 +49,6 @@ Each agent has a single responsibility and consumes/produces structured JSON
   (art-director, ui-critic, ui-auditor), `component-patterns` (ui-architect,
   ui-implementer, ui-critic, ui-auditor, ui-refactor-planner).
 - See `skills/design/*` for the canonical token system and pattern library.
+- **Routing:** quick explore → `agents/designer.md` + taste vendor skills;
+  production/gate → `$flow-build-ui` / `$flow-audit-ui` (`standards/design-pipeline.md`).
+  Agent bodies stay role + JSON schema + skill pointers; canon lives in skills.

@@ -1,0 +1,22 @@
+# Pricing reference (project-local)
+
+Copy to `.codex/brand/pricing.md` and adjust. `hourly_rate` in `brand.profile.json`
+overrides these lines when set.
+
+hourly_rate: 195
+currency: BRL
+locale: pt-BR
+
+## Client-facing rate
+
+Use the unified engineering rate in proposals and SOWs. Profile-level repasse
+tables belong in this file or in a separate `pricing-profiles.md` — never in
+global Flow scripts.
+
+## Formulas
+
+```
+PRECO = horas_totais × hourly_rate
+```
+
+Document discounts, sponsorships, and payment milestones in the proposal itself.

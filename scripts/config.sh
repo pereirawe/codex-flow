@@ -44,11 +44,15 @@ REVIEWER_COUNT="${REVIEWER_COUNT:-1}"
 # never committed, never logged. Without valid config the sync is disabled and
 # pipeline scripts behave exactly as before (zero Jira API calls).
 #
-# Config sources (per-field, env wins over file):
-#   - `.codex/jira.json` (project) — {baseUrl, email, projectKey,
-#     statusMap?, authMode?}
+# Config sources (per-field, env wins over project file over global defaults):
 #   - env vars: JIRA_BASE_URL, JIRA_PROJECT_KEY, JIRA_EMAIL, JIRA_AUTH_MODE,
 #     JIRA_STATUS_MAP (JSON), JIRA_API_TOKEN (required, env only)
+#   - `.codex/jira.json` (project) — {baseUrl, email, projectKey,
+#     statusMap?, authMode?}
+#   - `config/jira/defaults.json` (flow global) — baseUrl/email/statusMap/
+#     authMode only (never a portfolio-wide projectKey)
+# Product key map: `config/jira/registry.json` (see `scripts/jira-init.sh`,
+# `standards/jira.md`, skill `cf-jira`).
 #
 # Default status map (statusMap in jira.json overrides, else these):
 #   backlog/ready → "To Do", in-progress → "In Progress", in-review →
@@ -70,18 +74,16 @@ jira_config_load() {
   JIRA_AUTH_MODE=""
   JIRA_STATUS_MAP=""
   local file_base="" file_key="" file_email="" file_auth="" file_status_map=""
-  local file_base_b64="" file_key_b64="" file_email_b64="" file_auth_b64="" file_status_map_b64=""
+  local glob_base="" glob_key="" glob_email="" glob_auth="" glob_status_map=""
   local cfg="${JIRA_CONFIG_FILE:-}"
   if [[ -z "$cfg" ]]; then
-    for c in .codex/jira.json "$CONFIG_DIR/.codex/jira.json"; do
+    for c in .codex/jira.json "$FLOW_PROJECT_ROOT/.codex/jira.json" "$CONFIG_DIR/.codex/jira.json"; do
       if [[ -f "$c" ]]; then cfg="$c"; break; fi
     done
   fi
   if [[ -n "$cfg" && -f "$cfg" ]]; then
     if command -v python3 >/dev/null 2>&1; then
-      # Values are base64-encoded so the eval-d `name=value` lines are always
-      # single-word, quote-safe bash assignments (JSON strings with quotes,
-      # spaces, or special chars survive verbatim).
+      local base_b64="" key_b64="" email_b64="" auth_b64="" status_map_b64=""
       eval "$(JIRA_CFG="$cfg" python3 -c '
 import json, os, sys, base64
 try:
@@ -91,20 +93,20 @@ except Exception:
 def b64(s):
     return base64.b64encode(s.encode("utf-8")).decode("ascii")
 out = []
-for k, envk in (("baseUrl", "file_base"), ("email", "file_email"),
-                ("projectKey", "file_key"), ("authMode", "file_auth")):
+for k, envk in (("baseUrl", "base"), ("email", "email"),
+                ("projectKey", "key"), ("authMode", "auth")):
     v = d.get(k, "")
     if isinstance(v, str) and v:
         out.append("%s_b64=%s" % (envk, b64(v)))
 m = d.get("statusMap")
 if isinstance(m, dict) and m:
-    out.append("file_status_map_b64=%s" % b64(json.dumps(m)))
+    out.append("status_map_b64=%s" % b64(json.dumps(m)))
 print("; ".join(out))')" 2>/dev/null || true
-      file_base="$([[ -n "$file_base_b64" ]] && printf '%s' "$file_base_b64" | base64 -d 2>/dev/null || true)"
-      file_email="$([[ -n "$file_email_b64" ]] && printf '%s' "$file_email_b64" | base64 -d 2>/dev/null || true)"
-      file_key="$([[ -n "$file_key_b64" ]] && printf '%s' "$file_key_b64" | base64 -d 2>/dev/null || true)"
-      file_auth="$([[ -n "$file_auth_b64" ]] && printf '%s' "$file_auth_b64" | base64 -d 2>/dev/null || true)"
-      file_status_map="$([[ -n "$file_status_map_b64" ]] && printf '%s' "$file_status_map_b64" | base64 -d 2>/dev/null || true)"
+      file_base="$([[ -n "$base_b64" ]] && printf '%s' "$base_b64" | base64 -d 2>/dev/null || true)"
+      file_email="$([[ -n "$email_b64" ]] && printf '%s' "$email_b64" | base64 -d 2>/dev/null || true)"
+      file_key="$([[ -n "$key_b64" ]] && printf '%s' "$key_b64" | base64 -d 2>/dev/null || true)"
+      file_auth="$([[ -n "$auth_b64" ]] && printf '%s' "$auth_b64" | base64 -d 2>/dev/null || true)"
+      file_status_map="$([[ -n "$status_map_b64" ]] && printf '%s' "$status_map_b64" | base64 -d 2>/dev/null || true)"
     else
       # No python3: flat scalar fallback (statusMap not loaded — defaults apply)
       file_base="$(sed -n 's/.*"baseUrl"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' "$cfg" | head -1)"
@@ -112,13 +114,39 @@ print("; ".join(out))')" 2>/dev/null || true
       file_key="$(sed -n 's/.*"projectKey"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' "$cfg" | head -1)"
     fi
   fi
-  # env wins over file (per-field); token is env-only (BR 1)
-  JIRA_BASE_URL="${env_base:-$file_base}"
+  # Global defaults fill baseUrl/email/statusMap/authMode only (never projectKey).
+  local gcfg="$CONFIG_DIR/config/jira/defaults.json"
+  if [[ -f "$gcfg" ]] && command -v python3 >/dev/null 2>&1; then
+    local base_b64="" key_b64="" email_b64="" auth_b64="" status_map_b64=""
+    eval "$(JIRA_CFG="$gcfg" python3 -c '
+import json, os, sys, base64
+try:
+    d = json.load(open(os.environ["JIRA_CFG"]))
+except Exception:
+    sys.exit(0)
+def b64(s):
+    return base64.b64encode(s.encode("utf-8")).decode("ascii")
+out = []
+for k, envk in (("baseUrl", "base"), ("email", "email"), ("authMode", "auth")):
+    v = d.get(k, "")
+    if isinstance(v, str) and v:
+        out.append("%s_b64=%s" % (envk, b64(v)))
+m = d.get("statusMap")
+if isinstance(m, dict) and m:
+    out.append("status_map_b64=%s" % b64(json.dumps(m)))
+print("; ".join(out))')" 2>/dev/null || true
+    glob_base="$([[ -n "$base_b64" ]] && printf '%s' "$base_b64" | base64 -d 2>/dev/null || true)"
+    glob_email="$([[ -n "$email_b64" ]] && printf '%s' "$email_b64" | base64 -d 2>/dev/null || true)"
+    glob_auth="$([[ -n "$auth_b64" ]] && printf '%s' "$auth_b64" | base64 -d 2>/dev/null || true)"
+    glob_status_map="$([[ -n "$status_map_b64" ]] && printf '%s' "$status_map_b64" | base64 -d 2>/dev/null || true)"
+  fi
+  # env > project file > global defaults; token is env-only (BR 1)
+  JIRA_BASE_URL="${env_base:-${file_base:-$glob_base}}"
   JIRA_PROJECT_KEY="${env_key:-$file_key}"
-  JIRA_EMAIL="${env_email:-$file_email}"
-  JIRA_AUTH_MODE="${env_auth:-$file_auth}"
+  JIRA_EMAIL="${env_email:-${file_email:-$glob_email}}"
+  JIRA_AUTH_MODE="${env_auth:-${file_auth:-$glob_auth}}"
   JIRA_AUTH_MODE="${JIRA_AUTH_MODE:-basic}"
-  JIRA_STATUS_MAP="${env_map:-$file_status_map}"
+  JIRA_STATUS_MAP="${env_map:-${file_status_map:-$glob_status_map}}"
   [[ -n "$JIRA_BASE_URL" && -n "$JIRA_PROJECT_KEY" && -n "$JIRA_EMAIL" && -n "${JIRA_API_TOKEN:-}" ]]
 }
 

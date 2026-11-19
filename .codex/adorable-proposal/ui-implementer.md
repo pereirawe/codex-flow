@@ -7,7 +7,7 @@ description: >
   ou CSS vanilla. Nunca toma decisões de design ou arquitetura — executa
   os contratos com precisão e qualidade de produção.
 mode: subagent
-model: anthropic/claude-opus-4-5
+# model: inherit Codex session model (capability preference in role prose only)
 temperature: 0.1
 permission:
   edit: allow

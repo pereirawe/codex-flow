@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 source "$(dirname "$0")/config.sh"
+source "$(dirname "$0")/lib-issues.sh"
+source "$(dirname "$0")/lib-os.sh"
 
 # Usage:
 # $SCRIPTS_DIR/create_issue.sh "Issue Title" "Issue Body"
@@ -9,27 +11,22 @@ source "$(dirname "$0")/config.sh"
 INPUT=${1:-}
 TITLE=""
 BODY=""
+MODE="$(issues_mode)"
 
-# If only a number is provided, fetch from known_issues
+# If only a number is provided, fetch from known_issues / hybrid issues/
 if [[ "$INPUT" =~ ^[0-9]+$ ]]; then
   FILE="$PROJECT_ISSUES_FILE"
-  if [[ ! -f "$FILE" ]]; then
+  if [[ "$MODE" == monolith && ! -f "$FILE" ]]; then
     echo "known_issues.md not found"
     exit 1
   fi
-  SECTION=$(awk -v id="$INPUT" '
-    $0 ~ "^### " id "\\." {found=1}
-    found {
-      if ($0 ~ /^### [0-9]+\./ && $0 !~ "^### " id "\\.") {
-        exit
-      }
-      print
-    }
-  ' "$FILE")
-
+  SECTION="$(issue_section "$INPUT" || true)"
   if [[ -z "$SECTION" ]]; then
     echo "Issue $INPUT not found"
     exit 1
+  fi
+  if [[ "$MODE" == hybrid ]]; then
+    FILE="$(issue_path "$INPUT")" || { echo "Issue $INPUT not found"; exit 1; }
   fi
 
   STATUS=$(printf '%s\n' "$SECTION" | awk -F': ' '/^- Status:/ {print $2; exit}')
@@ -164,33 +161,43 @@ rewrite_entry() { # <file> <id> <new_status|''> <opened|''> <ready|''> <started|
   ' "$file" > "$file.tmp" && mv "$file.tmp" "$file"
 }
 
-# Update known_issues with Remote ID and status
-FILE="$PROJECT_ISSUES_FILE"
-if [[ -f "$FILE" && "$INPUT" =~ ^[0-9]+$ ]]; then
-  NEW_STATUS="in-progress"
-  if [[ "$STATUS" == "ready" ]]; then
-    NEW_STATUS="ready"
-  fi
-  if [[ -n "$ERROR_MSG" ]]; then
-    REMOTE_VAL="error:$ERROR_MSG"
-  elif [[ -n "$ISSUE_ID" ]]; then
-    REMOTE_VAL="#$ISSUE_ID"
+# Update known_issues / hybrid body with Remote ID and status
+if [[ "$INPUT" =~ ^[0-9]+$ ]]; then
+  if [[ "$MODE" == hybrid ]]; then
+    FILE="$(issue_path "$INPUT")" || FILE=""
   else
-    REMOTE_VAL="-"
+    FILE="$PROJECT_ISSUES_FILE"
   fi
-  # Stamp `- Opened:` ONLY on remote creation success (BR 3/BR 8), set-if-absent
-  OPENED_DATE=""
-  if [[ -n "$ISSUE_ID" ]]; then
-    OPENED_DATE=$(date +%Y-%m-%d)
+  if [[ -n "${FILE:-}" && -f "$FILE" ]]; then
+    NEW_STATUS="in-progress"
+    if [[ "$STATUS" == "ready" ]]; then
+      NEW_STATUS="ready"
+    fi
+    if [[ -n "$ERROR_MSG" ]]; then
+      REMOTE_VAL="error:$ERROR_MSG"
+    elif [[ -n "$ISSUE_ID" ]]; then
+      REMOTE_VAL="#$ISSUE_ID"
+    else
+      REMOTE_VAL="-"
+    fi
+    # Stamp `- Opened:` ONLY on remote creation success (BR 3/BR 8), set-if-absent
+    OPENED_DATE=""
+    if [[ -n "$ISSUE_ID" ]]; then
+      OPENED_DATE=$(date +%Y-%m-%d)
+    fi
+    flow_lock_begin "$PROJECT_ISSUES_DIR/.issues.lock"
+    rewrite_entry "$FILE" "$INPUT" "$NEW_STATUS" "$OPENED_DATE" "" "" "$REMOTE_VAL"
+    if [[ "$MODE" == hybrid ]]; then
+      bash "$SCRIPTS_DIR/issues-reindex.sh" >/dev/null
+    fi
   fi
-  rewrite_entry "$FILE" "$INPUT" "$NEW_STATUS" "$OPENED_DATE" "" "" "$REMOTE_VAL"
 fi
 
 # Jira Cloud sync (issue #48): create the card when Jira is configured and the
 # issue has no card yet (BR 4). Idempotent (BR 5): `Jira:` populated → no-op.
 # Non-blocking (BR 8): failures warn but never fail the script.
 if [[ "$INPUT" =~ ^[0-9]+$ ]] && "$SCRIPTS_DIR/sync-jira.sh" config >/dev/null 2>&1; then
-  "$SCRIPTS_DIR/sync-jira.sh" ensure-card "$FILE" "$INPUT" \
+  "$SCRIPTS_DIR/sync-jira.sh" ensure-card "${FILE:-$PROJECT_ISSUES_FILE}" "$INPUT" \
     || echo "[jira] Warning: card creation failed for issue $INPUT (non-blocking)"
 fi
 

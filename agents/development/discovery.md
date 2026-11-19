@@ -61,14 +61,15 @@ Pick ONE loop from `- Type:` + `- Severity:`:
 
 | Loop | Trigger | Depth | Reviewers (delivery) | Quality bar |
 |------|---------|-------|----------------------|-------------|
-| `feat-full` | `feat` | PO (rules+Tests) → TL (branch/reviewers) | from TL | full |
+| `feat-lean` | `feat` + rules+Tests present + no risk | **no agent** (parent + scripts) | defaults / detect-lang | same floors as full |
+| `feat-full` | `feat` incomplete or risk | only missing roles: PO and/or TL; CTO only for architecture/standards | from TL or defaults | full |
 | `bug-expedite` | `bug` + `critical|high` | PO triage only (fast) | 2 (incl `security` if applicable) | high |
 | `bug-lean` | `bug` + `low|medium` | PO triage only (fast) | 1 | normal |
 | `chore` | `doc|chore` | no agent | 1 | light |
 
-Bugs are resolved **faster** (fewer agents, no TL/CTO/QA-agent) but with a
-**higher quality bar** (expedite mandates 2 reviewers + lint-strict + security
-when relevant). Feats keep the full depth.
+Prefer `scripts/discovery-route.sh` for loop + agent list. Bugs stay lean; feats
+skip PO/TL when the proposal already clears gates (**fail closed** to
+`feat-full` if lint or gates fail).
 
 ## Tool discipline (bash-restricted)
 
@@ -86,18 +87,21 @@ denied, switch silently to the correct tool — never narrate permission denials
   in the issue (`Business rules:` notes the gap) and proceed — gaps become new
   issues, never silent downgrades.
 
+## `feat-lean`
+
+When `discovery-route.sh` returns `loop: feat-lean` and `agents: []`:
+
+1. Do **not** invoke PO/TL/CTO.
+2. Write fields from the proposal + router `defaults` via `append-issue.sh`.
+3. `issue-lint.sh --strict` must PASS; otherwise escalate to `feat-full`.
+
 ## `feat-full`
 
-1. Invoke `development/product-owner` — **one pass**: capture business value,
-   explicit business rules, and `Tests:` scenarios (severity floor:
-   critical/high ≥3, medium ≥2, low ≥1; missing severity ⇒ medium ≥2).
-2. Escalation (optional): if the feat touches architecture/standards OR the user
-   explicitly asks, invoke `development/cto` for alignment. Otherwise skip — do
-   not burn a roundtrip on routine feats.
-3. Invoke `development/tech-lead`: set `Base branch:`, `Reviewers:` profiles,
-   effort, and task breakdown. For small feats TL may only set branch+reviewers.
-4. `scripts/append-issue.sh --type feat --status ready ...` with all fields
-   (pass multiline via `\n`).
+1. Invoke only roles listed by the router (typically PO when rules/tests missing).
+2. CTO only for architecture/standards risk — never by default.
+3. TL only when branch/reviewers missing or technical risk — small feats may
+   skip TL if defaults already set.
+4. `scripts/append-issue.sh --type feat --status ready ...`
 5. `scripts/issue-lint.sh --strict <id>` → must PASS.
 
 ## `bug-expedite` (critical / high)

@@ -72,6 +72,9 @@ Before writing any code, commit to an explicit direction:
 - Every color choice must meet WCAG AA contrast (4.5:1 normal text)
 
 ## Related Skills
+- `marketing-router` — pick channel/CRO/SEO skills
 - `conversion-optimization` — CRO for pages
 - `copywriting` — page copy
 - `theme-factory` — design token generation
+- `design-tokens` — canonical product UI tokens (Adorable pipeline)
+- `$flow-build-ui` — production UI with critic gate (`standards/design-pipeline.md`)

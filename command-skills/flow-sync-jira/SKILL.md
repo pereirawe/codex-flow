@@ -1,6 +1,8 @@
 ---
 name: flow-sync-jira
-description: Reconcile known_issues status with Jira Cloud cards
+description: >-
+  Reconcile known_issues status with Jira Cloud cards. For portfolio setup,
+  Atlassian MCP, and project keys, also read standards/jira.md and skill cf-jira.
 ---
 
 ## Codex runtime contract
@@ -26,4 +28,9 @@ when the user explicitly invokes a workflow that includes them or separately
 authorizes them. Mere migration, file reading, or implicit skill selection
 does not authorize sending. Do not hide approval rejections from the user.
 
-Run the Jira Cloud reconciliation: `scripts/sync-jira.sh sync` — iterate known_issues.md and, for every issue with a `- Jira:` field, transition its card to the status mapped from the local `- Status:` (statusMap in `.codex/jira.json`, defaults: backlog/ready→To Do, in-progress→In Progress, in-review→In Review, in-qa→QA/Testing, in-publish→Ready for Release, resolved→Done). Configuration comes from `.codex/jira.json` (baseUrl, email, projectKey, optional statusMap/authMode) or env vars JIRA_BASE_URL/JIRA_PROJECT_KEY/JIRA_EMAIL, plus JIRA_API_TOKEN (env only — never committed, never logged). Without valid config the sync reports it is disabled and exits cleanly. Sync is non-blocking: network/API/auth failures log a warning and continue; transitions not allowed by the Jira workflow are no-ops with a warning. Report per-issue results and the list of issues without a card.
+Global context: `standards/jira.md`, `config/jira/registry.json`, skill `cf-jira`,
+and `scripts/jira-init.sh` (bootstrap `.codex/jira.json` from the portfolio map).
+Config resolution: env > project `.codex/jira.json` > `config/jira/defaults.json`
+(baseUrl/email only) + `JIRA_API_TOKEN` (env only).
+
+Run the Jira Cloud reconciliation: `scripts/sync-jira.sh sync` — iterate known_issues.md and, for every issue with a `- Jira:` field, transition its card to the status mapped from the local `- Status:` (statusMap in `.codex/jira.json`, defaults: backlog/ready→To Do, in-progress→In Progress, in-review→In Review, in-qa→QA/Testing, in-publish→Ready for Release, resolved→Done). Without valid config the sync reports it is disabled and exits cleanly. Sync is non-blocking: network/API/auth failures log a warning and continue; transitions not allowed by the Jira workflow are no-ops with a warning. Report per-issue results and the list of issues without a card.

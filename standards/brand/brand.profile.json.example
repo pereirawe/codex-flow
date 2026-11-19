@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "company": "Your Company Legal Name",
+  "issuer": {
+    "name": "Your Company",
+    "tagline": "",
+    "cnpj": "",
+    "website": "https://example.com",
+    "email": "contact@example.com",
+    "phones": [],
+    "whatsapp": "",
+    "signatory": "Name, Role"
+  },
+  "logo_path": "logo.png",
+  "locale": "pt-BR",
+  "currency": "BRL",
+  "hourly_rate": null
+}

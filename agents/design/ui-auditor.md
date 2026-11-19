@@ -181,7 +181,9 @@ Read the most relevant files in depth:
 - The routing file (router, routes, pages/)
 - The main CSS files
 
-### STEP 3 — Visual audit
+### STEP 3 — Visual audit (baseline = skills)
+
+Measure palette, typography, spacing, radius, and shadow against `design-tokens`, `reference-library`, and `visual-hierarchy` — deviations are findings with file+line evidence. Use the grep patterns below for discovery; do not invent alternate canon values.
 
 Analyze the visual decisions present in the code:
 
@@ -219,10 +221,6 @@ grep -rn "font-family\|font-size\|font-weight\|line-height\|letter-spacing" \
 
 **Radius and shadow:**
 - Is there consistency, or does every component decide its own border-radius?
-
-Measure everything against the canonical values in `design-tokens`,
-`reference-library`, and `visual-hierarchy` — a deviation from canon is a
-finding, not a preference.
 
 ### STEP 4 — Structural audit
 

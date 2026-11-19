@@ -37,3 +37,7 @@ Design and optimize landing pages for maximum conversion.
 - Persuasive copywriting (headlines, CTAs, social proof)
 - Conversion Rate Optimization (CRO) techniques
 - A/B testing frameworks for page elements
+
+## Router (stub)
+
+Pointer-only entry — read `marketing-router` first. For depth use `conversion-optimization`, `copywriting`, and `frontend-design` (explore) or `$flow-build-ui` + `design-tokens` for gated product UI.
